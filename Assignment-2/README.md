@@ -4,5 +4,10 @@
 
 
 ### To build from source:
-* cd build
+* mkdir Build && cd Build
+* cmake -DOGRE_HOME=/path/to/ogre-1.9/sdkroot/ ..
 * make
+Then, to run it,
+
+* cd Binaries
+* ./ProjectName
