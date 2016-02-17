@@ -5,6 +5,7 @@
 #include "SceneHelper.h"
 #include <OgreOverlaySystem.h>
 #include <string>
+#include "btBulletDynamicsCommon.h"
 
 using namespace Ogre;
 
@@ -64,6 +65,8 @@ void Application::init()
 	mRoot->addFrameListener(this);
 	WindowEventUtilities::addWindowEventListener(mRenderWindow, this);
 	mRenderWindow->addListener(this);
+	btBoxShape* box = new btBoxShape(btVector3(1, 1, 1));
+
 
 #ifdef _WIN32
 		std::string relative = "../../../ogre/build/sdk/media";
