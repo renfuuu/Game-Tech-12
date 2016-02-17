@@ -79,7 +79,20 @@ void Application::init()
 		// Add viewport
 		Viewport * vp = mRenderWindow->addViewport(mCamera);
 		mCamera->setAutoAspectRatio(true);
+		mCamera->setPosition(0, -300, 600);
 		t1 = new Timer();
+
+		// Add some light
+		mSceneManager->setAmbientLight(Ogre::ColourValue(0.2, 0.2, 0.2));
+		mSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+
+		Ogre::Light* light = mSceneManager->createLight("MainLight");
+		light->setCastShadows(true);
+		light->setPosition(0, 0, 0);
+		light->setType(Ogre::Light::LightTypes::LT_POINT);
+
+		createRootEntity("test", "sphere.mesh", 0, -300, 0);
+		SceneHelper::getEntity(mSceneManager, "test",0)->setMaterialName("RustyBarrel");
 	}
 	catch (Exception e) {
 		std::cout << "Exception Caught: " << e.what() << std::endl;
