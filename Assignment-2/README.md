@@ -6,7 +6,7 @@ Assignment 2 is building upon assignment 1 where we take out room and ball and a
 
 #### Room
 
-5-sided room with an invisible mesh infront of the camera.
+5-sided room with an invisible mesh in front of the camera.
 
 Three "types" of collision to be handled
 * Ball and paddle
