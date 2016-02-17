@@ -30,4 +30,3 @@ Stationary camera outside the room looking through the invisible mesh.
 #### Scoring Mechanism
 
 Increment sore by one point whenever the ball and paddle collide. The game is loss when the ball escapes the room through the invisible mesh or begins to roll (or when the velocity of the ball is reaching zero).
-
