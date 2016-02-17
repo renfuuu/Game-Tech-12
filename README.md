@@ -1,15 +1,15 @@
-# Game-Tech-12
+# CS 354R - Game Technology
 
-## Collaborators
+#### Team 12
 * Itoro Esiere
 * David Parker
 * Frank Cerasoli
 
-### To run program:
+##### To run program:
 * cd build
 * ./Binaries/ProjectName
 
-### To build from source:
+##### To build from source:
 * mkdir Build && cd Build
 * cmake -DOGRE_HOME=/path/to/ogre-1.9/sdkroot/ ..
 * make
