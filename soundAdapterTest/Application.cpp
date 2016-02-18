@@ -29,6 +29,14 @@ Application::~Application(void)
 //-------------------------------------------------------------------------------------
 void Application::createScene(void)
 {
+
+  mSceneMgr->setAmbientLight(Ogre::ColourValue(0.8, 0.8, 0.8));
+ 
+  mCamera->setPosition(0, 2000, 4000);
+ 
+  Ogre::Light* light = mSceneMgr->createLight("MainLight");
+  light->setPosition(0.0, 1580.0, 3050.0);
+ 
 }
  
 #if OGRE_PLATFORM == OGRE_PLATFORM_APPLE

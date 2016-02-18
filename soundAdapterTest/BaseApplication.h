@@ -106,7 +106,7 @@ protected:
 	Ogre::RenderWindow* mWindow;
 	Ogre::String mResourcesCfg;
 	Ogre::String mPluginsCfg;
- 
+
 	Ogre::OverlaySystem *mOverlaySystem;
 
 	//Sound Adapter
