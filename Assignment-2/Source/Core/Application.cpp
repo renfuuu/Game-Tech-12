@@ -6,6 +6,7 @@
 #include <Overlay/OgreOverlaySystem.h>
 #include <string>
 #include "btBulletDynamicsCommon.h"
+#include "SoundAdapter.h"
 
 using namespace Ogre;
 
@@ -67,7 +68,10 @@ void Application::init()
 	mRoot->addFrameListener(this);
 	WindowEventUtilities::addWindowEventListener(mRenderWindow, this);
 	mRenderWindow->addListener(this);
-	btBoxShape* box = new btBoxShape(btVector3(1, 1, 1));
+
+	// These objects are just to test that we can build bullet and sdl
+	btBoxShape* bulletTest = new btBoxShape(btVector3(1, 1, 1));
+	SoundAdapter* soundTest = new SoundAdapter();
 
 
 #ifdef _WIN32
