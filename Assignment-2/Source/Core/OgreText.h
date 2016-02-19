@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Overlay/OgreTextAreaOverlayElement.h"
+#include <Overlay/OgreTextAreaOverlayElement.h>
 #include "OgreStringConverter.h"
 #include <Overlay/OgreOverlayManager.h>
 #include <Overlay/OgreOverlay.h>
