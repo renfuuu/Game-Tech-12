@@ -3,7 +3,7 @@
 #include "OgreText.h"
 #include "MultiPlatformHelper.h"
 #include "SceneHelper.h"
-#include <OgreOverlaySystem.h>
+#include <Overlay/OgreOverlaySystem.h>
 #include <string>
 #include "btBulletDynamicsCommon.h"
 
@@ -19,6 +19,7 @@ Application::~Application()
 
 void Application::init()
 {
+		try {
 	NameValuePairList params;
 	// Initialization
 	mRoot = new Root("");
@@ -28,9 +29,9 @@ void Application::init()
 	mRoot->loadPlugin("RenderSystem_GL_d");
 #endif
 #ifdef __linux__
-	mRoot->loadPlugin("RenderSystem_GL");
+	mRoot->loadPlugin("/lusr/opt/ogre-1.9/lib/OGRE/RenderSystem_GL");
 #endif
-	try {
+
 	// Select render system
 	const RenderSystemList &renderers = mRoot->getAvailableRenderers();
 	RenderSystem * renderSystem = nullptr;

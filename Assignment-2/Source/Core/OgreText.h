@@ -1,10 +1,10 @@
 #pragma once
 
-#include "OgreTextAreaOverlayElement.h"
+#include "Overlay/OgreTextAreaOverlayElement.h"
 #include "OgreStringConverter.h"
-#include <OgreOverlayManager.h>
-#include <OgreOverlay.h>
-#include <OgreOverlayContainer.h>
+#include <Overlay/OgreOverlayManager.h>
+#include <Overlay/OgreOverlay.h>
+#include <Overlay/OgreOverlayContainer.h>
 
 using namespace Ogre;
 
