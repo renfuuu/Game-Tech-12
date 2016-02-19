@@ -1,0 +1,12 @@
+ACLOCAL_AMFLAGS= -I m4
+noinst_HEADERS= BaseApplication.h Application.h SoundAdapter.h
+
+bin_PROGRAMS= OgreApp
+OgreApp_CPPFLAGS= -I$(top_srcdir)
+OgreApp_SOURCES= BaseApplication.cpp Application.cpp SoundAdapter.cpp
+OgreApp_CXXFLAGS= $(OGRE_CFLAGS) $(OIS_CFLAGS)
+OgreApp_LDADD= $(OGRE_LIBS) $(OIS_LIBS)
+OgreApp_LDFLAGS= -lOgreOverlay -lboost_system -lSDL -lSDL_mixer
+
+EXTRA_DIST= buildit makeit
+AUTOMAKE_OPTIONS= foreign
