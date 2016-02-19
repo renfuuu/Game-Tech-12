@@ -19,7 +19,8 @@ Application::~Application()
 
 void Application::init()
 {
-		try {
+	// This is really just a debugging try-catch block for catching and printing exceptions
+	try {
 	NameValuePairList params;
 	// Initialization
 	mRoot = new Root("");
