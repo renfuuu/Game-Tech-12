@@ -1,0 +1,8 @@
+#!/bin/sh
+cp ../Source/Core/*.cpp .
+cp ../Source/Interface/Linux/*.cpp .
+cp ../Source/Core/*.h .
+
+rm -rf autom4te.cache
+libtoolize --force --copy &&  aclocal &&  autoheader &&  automake --add-missing --force-missing --copy --foreign &&  autoconf
+./configure && ./makeit
