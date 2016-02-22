@@ -1,4 +1,4 @@
-noinst_HEADERS = Application.h MultiPlatformHelper.h SceneHelper.h CoreConfig.h OgreText.h SoundAdapter.h
+noinst_HEADERS = Application.h MultiPlatformHelper.h SceneHelper.h CoreConfig.h OgreText.h SoundAdapter.h BulletContactCallback.h
 bin_PROGRAMS = assignment2
 assignment2_CPPFLAGS = -I$(top_srcdir) -std=c++11
 assignment2_SOURCES = Application.cpp main.cpp SoundAdapter.cpp
