@@ -8,7 +8,7 @@
 BulletContactCallback::BulletContactCallback(btRigidBody& tgtBody , CollisionContext& context /*, ... */)
 	: btCollisionWorld::ContactResultCallback(), body(tgtBody), ctxt(context) { }
 
-virtual bool BulletContactCallback::needsCollision(btBroadphaseProxy* proxy) const {
+bool BulletContactCallback::needsCollision(btBroadphaseProxy* proxy) const {
 	// superclass will check m_collisionFilterGroup and m_collisionFilterMask
 	if(!btCollisionWorld::ContactResultCallback::needsCollision(proxy))
 		return false;
@@ -17,7 +17,7 @@ virtual bool BulletContactCallback::needsCollision(btBroadphaseProxy* proxy) con
 }
 
 //! Called with each contact for your own processing
-virtual btScalar BulletContactCallback::addSingleResult(btManifoldPoint& cp,
+btScalar BulletContactCallback::addSingleResult(btManifoldPoint& cp,
 	const btCollisionObject* colObj0, int partId0, int index0,
 	const btCollisionObject* colObj1, int partId1, int index1) {
 

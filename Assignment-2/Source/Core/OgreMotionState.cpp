@@ -5,16 +5,18 @@ OgreMotionState::OgreMotionState(const btTransform &initialpos, Ogre::SceneNode*
 	mPos1 = initialpos;
 }
 
+OgreMotionState::~OgreMotionState() {}
+
 	//Provides flexibility in terms of object visibility
-void OgreMotionStatesetNode(Ogre::SceneNode* node) {
+void OgreMotionState::setNode(Ogre::SceneNode* node) {
 	mVisibleobj = node;
 } 
 
-virtual void OgreMotionStategetWorldTransform(btTransform &worldTrans) const {
+void OgreMotionState::getWorldTransform(btTransform &worldTrans) const {
 	worldTrans = mPos1;
 }
 
-virtual void OgreMotionStatesetWorldTransform(const btTransform &worldTrans) {
+void OgreMotionState::setWorldTransform(const btTransform &worldTrans) {
 	if (mVisibleobj == nullptr)
 		return; // silently return before we set a node
 

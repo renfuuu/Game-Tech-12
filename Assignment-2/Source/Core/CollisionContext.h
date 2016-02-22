@@ -1,12 +1,11 @@
 #pragma once
 
 #include <btBulletDynamicsCommon.h>
-// #include "GameObject.h"
-/*
-A struct to keep track of contact information.  Can vary depending on what needs to be tracked
-*/
+
+// Forward declaration for GameObject pointer. We cannot include GameObject.h because there is ciruclar dependencies.
 class GameObject;
 
+//A struct to keep track of contact information.  Can vary depending on what needs to be tracked
 struct CollisionContext {
 	bool hit;
 	const btCollisionObject* body;

@@ -7,7 +7,9 @@
 #include <string>
 #include "btBulletDynamicsCommon.h"
 #include "SoundAdapter.h"
-#include "BulletContactCallback.h"
+#include "OgreMotionState.h"
+#include "Simulator.h"
+#include "GameObject.h"
 
 using namespace Ogre;
 
@@ -73,6 +75,7 @@ void Application::init()
 	// These objects are just to test that we can build bullet and sdl
 	btBoxShape* bulletTest = new btBoxShape(btVector3(1, 1, 1));
 	SoundAdapter* soundTest = new SoundAdapter();
+	// GameObject* obj = new GameObject();
 
 
 #ifdef _WIN32
@@ -101,8 +104,19 @@ void Application::init()
 		light->setPosition(0, 0, 0);
 		light->setType(Ogre::Light::LightTypes::LT_POINT);
 
+		// Test Bullet
+		Simulator* mySim = new Simulator();
 		createRootEntity("test", "sphere.mesh", 0, -300, 0);
-		SceneHelper::getEntity(mSceneManager, "test",0)->setMaterialName("RustyBarrel");
+		Ogre::SceneNode* sn = mSceneManager->getSceneNode("test");
+		Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, "test", 0);
+		const btTransform pos;
+		OgreMotionState* ms = new OgreMotionState(pos, sn);
+
+		GameObject* obj = new GameObject("test", mSceneManager, sn, ent, ms, mySim);
+		obj->addToSimulator();
+
+		// createRootEntity("test", "sphere.mesh", 0, -300, 0);
+		// SceneHelper::getEntity(mSceneManager, "test",0)->setMaterialName("RustyBarrel");
 	}
 	catch (Exception e) {
 		std::cout << "Exception Caught: " << e.what() << std::endl;

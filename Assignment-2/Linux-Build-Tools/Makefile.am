@@ -1,5 +1,4 @@
-noinst_HEADERS = Application.h MultiPlatformHelper.h SceneHelper.h CoreConfig.h OgreText.h SoundAdapter.h GameObject.h Simulator.h BulletContactCallback.h CollisionContext.h
-OgreMotionState.h
+noinst_HEADERS = Application.h MultiPlatformHelper.h SceneHelper.h CoreConfig.h OgreText.h SoundAdapter.h GameObject.h Simulator.h BulletContactCallback.h CollisionContext.h OgreMotionState.h
 
 bin_PROGRAMS = assignment2
 assignment2_CPPFLAGS = -I$(top_srcdir) -std=c++11
