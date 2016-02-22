@@ -111,6 +111,11 @@ protected:
 	CollisionContext* context;
 	BulletContactCallback* cCallBack;
 
+	GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* root, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim) 
+	: 	name(nme), sceneMgr(scnMgr), rootNode(root), geom(ent), motionstate(ms), 
+	 	simulator(sim), shape(), body(), tr(), inertia(), mass(1), restitution(1), friction(1), kinematic(true), needsUpdates(true), 
+	 	context(), cCallBack() {}
+
 
 //Add the game object to the simulator
 inline void GameObject::addToSimulator() {

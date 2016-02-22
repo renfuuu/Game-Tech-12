@@ -7,6 +7,7 @@
 #include <string>
 #include "btBulletDynamicsCommon.h"
 #include "SoundAdapter.h"
+#include "BulletContactCallback.h"
 
 using namespace Ogre;
 
