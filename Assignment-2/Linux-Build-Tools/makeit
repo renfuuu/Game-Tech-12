@@ -1,3 +1,9 @@
 #!/bin/sh
+rm *.cpp
+rm *.h
+
+cp ../Source/Core/*.cpp .
+cp ../Source/Interface/Linux/*.cpp .
+cp ../Source/Core/*.h .
 make clean
 make
