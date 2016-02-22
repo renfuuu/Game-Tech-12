@@ -1,4 +1,5 @@
 #include "Simulator.h"
+#include "GameObject.h"
 
 Simulator::Simulator() { 
   collisionConfiguration = new btDefaultCollisionConfiguration(); 
@@ -18,8 +19,8 @@ void Simulator::addObject (GameObject* o) {
 
 //Update the physics world state and any objects that have collision
 void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, const Ogre::Real fixedTimestep) {
-    for (int i = 0; i != objList.size(); i++) idList[i] = 0;
-  dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
-  for (unsigned int i = 0; i < objList.size(); i++)
-    if (objList[i].gObject->doUpdates()) objList[i].gObject->update(elapsedTime);
+    // for (int i = 0; i != objList.size(); i++) idList[i] = 0;
+  // dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
+  // for (unsigned int i = 0; i < objList.size(); i++)
+  //   if (objList[i].gObject->doUpdates()) objList[i].gObject->update(elapsedTime);
 }
