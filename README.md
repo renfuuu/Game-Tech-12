@@ -7,13 +7,12 @@
 
 ##### To run program:
 * cd build
-* ./Binaries/ProjectName
+* ./assignment2
 
 ##### To build from source:
-* mkdir Build && cd Build
-* cmake -DOGRE_HOME=/path/to/ogre-1.9/sdkroot/ ..
-* make
+* mkdir Build
+* cp -avr Linux-Build-Tools/. Build/
+* ./buildit
+* ./makeit
 Then, to run it,
-
-* cd Binaries
-* ./ProjectName
+* ./assignment2
