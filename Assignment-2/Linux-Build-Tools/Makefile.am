@@ -1,7 +1,7 @@
-noinst_HEADERS = Application.h MultiPlatformHelper.h SceneHelper.h CoreConfig.h OgreText.h SoundAdapter.h BulletContactCallback.h
+noinst_HEADERS = Application.h MultiPlatformHelper.h SceneHelper.h CoreConfig.h OgreText.h SoundAdapter.h BulletContactCallback.h Simulator.h GameObject.h
 bin_PROGRAMS = assignment2
 assignment2_CPPFLAGS = -I$(top_srcdir) -std=c++11
-assignment2_SOURCES = Application.cpp main.cpp SoundAdapter.cpp
+assignment2_SOURCES = Application.cpp main.cpp SoundAdapter.cpp Simulator.cpp
 assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS)
 assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS)
 assignment2_LDFLAGS = -lOgreOverlay -lboost_system -lSDL -lSDL_mixer

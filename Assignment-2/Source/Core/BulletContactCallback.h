@@ -3,7 +3,8 @@
 #pragma once
 
 #include <btBulletDynamicsCommon.h>
-class GameObject;
+#include "Simulator.h"
+#include "GameObject.h"
 
 /*
 A struct to keep track of contact information.  Can vary depending on what needs to be tracked
@@ -85,72 +86,3 @@ struct BulletContactCallback : public btCollisionWorld::ContactResultCallback {
 	}
 };
 
-//How this callback works in the code:
-
-//Some declarations within the game object class
-class GameObject {
-protected:
-	Ogre::String name;
-	Ogre::SceneManager* sceneMgr;
-	Ogre::SceneNode* rootNode;
-	Ogre::Entity* geom;
-	OgreMotionState* motionState;
-
-	Simulator* simulator;
-	btCollisionShape* shape;
-	btRigidBody* body;
-	btTransform tr;
-	btVector3 inertia;
-
-	btScalar mass;
-	btScalar restitution;
-	btScalar friction;
-	bool kinematic;
-	bool needsUpdates;
-
-	CollisionContext* context;
-	BulletContactCallback* cCallBack;
-
-	GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* root, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim) 
-	: 	name(nme), sceneMgr(scnMgr), rootNode(root), geom(ent), motionstate(ms), 
-	 	simulator(sim), shape(), body(), tr(), inertia(), mass(1), restitution(1), friction(1), kinematic(true), needsUpdates(true), 
-	 	context(), cCallBack() {}
-
-
-//Add the game object to the simulator
-inline void GameObject::addToSimulator() {
-	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-	updateTransform();
-	//rigidbody is dynamic if and only if mass is non zero, otherwise static
-	if (mass != 0.0f) shape->calculateLocalInertia(mass, inertia);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, shape, inertia);
-	rbInfo.m_restitution = restitution;
-	rbInfo.m_friction = friction;
-	body = new btRigidBody(rbInfo);
-	body->setUserPointer(this);
-	if (kinematic) {
-		body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-		body->setActivationState(DISABLE_DEACTIVATION);
-	}
-	simID = simulator->addObject(this);
-}
-
-//Specific game object update routine
-inline void Ball::update(float elapsedTime) {
-	lastTime += elapsedTime;
-	simulator->getWorld()->contactTest(body, *cCallBack);
-	if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0) 
-		&& (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
-		//Handle the hit
-		lastTime = 0.0f;
-	}
-	context->hit = false;
-}
-
-//Update the physics world state and any objects that have collision
-inline void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, const Ogre::Real fixedTimestep) {
-    for (int i = 0; i != objList.size(); i++) idList[i] = 0;
-	dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
-	for (unsigned int i = 0; i < objList.size(); i++)
-		if (objList[i].gObject->doUpdates()) objList[i].gObject->update(elapsedTime);
-}
