@@ -29,7 +29,7 @@ void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, co
 		for (auto& inner : objList) {
 			if (outer == inner) continue;
 
-			// Comapre if a contact is happening between these two gameobjects
+			// Compare if a contact is happening between these two gameobjects
 			dynamicsWorld->contactPairTest(outer->getBody(), inner->getBody(), *(outer->cCallBack));
 		}
 	}

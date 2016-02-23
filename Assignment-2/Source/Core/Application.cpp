@@ -106,14 +106,25 @@ void Application::init()
 
 		// Test Bullet
 		Simulator* mySim = new Simulator();
-		createRootEntity("test", "sphere.mesh", 0, -300, 0);
+		createRootEntity("test", "sphere.mesh", 0, -100, 0);
 		Ogre::SceneNode* sn = mSceneManager->getSceneNode("test");
 		Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, "test", 0);
 		const btTransform pos;
 		OgreMotionState* ms = new OgreMotionState(pos, sn);
 
-		GameObject* obj = new GameObject("test", mSceneManager, sn, ent, ms, mySim);
+		GameObject* obj = new GameObject("test", mSceneManager, sn, ent, ms, mySim, 1.0f);
 		obj->addToSimulator();
+
+		// TODO make a createGameObject() method
+		createRootEntity("test2", "sphere.mesh", 0, -400, 0);
+		Ogre::SceneNode* sn1 = mSceneManager->getSceneNode("test2");
+		Ogre::Entity* ent1 = SceneHelper::getEntity(mSceneManager, "test2", 0);
+		const btTransform pos1;
+		OgreMotionState* ms1 = new OgreMotionState(pos1, sn1);
+
+		GameObject* obj1 = new GameObject("test", mSceneManager, sn1, ent1, ms1, mySim, 0.0f);
+		obj1->addToSimulator();
+
 		_simulator = mySim;
 	}
 	catch (Exception e) {

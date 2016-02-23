@@ -3,14 +3,14 @@
 #include <btBulletDynamicsCommon.h>
 
 //Add the game object to the simulator
-GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim) :
+GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss) :
 	name(nme), sceneMgr(scnMgr), rootNode(node), geom(ent), motionState(ms), simulator(sim), tr(), inertia(), restitution(1), friction(), kinematic(false),
-	needsUpdates(false) {
-		mass = 1.0f;
+	needsUpdates(false), mass(mss) {
+		// mass = 1.0f;
 		inertia.setZero();
 
 		// TODO remove this and have children decide their shapes
-		shape = new btSphereShape(1);
+		shape = new btSphereShape(100);
 }
 
 void GameObject::updateTransform() {
@@ -40,12 +40,13 @@ void GameObject::addToSimulator() {
 		body->setActivationState(DISABLE_DEACTIVATION);
 	}
 
-	CollisionContext* context = new CollisionContext();
+	context = new CollisionContext();
 	cCallBack = new BulletContactCallback(*body, *context);
 	simulator->addObject(this);
 }
 
 // TODO Make this virtual and only have children create this method
 void GameObject::update() {
-	MultiPlatformHelper::print("Update!\n");
+	if(context->hit)
+		MultiPlatformHelper::print("Collision!\n");
 }

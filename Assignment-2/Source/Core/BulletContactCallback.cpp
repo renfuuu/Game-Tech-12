@@ -40,7 +40,11 @@ btScalar BulletContactCallback::addSingleResult(btManifoldPoint& cp,
 }
 
 #ifdef __linux__
-btScalar BulletContactCallback::addSingleResult(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj, int partId1, int index1, const btCollisionObjectWrapper* colbj1Wrap, int partId2, int index2) {
+// This is the version of addSingleResult called by the lab machine's version of Ogre
+btScalar BulletContactCallback::addSingleResult(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj0W, int partId0, int index0, const btCollisionObjectWrapper* colObj1W, int partId1, int index1) {
+	const btCollisionObject* colObj0 = colObj0W->getCollisionObject();
+	const btCollisionObject* colObj1 = colObj1W->getCollisionObject();
 
+	return addSingleResult(cp, colObj0, partId0, index0, colObj1, partId1, index1);
 }
 #endif
