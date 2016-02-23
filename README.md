@@ -10,8 +10,8 @@
 * ./assignment2
 
 ##### To build from source:
-* mkdir Build
-* cp -avr Linux-Build-Tools/. Build/
+* mkdir build && cd build
+* cp -avr Linux-Build-Tools/. build/
 * ./buildit
 * ./makeit
 Then, to run it,
