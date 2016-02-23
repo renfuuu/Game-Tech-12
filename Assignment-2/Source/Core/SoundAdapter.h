@@ -6,7 +6,13 @@
 #ifndef __SoundAdapter_h_
 #define __SoundAdapter_h_
 
+#ifdef _WIN32
+#include <SDL_mixer.h>
+#endif
+#ifdef __linux__
 #include <SDL/SDL_mixer.h>
+#endif
+
 
 #define NUM_SOUNDS 5  //WallBounce, PaddleBounce, GameWin, GameLoss, ClickTesting
 
