@@ -106,24 +106,8 @@ void Application::init()
 
 		// Test Bullet
 		Simulator* mySim = new Simulator();
-		createRootEntity("test", "sphere.mesh", 0, -100, 0);
-		Ogre::SceneNode* sn = mSceneManager->getSceneNode("test");
-		Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, "test", 0);
-		const btTransform pos;
-		OgreMotionState* ms = new OgreMotionState(pos, sn);
-
-		GameObject* obj = new GameObject("test", mSceneManager, sn, ent, ms, mySim, 1.0f);
-		obj->addToSimulator();
-
-		// TODO make a createGameObject() method
-		createRootEntity("test2", "sphere.mesh", 0, -400, 0);
-		Ogre::SceneNode* sn1 = mSceneManager->getSceneNode("test2");
-		Ogre::Entity* ent1 = SceneHelper::getEntity(mSceneManager, "test2", 0);
-		const btTransform pos1;
-		OgreMotionState* ms1 = new OgreMotionState(pos1, sn1);
-
-		GameObject* obj1 = new GameObject("test", mSceneManager, sn1, ent1, ms1, mySim, 0.0f);
-		obj1->addToSimulator();
+		GameObject* b1 = createBall("test", "sphere.mesh", 0, -100, 0, mSceneManager, 1.0f, mySim);
+		GameObject* b2 = createBall("test2", "sphere.mesh", -50, -400, 0, mSceneManager, 0.0f, mySim);
 
 		_simulator = mySim;
 	}
@@ -185,4 +169,17 @@ void Application::createChildEntity(std::string name, std::string mesh, Ogre::Sc
 	Ogre::SceneNode* ogreNode = sceneNode->createChildSceneNode(name);
 	ogreNode->attachObject(ogreEntity);
 	ogreNode->setPosition(x, y, z);
+}
+
+Ball* Application::createBall(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::SceneManager* scnMgr, Ogre::Real mss, Simulator* mySim) {
+	createRootEntity(nme, meshName, x, y, z);
+	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
+	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
+	const btTransform pos;
+	OgreMotionState* ms = new OgreMotionState(pos, sn);
+
+	Ball* obj = new Ball(nme, mSceneManager, sn, ent, ms, mySim, mss);
+	obj->addToSimulator();
+
+	return obj;
 }

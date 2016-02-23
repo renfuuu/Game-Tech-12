@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include <string>
 #include "Simulator.h"
+#include "Ball.h"
 
 class Application : public Ogre::FrameListener, public Ogre::WindowEventListener, public Ogre::RenderTargetListener
 {
@@ -37,4 +38,5 @@ public:
 	void createRootEntity(std::string name, std::string mesh, int x, int y, int z);
 	void createChildEntity(std::string name, std::string mesh, Ogre::SceneNode* sceneNode, int x, int y, int z);
 	void update(const Ogre::FrameEvent &evt);
+	Ball* createBall(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::SceneManager* scnMgr, Ogre::Real mss, Simulator* mySim);
 };

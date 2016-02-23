@@ -49,5 +49,5 @@ public:
 	inline btRigidBody* getBody() { return body; }
 	void addToSimulator();
 	void updateTransform();
-	virtual void update();
+	virtual void update() = 0;
 };
