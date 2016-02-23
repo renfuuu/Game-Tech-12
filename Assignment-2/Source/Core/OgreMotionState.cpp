@@ -16,6 +16,11 @@ void OgreMotionState::getWorldTransform(btTransform &worldTrans) const {
 	worldTrans = mPos1;
 }
 
+void OgreMotionState::updateTransform(btTransform& newpos) {
+	mPos1 = newpos;
+}
+
+// Bridge between Bullet physics position and Ogre scene node position, called once per simulation step
 void OgreMotionState::setWorldTransform(const btTransform &worldTrans) {
 	if (mVisibleobj == nullptr)
 		return; // silently return before we set a node

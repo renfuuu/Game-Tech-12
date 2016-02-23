@@ -114,9 +114,7 @@ void Application::init()
 
 		GameObject* obj = new GameObject("test", mSceneManager, sn, ent, ms, mySim);
 		obj->addToSimulator();
-
-		// createRootEntity("test", "sphere.mesh", 0, -300, 0);
-		// SceneHelper::getEntity(mSceneManager, "test",0)->setMaterialName("RustyBarrel");
+		_simulator = mySim;
 	}
 	catch (Exception e) {
 		std::cout << "Exception Caught: " << e.what() << std::endl;
@@ -141,18 +139,19 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 	// Code per frame in fixed FPS
 	float temp = t1->getMilliseconds();
 	if ((temp - dTime) >= (1.0 / fps)*1000.0) {
-		update();
+		update(evt);
 		dTime = temp;
 	}
+
+	_simulator->stepSimulation(evt.timeSinceLastFrame, 10, 1 / fps);
 
 	return true;
 }
 
 // Called once per predefined frame
-void Application::update() {
+void Application::update(const FrameEvent &evt) {
 	
 	try{
-		
 		
 	}
 	catch (Exception e) {

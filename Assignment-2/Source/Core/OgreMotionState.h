@@ -3,6 +3,7 @@
 #include <btBulletDynamicsCommon.h>
 #include <OgreSceneManager.h>
 
+// This class inherits the btMotionState interface for the purposes of setWorldTransform being called each simulation step
 class OgreMotionState : public btMotionState {
 protected:
 	Ogre::SceneNode* mVisibleobj;
@@ -18,4 +19,6 @@ public:
 	virtual void getWorldTransform(btTransform &worldTrans) const;
 
 	virtual void setWorldTransform(const btTransform &worldTrans);	
+
+	void updateTransform(btTransform& newpos);
 };

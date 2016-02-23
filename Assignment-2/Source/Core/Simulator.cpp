@@ -1,5 +1,6 @@
 #include "Simulator.h"
 #include "GameObject.h"
+#include <exception>
 
 Simulator::Simulator() : objList(), collisionShapes() { 
   collisionConfiguration = new btDefaultCollisionConfiguration(); 
@@ -7,7 +8,7 @@ Simulator::Simulator() : objList(), collisionShapes() {
   overlappingPairCache = new btDbvtBroadphase(); 
   solver = new btSequentialImpulseConstraintSolver(); 
   dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration); 
-  dynamicsWorld->setGravity(btVector3(0.0, -0.098, 0.0));
+  dynamicsWorld->setGravity(btVector3(0.0, -9.8f * 4, 0.0));
   //Add collision shapes to reuse among rigid bodies
 }
 
@@ -18,8 +19,22 @@ void Simulator::addObject (GameObject* o) {
 
 //Update the physics world state and any objects that have collision
 void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, const Ogre::Real fixedTimestep) {
-    // for (int i = 0; i != objList.size(); i++) idList[i] = 0;
-  // dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
-  // for (unsigned int i = 0; i < objList.size(); i++)
-  //   if (objList[i].gObject->doUpdates()) objList[i].gObject->update(elapsedTime);
+	dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
+
+	// Compare each object to every other
+	for (auto& outer : objList) {
+		// Clear the all previous hits
+		outer->cCallBack->ctxt.hit = false;
+
+		for (auto& inner : objList) {
+			if (outer == inner) continue;
+
+			// Comapre if a contact is happening between these two gameobjects
+			dynamicsWorld->contactPairTest(outer->getBody(), inner->getBody(), *(outer->cCallBack));
+		}
+	}
+
+	for (auto& obj : objList) {
+		obj->update();
+	}
 }

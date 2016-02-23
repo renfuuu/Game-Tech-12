@@ -20,7 +20,6 @@
 // Simulator & GameObject inclue each other (circular reference).
 
 //Some declarations within the game object class
-// TODO: NEEDS A CONSTRUCTOR
 class GameObject {
 protected:
 	Ogre::String name;
@@ -42,10 +41,13 @@ protected:
 	bool needsUpdates;
 
 	CollisionContext* context;
-	BulletContactCallback* cCallBack;
 
 public:
+	BulletContactCallback* cCallBack;
+
 	GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim);
 	inline btRigidBody* getBody() { return body; }
 	void addToSimulator();
+	void updateTransform();
+	virtual void update();
 };
