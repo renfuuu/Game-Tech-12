@@ -26,5 +26,10 @@ struct BulletContactCallback : public btCollisionWorld::ContactResultCallback {
 	virtual btScalar addSingleResult(btManifoldPoint& cp,
 		const btCollisionObject* colObj0, int partId0, int index0,
 		const btCollisionObject* colObj1, int partId1, int index1);
+
+#ifdef __linux__
+	// Not sure why this second signature is part of the BulletContactCallback interface. This is onlyn needed for the lab machine's version of Ogre.
+	virtual btScalar addSingleResult(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj, int partId1, int index1, const btCollisionObjectWrapper* colbj1Wrap, int partId2, int index2);
+#endif
 };
 

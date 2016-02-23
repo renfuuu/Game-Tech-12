@@ -39,3 +39,8 @@ btScalar BulletContactCallback::addSingleResult(btManifoldPoint& cp,
 	return 0;
 }
 
+#ifdef __linux__
+btScalar BulletContactCallback::addSingleResult(btManifoldPoint& cp, const btCollisionObjectWrapper* colObj, int partId1, int index1, const btCollisionObjectWrapper* colbj1Wrap, int partId2, int index2) {
+
+}
+#endif
