@@ -29,6 +29,7 @@ public:
 	Ogre::Camera * mCamera;
 	Ogre::Timer* t1;
 	Simulator* _simulator;
+	GameObject* _theBall;
 
 	double fps = 300.0;
 

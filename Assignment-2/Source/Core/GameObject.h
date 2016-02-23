@@ -49,5 +49,7 @@ public:
 	inline btRigidBody* getBody() { return body; }
 	void addToSimulator();
 	void updateTransform();
+	void translate(float x, float y, float z);
+	void applyForce(float x, float y, float z);
 	virtual void update() = 0;
 };

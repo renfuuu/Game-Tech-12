@@ -17,6 +17,14 @@ void GameObject::updateTransform() {
 	motionState->updateTransform(tr);
 }
 
+void GameObject::translate(float x, float y, float z) {
+	body->translate(btVector3(x,y,z));
+}
+
+void GameObject::applyForce(float x, float y, float z) {
+	body->applyCentralForce(btVector3(x, y, z));
+}
+
 void GameObject::addToSimulator() {
 	// using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 	 updateTransform();

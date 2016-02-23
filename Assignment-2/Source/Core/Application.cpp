@@ -109,6 +109,8 @@ void Application::init()
 		GameObject* b1 = createBall("test", "sphere.mesh", 0, -100, 0, mSceneManager, 1.0f, mySim);
 		GameObject* b2 = createBall("test2", "sphere.mesh", -50, -400, 0, mSceneManager, 0.0f, mySim);
 
+		_theBall = b1;
+
 		_simulator = mySim;
 	}
 	catch (Exception e) {
@@ -147,7 +149,8 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 void Application::update(const FrameEvent &evt) {
 	
 	try{
-		
+		// Example of how to do a direct translation of a gameobject
+		_theBall->translate(0, 2.0, 0);
 	}
 	catch (Exception e) {
 
