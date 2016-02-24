@@ -19,4 +19,5 @@ Then, to run it,
 * ./assignment2
 
 ##### Alternative build
+* chmod u+x ./create
 * ./create
