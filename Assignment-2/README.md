@@ -61,3 +61,6 @@ A class to handle input from the player.
 * David: Bullet, Input Event Manager, Application
 * Frank: SDL, Sound Adapter, Application
 * Itoro: Doc, Score Manager, Application
+
+#### Credit:
+* Paddle model downloaded from: http://www.blendswap.com/blends/view/49333 credit: Bruno Matheus
