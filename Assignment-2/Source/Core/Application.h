@@ -41,6 +41,8 @@ public:
 	Simulator* _simulator;
 	GameObject* _theBall;
 	GameObject* _thePaddle;
+	int width;
+	int height;
 
 	double fps = 300.0;
 

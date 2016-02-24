@@ -27,6 +27,18 @@ void GameObject::translate(float x, float y, float z) {
 	}
 }
 
+void GameObject::setPosition(float x, float y, float z) {
+	if(kinematic) {
+		rootNode->setPosition(x,y,z);
+		updateTransform();
+	}
+}
+
+Ogre::SceneNode* GameObject::getNode() {
+	return rootNode;
+}
+
+
 void GameObject::applyForce(float x, float y, float z) {
 	body->applyCentralForce(btVector3(x, y, z));
 }

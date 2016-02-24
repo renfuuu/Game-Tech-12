@@ -78,7 +78,7 @@ void Application::init()
 
 	// Create scene manager, render window, and camera
 	mSceneManager = mRoot->createSceneManager(ST_GENERIC);
-	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, 800, 600, false, &params);
+	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, width = 800, height = 600, false, &params);
 	mCamera = mSceneManager->createCamera("Main Camera");
 
 	Ogre::OverlaySystem* pOverlaySystem = new Ogre::OverlaySystem();
@@ -111,7 +111,7 @@ void Application::init()
 		// Add viewport
 		Viewport * vp = mRenderWindow->addViewport(mCamera);
 		mCamera->setAutoAspectRatio(true);
-		mCamera->setPosition(0, -350, 600);
+		mCamera->setPosition(0, 120, 1000);
 		t1 = new Timer();
 
 		// Add some light
@@ -120,7 +120,7 @@ void Application::init()
 
 		Ogre::Light* light = mSceneManager->createLight("MainLight");
 		light->setCastShadows(true);
-		light->setPosition(0, 0, 0);
+		light->setPosition(0, 500, 0);
 		light->setType(Ogre::Light::LightTypes::LT_POINT);
 		mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
@@ -132,8 +132,8 @@ void Application::init()
 
 		// Test Bullet
 		Simulator* mySim = new Simulator();
-		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, -400, 50, 100, mSceneManager, 0.0f, 1.0f, 0.8f, true, mySim);
-		GameObject* b2 = createBall("test2", "sphere.mesh", 5, -100, 0, .15, mSceneManager, 1.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, 0, 0, 100, mSceneManager, 0.0f, 1.0f, 0.8f, true, mySim);
+		GameObject* b2 = createBall("test2", "sphere.mesh", 5, 300, 0, .15, mSceneManager, 1.0f, 1.0f, 0.8f, false, mySim);
 
 		_theBall = b2;
 		_thePaddle = b1;
@@ -174,15 +174,30 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 
 // Called once per predefined frame
 void Application::update(const FrameEvent &evt) {
-	static int lastMouseXPos = 0;
-	static int lastMouseYPos = 0;
 	try {
 		_oisManager->capture();
 		int mouseX = _oisManager->getMouseXAxis();
-		int mouseY = _oisManager->getMouseYAxis();
-		_thePaddle->translate(mouseX - lastMouseXPos, 0 ,mouseY - lastMouseYPos);
-		lastMouseXPos = mouseX;
-		lastMouseYPos = mouseY;
+		int mouseY = Ogre::Math::Clamp(_oisManager->getMouseYAxis(), 1, 220);
+		int paddleZ = (height/4)-(Ogre::Math::Sqr(mouseX)/width + Ogre::Math::Sqr((width/height)*1.5*mouseY)/height);
+
+		_thePaddle->setPosition(mouseX, paddleZ ,mouseY);
+/*
+		Ogre::SceneNode* mNode = _thePaddle->getNode();
+
+ 		Ogre::Quaternion orient = mNode->getOrientation();
+		Ogre::Vector3 oldUp = orient.yAxis();
+		Ogre::Vector3 newUp = mNode->getPosition().normalisedCopy();
+		Ogre::Quaternion rot = oldUp.getRotationTo(newUp);
+		mNode->rotate(rot);
+*/
+		
+
+		// Ogre::Vector3 normal = mNode->getPosition();
+		// normal.normalise();
+		// Ogre::Vector3 src = -mNode->getOrientation().zAxis();
+		// Ogre::Quaternion quat = src.getRotationTo(normal);
+		// mNode->rotate(quat);
+
 		if(_oisManager->getKeyPressed() == OIS::KC_ESCAPE)
 			mRunning = false;
 	}

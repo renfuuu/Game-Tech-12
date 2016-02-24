@@ -52,5 +52,7 @@ public:
 	void updateTransform();
 	void translate(float x, float y, float z);
 	void applyForce(float x, float y, float z);
+	void setPosition(float x, float y, float z);
+	Ogre::SceneNode* getNode();
 	virtual void update() = 0;
 };
