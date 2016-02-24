@@ -183,6 +183,8 @@ void Application::update(const FrameEvent &evt) {
 		_thePaddle->translate(mouseX - lastMouseXPos, 0 ,mouseY - lastMouseYPos);
 		lastMouseXPos = mouseX;
 		lastMouseYPos = mouseY;
+		if(_oisManager->getKeyPressed() == OIS::KC_ESCAPE)
+			mRunning = false;
 	}
 	catch (Exception e) {
 

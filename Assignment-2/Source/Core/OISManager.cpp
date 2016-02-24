@@ -214,10 +214,11 @@ OIS::Keyboard* OISManager::getKeyboard( void ) {
 bool OISManager::keyPressed( const OIS::KeyEvent &e ) {
     if ( e.key == OIS::KC_P )
         MultiPlatformHelper::print("Pressed: P\n");
+    mKeyPressed = e.key;
 
     return true;
 }
- 
+
 bool OISManager::keyReleased( const OIS::KeyEvent &e ) {
     MultiPlatformHelper::print("Released\n");
 
@@ -257,4 +258,8 @@ int OISManager::getMouseXAxis() {
 
 int OISManager::getMouseYAxis() {
     return mouseYAxis;
+}
+
+OIS::KeyCode OISManager::getKeyPressed(){
+    return mKeyPressed;
 }

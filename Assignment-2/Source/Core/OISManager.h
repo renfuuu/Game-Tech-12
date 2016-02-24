@@ -36,6 +36,7 @@ public:
 
     int getMouseXAxis();
     int getMouseYAxis();
+    OIS::KeyCode getKeyPressed();
 
 private:
     OISManager( void );
@@ -48,6 +49,8 @@ private:
     bool mouseMoved( const OIS::MouseEvent &e );
     bool mousePressed( const OIS::MouseEvent &e, OIS::MouseButtonID id );
     bool mouseReleased( const OIS::MouseEvent &e, OIS::MouseButtonID id );
+
+    bool killWindow(bool running);
  
     OIS::Mouse        *mMouse;
     OIS::Keyboard     *mKeyboard;
@@ -67,5 +70,6 @@ private:
     // Our private members here
     int mouseXAxis;
     int mouseYAxis;
+    OIS::KeyCode mKeyPressed;
 };
 #endif
