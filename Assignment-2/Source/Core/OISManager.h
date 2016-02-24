@@ -34,6 +34,8 @@ public:
  
     static OISManager* getSingletonPtr( void );
 
+    int getMouseXAxis();
+
 private:
     OISManager( void );
     OISManager( const OISManager& ) { }
@@ -60,5 +62,8 @@ private:
     std::map<std::string, OIS::MouseListener*>::iterator itMouseListenerEnd;
  
     static OISManager *mOISManager;
+
+    // Our private members here
+    int mouseXAxis;
 };
 #endif

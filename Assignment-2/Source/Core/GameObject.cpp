@@ -3,8 +3,8 @@
 #include <btBulletDynamicsCommon.h>
 
 //Add the game object to the simulator
-GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal) :
-	name(nme), sceneMgr(scnMgr), rootNode(node), geom(ent), scale(scal), motionState(ms), simulator(sim), tr(), inertia(), restitution(rest), friction(frict), kinematic(false),
+GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin) :
+	name(nme), sceneMgr(scnMgr), rootNode(node), geom(ent), scale(scal), motionState(ms), simulator(sim), tr(), inertia(), restitution(rest), friction(frict), kinematic(kin),
 	needsUpdates(false), mass(mss) {
 		inertia.setZero();
 }
@@ -18,7 +18,13 @@ void GameObject::updateTransform() {
 }
 
 void GameObject::translate(float x, float y, float z) {
-	body->translate(btVector3(x,y,z));
+	if(kinematic) {
+		rootNode->translate(x,y,z);
+		updateTransform();
+	}
+	else {
+		body->translate(btVector3(x,y,z));
+	}
 }
 
 void GameObject::applyForce(float x, float y, float z) {
@@ -40,6 +46,7 @@ void GameObject::addToSimulator() {
 	body->setUserPointer(this);
 
 	if (kinematic) {
+		std::cout << "Kinematic\n"; 
 		body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 		body->setActivationState(DISABLE_DEACTIVATION);
 	}

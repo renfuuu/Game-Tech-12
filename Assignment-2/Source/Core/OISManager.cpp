@@ -226,6 +226,9 @@ bool OISManager::keyReleased( const OIS::KeyEvent &e ) {
  
 bool OISManager::mouseMoved( const OIS::MouseEvent &e ) {
 
+    // From -width/2 to +width/2
+    mouseXAxis = (e.state.X.abs) - e.state.width/2;
+    // std::cout << e.state.X.abs << std::endl;
     return true;
 }
  
@@ -245,4 +248,8 @@ OISManager* OISManager::getSingletonPtr( void ) {
     }
  
     return mOISManager;
+}
+
+int OISManager::getMouseXAxis() {
+    return mouseXAxis;
 }

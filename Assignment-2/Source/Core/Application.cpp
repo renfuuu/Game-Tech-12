@@ -132,10 +132,11 @@ void Application::init()
 
 		// Test Bullet
 		Simulator* mySim = new Simulator();
-		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, -400, 50, 100, mSceneManager, 0.0f, 1.0f, 0.0f, mySim);
-		GameObject* b2 = createBall("test2", "sphere.mesh", 5, -100, 0, .2, mSceneManager, 1.0f, 1.0f, 0.0f, mySim);
+		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, -400, 50, 100, mSceneManager, 0.0f, 1.0f, 0.8f, true, mySim);
+		GameObject* b2 = createBall("test2", "ogrehead.mesh", 5, -100, 0, .5, mSceneManager, 1.0f, 1.0f, 0.8f, false, mySim);
 
 		_theBall = b2;
+		_thePaddle = b1;
 
 		_simulator = mySim;
 	}
@@ -173,12 +174,12 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 
 // Called once per predefined frame
 void Application::update(const FrameEvent &evt) {
-	
+	static int lastMousePos = 0;
 	try {
-
-		//_oisManager->getMouse()->capture();
-		//_oisManager->getKeyboard()->capture();
 		_oisManager->capture();
+		int mouse = _oisManager->getMouseXAxis();
+		_thePaddle->translate(mouse - lastMousePos, 0 ,0);
+		lastMousePos = mouse;
 	}
 	catch (Exception e) {
 
@@ -202,7 +203,7 @@ void Application::createChildEntity(std::string name, std::string mesh, Ogre::Sc
 	ogreNode->setPosition(x, y, z);
 }
 
-Ball* Application::createBall(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Simulator* mySim) {
+Ball* Application::createBall(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
@@ -210,13 +211,13 @@ Ball* Application::createBall(Ogre::String nme, Ogre::String meshName, int x, in
 	OgreMotionState* ms = new OgreMotionState(pos, sn);
 	sn->setScale(scale,scale,scale);
 
-	Ball* obj = new Ball(nme, mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale);
+	Ball* obj = new Ball(nme, mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
 	obj->addToSimulator();
 
 	return obj;
 }
 
-Paddle* Application::createPaddle(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Simulator* mySim) {
+Paddle* Application::createPaddle(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
@@ -225,7 +226,7 @@ Paddle* Application::createPaddle(Ogre::String nme, Ogre::String meshName, int x
 	const btTransform pos;
 	OgreMotionState* ms = new OgreMotionState(pos, sn);
 
-	Paddle* obj = new Paddle(nme, mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale);
+	Paddle* obj = new Paddle(nme, mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
 	obj->addToSimulator();
 
 
