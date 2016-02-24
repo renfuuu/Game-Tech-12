@@ -4,8 +4,14 @@
 #include "MultiPlatformHelper.h"
 #include "SceneHelper.h"
 #include <Overlay/OgreOverlaySystem.h>
+
+#include <OISMouse.h>
+#include <OISKeyboard.h>
+#include <OISInputManager.h>
+
 #include <string>
 #include "btBulletDynamicsCommon.h"
+#include "OISManager.h"
 #include "SoundAdapter.h"
 #include "OgreMotionState.h"
 #include "Simulator.h"
@@ -118,6 +124,12 @@ void Application::init()
 		light->setType(Ogre::Light::LightTypes::LT_POINT);
 		mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
+		// Setup OISManager
+	    _oisManager = OISManager::getSingletonPtr();
+	    _oisManager->initialise( mRenderWindow );
+	    _oisManager->addKeyListener( (OIS::KeyListener*)_oisManager, "keyboardListener" );
+	    _oisManager->addMouseListener( (OIS::MouseListener*)_oisManager, "mouseListener" );
+
 		// Test Bullet
 		Simulator* mySim = new Simulator();
 		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, -400, 50, 100, mSceneManager, 0.0f, 1.0f, 0.0f, mySim);
@@ -162,9 +174,11 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 // Called once per predefined frame
 void Application::update(const FrameEvent &evt) {
 	
-	try{
-		// Example of how to do a direct translation of a gameobject
-		// _theBall->translate(0, 2.0, 0);
+	try {
+
+		//_oisManager->getMouse()->capture();
+		//_oisManager->getKeyboard()->capture();
+		_oisManager->capture();
 	}
 	catch (Exception e) {
 

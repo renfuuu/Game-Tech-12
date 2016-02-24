@@ -9,9 +9,15 @@
 #include <OgreRenderWindow.h>
 #include <OgreConfigFile.h>
 #include <OgreWindowEventUtilities.h>
-#include <OgreRenderTargetListener.h>
+#include <OgreRenderTargetListener.h> 
+
+#include <OISMouse.h>
+#include <OISKeyboard.h>
+#include <OISInputManager.h>
+
 #include <unordered_map>
 #include <string>
+#include "OISManager.h"
 #include "Simulator.h"
 #include "Ball.h"
 #include "Paddle.h"
@@ -31,6 +37,7 @@ public:
 	Ogre::SceneManager * mSceneManager;
 	Ogre::Camera * mCamera;
 	Ogre::Timer* t1;
+	OISManager* _oisManager;
 	Simulator* _simulator;
 	GameObject* _theBall;
 
