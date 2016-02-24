@@ -24,6 +24,8 @@ public:
 	virtual void init();
 
 	Ogre::Root * mRoot;
+	Ogre::String mResourcesCfg;
+	Ogre::String mPluginsCfg;
 	Ogre::RenderWindow * mRenderWindow;
 	Ogre::SceneManager * mSceneManager;
 	Ogre::Camera * mCamera;
@@ -40,4 +42,5 @@ public:
 	void createChildEntity(std::string name, std::string mesh, Ogre::SceneNode* sceneNode, int x, int y, int z);
 	void update(const Ogre::FrameEvent &evt);
 	Ball* createBall(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::SceneManager* scnMgr, Ogre::Real mss, Simulator* mySim);
+	void setupResources(void);
 };

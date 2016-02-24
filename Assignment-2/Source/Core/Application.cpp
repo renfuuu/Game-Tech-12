@@ -23,11 +23,19 @@ Application::~Application()
 
 void Application::init()
 {
+
+#ifdef __linux__
+	mResourcesCfg = "resources.cfg";
+	mPluginsCfg = "plugins.cfg";
+#endif
+
 	// This is really just a debugging try-catch block for catching and printing exceptions
 	try {
 	NameValuePairList params;
 	// Initialization
-	mRoot = new Root("");
+	mRoot = new Root(mPluginsCfg);
+
+	setupResources();
 
 	// load plugins
 #ifdef _WIN32
@@ -106,7 +114,7 @@ void Application::init()
 
 		// Test Bullet
 		Simulator* mySim = new Simulator();
-		GameObject* b1 = createBall("test", "sphere.mesh", 0, -100, 0, mSceneManager, 1.0f, mySim);
+		GameObject* b1 = createBall("test", "ogrehead.mesh", 0, -100, 0, mSceneManager, 1.0f, mySim);
 		GameObject* b2 = createBall("test2", "sphere.mesh", -50, -400, 0, mSceneManager, 0.0f, mySim);
 
 		_theBall = b1;
@@ -185,4 +193,37 @@ Ball* Application::createBall(Ogre::String nme, Ogre::String meshName, int x, in
 	obj->addToSimulator();
 
 	return obj;
+}
+
+void Application::setupResources(void){
+	// Load resource paths from config file
+    Ogre::ConfigFile cf;
+    cf.load(mResourcesCfg);
+
+    // Go through all sections & settings in the file
+    Ogre::ConfigFile::SectionIterator seci = cf.getSectionIterator();
+
+    Ogre::String secName, typeName, archName;
+    while (seci.hasMoreElements())
+    {
+        secName = seci.peekNextKey();
+        Ogre::ConfigFile::SettingsMultiMap *settings = seci.getNext();
+        Ogre::ConfigFile::SettingsMultiMap::iterator i;
+        for (i = settings->begin(); i != settings->end(); ++i)
+        {
+            typeName = i->first;
+            archName = i->second;
+
+	#if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
+            // OS X does not set the working directory relative to the app.
+            // In order to make things portable on OS X we need to provide
+            // the loading with it's own bundle path location.
+            if (!Ogre::StringUtil::startsWith(archName, "/", false)) // only adjust relative directories
+                archName = Ogre::String(Ogre::macBundlePath() + "/" + archName);
+	#endif
+
+            Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+                archName, typeName, secName);
+        }
+    }
 }
