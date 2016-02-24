@@ -4,7 +4,7 @@
 
 //Add the game object to the simulator
 GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss) :
-	name(nme), sceneMgr(scnMgr), rootNode(node), geom(ent), motionState(ms), simulator(sim), tr(), inertia(), restitution(.5f), friction(1.0f), kinematic(false),
+	name(nme), sceneMgr(scnMgr), rootNode(node), geom(ent), motionState(ms), simulator(sim), tr(), inertia(), restitution(.4f), friction(0.0f), kinematic(false),
 	needsUpdates(false), mass(mss) {
 		inertia.setZero();
 }
