@@ -17,3 +17,6 @@
 * ./makeit
 Then, to run it,
 * ./assignment2
+
+##### Alternative build
+* ./create
