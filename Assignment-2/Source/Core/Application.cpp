@@ -116,11 +116,12 @@ void Application::init()
 		light->setCastShadows(true);
 		light->setPosition(0, 0, 0);
 		light->setType(Ogre::Light::LightTypes::LT_POINT);
+		//mSceneManager->setSkyBox(true, "Examples/CloudySky");
 
 		// Test Bullet
 		Simulator* mySim = new Simulator();
-		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, -400, 0, mSceneManager, 0.0f, mySim);
-		GameObject* b2 = createBall("test2", "sphere.mesh", -10, -100, 0, mSceneManager, 1.0f, mySim);
+		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, -100, 0, mSceneManager, 1.0f, mySim);
+		GameObject* b2 = createBall("test2", "sphere.mesh", -10, -400, 0, mSceneManager, 0.0f, mySim);
 
 		_theBall = b2;
 
@@ -205,7 +206,7 @@ Paddle* Application::createPaddle(Ogre::String nme, Ogre::String meshName, int x
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
 	sn->setScale(100.0f,100.0f,100.0f);
-	sn->showBoundingBox(true);
+	//sn->showBoundingBox(true);
 	const btTransform pos;
 	OgreMotionState* ms = new OgreMotionState(pos, sn);
 
