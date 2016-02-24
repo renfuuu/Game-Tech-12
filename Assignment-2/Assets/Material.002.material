@@ -1,0 +1,36 @@
+// Material.002 genrated by blender2ogre 0.6.0
+
+material Material.002 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Material.002
+        {
+            ambient 0.05442681908607483 0.05496611073613167 0.051019422709941864 1.0
+            diffuse 0.04354145591767811 0.043972889244152435 0.040815538776152405 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            mesh_exporter <bpy_struct, MaterialProperties("")>
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
