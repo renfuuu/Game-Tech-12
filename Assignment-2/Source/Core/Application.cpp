@@ -35,7 +35,9 @@ void Application::init()
 	// Initialization
 	mRoot = new Root(mPluginsCfg);
 
+#ifdef __linux__
 	setupResources();
+#endif
 
 	// load plugins
 #ifdef _WIN32
@@ -88,6 +90,7 @@ void Application::init()
 
 #ifdef _WIN32
 		std::string relative = "../../../ogre/build/sdk/media";
+		ResourceGroupManager::getSingleton().addResourceLocation("../../../Game-Tech-12/Assignment-2/Assets", "FileSystem");
 #endif
 #ifdef __linux__
 		std::string relative = "/lusr/opt/ogre-1.9/share/OGRE/Media";
