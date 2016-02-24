@@ -95,6 +95,8 @@ void Application::init()
 		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/models", "FileSystem");
 		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials", "FileSystem");
 		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/textures", "FileSystem");
+		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/programs/GLSL", "FileSystem");
+		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/scripts", "FileSystem");
 		ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 		// Add viewport
@@ -158,7 +160,7 @@ void Application::update(const FrameEvent &evt) {
 	
 	try{
 		// Example of how to do a direct translation of a gameobject
-		_theBall->translate(0, 2.0, 0);
+		// _theBall->translate(0, 2.0, 0);
 	}
 	catch (Exception e) {
 
