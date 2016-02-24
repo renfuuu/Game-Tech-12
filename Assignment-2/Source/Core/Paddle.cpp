@@ -11,7 +11,7 @@ GameObject(nme, scnMgr, node, ent, ms, sim, mss, rest, frict, scal, kin) {
 	auto size = var.getSize();
 
 	// We scale the y lower than .5 because the handle increases the bounding box's size
-	shape = new btBoxShape(btVector3((var.getSize().x*scale)/2, (var.getSize().y*scale)*.3, (var.getSize().z*scale)/2));
+	shape = new btBoxShape(btVector3((var.getSize().x*scale)/2, (var.getSize().y*scale)*.125, (var.getSize().z*scale)/2));
 }
 
 Paddle::~Paddle() {

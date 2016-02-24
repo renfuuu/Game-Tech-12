@@ -133,7 +133,7 @@ void Application::init()
 		// Test Bullet
 		Simulator* mySim = new Simulator();
 		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, -400, 50, 100, mSceneManager, 0.0f, 1.0f, 0.8f, true, mySim);
-		GameObject* b2 = createBall("test2", "ogrehead.mesh", 5, -100, 0, .5, mSceneManager, 1.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b2 = createBall("test2", "sphere.mesh", 5, -100, 0, .15, mSceneManager, 1.0f, 1.0f, 0.8f, false, mySim);
 
 		_theBall = b2;
 		_thePaddle = b1;
@@ -174,12 +174,15 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 
 // Called once per predefined frame
 void Application::update(const FrameEvent &evt) {
-	static int lastMousePos = 0;
+	static int lastMouseXPos = 0;
+	static int lastMouseYPos = 0;
 	try {
 		_oisManager->capture();
-		int mouse = _oisManager->getMouseXAxis();
-		_thePaddle->translate(mouse - lastMousePos, 0 ,0);
-		lastMousePos = mouse;
+		int mouseX = _oisManager->getMouseXAxis();
+		int mouseY = _oisManager->getMouseYAxis();
+		_thePaddle->translate(mouseX - lastMouseXPos, 0 ,mouseY - lastMouseYPos);
+		lastMouseXPos = mouseX;
+		lastMouseYPos = mouseY;
 	}
 	catch (Exception e) {
 

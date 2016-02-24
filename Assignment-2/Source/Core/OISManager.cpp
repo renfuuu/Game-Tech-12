@@ -228,6 +228,7 @@ bool OISManager::mouseMoved( const OIS::MouseEvent &e ) {
 
     // From -width/2 to +width/2
     mouseXAxis = (e.state.X.abs) - e.state.width/2;
+    mouseYAxis = (e.state.Y.abs) - e.state.height/2;
     // std::cout << e.state.X.abs << std::endl;
     return true;
 }
@@ -252,4 +253,8 @@ OISManager* OISManager::getSingletonPtr( void ) {
 
 int OISManager::getMouseXAxis() {
     return mouseXAxis;
+}
+
+int OISManager::getMouseYAxis() {
+    return mouseYAxis;
 }

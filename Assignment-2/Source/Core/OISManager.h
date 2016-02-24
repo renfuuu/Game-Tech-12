@@ -35,6 +35,7 @@ public:
     static OISManager* getSingletonPtr( void );
 
     int getMouseXAxis();
+    int getMouseYAxis();
 
 private:
     OISManager( void );
@@ -65,5 +66,6 @@ private:
 
     // Our private members here
     int mouseXAxis;
+    int mouseYAxis;
 };
 #endif
