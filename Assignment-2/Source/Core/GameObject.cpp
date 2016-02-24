@@ -3,8 +3,8 @@
 #include <btBulletDynamicsCommon.h>
 
 //Add the game object to the simulator
-GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss) :
-	name(nme), sceneMgr(scnMgr), rootNode(node), geom(ent), motionState(ms), simulator(sim), tr(), inertia(), restitution(.9f), friction(0.0f), kinematic(false),
+GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal) :
+	name(nme), sceneMgr(scnMgr), rootNode(node), geom(ent), scale(scal), motionState(ms), simulator(sim), tr(), inertia(), restitution(rest), friction(frict), kinematic(false),
 	needsUpdates(false), mass(mss) {
 		inertia.setZero();
 }

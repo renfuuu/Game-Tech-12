@@ -111,7 +111,7 @@ void Application::init()
 		// Add viewport
 		Viewport * vp = mRenderWindow->addViewport(mCamera);
 		mCamera->setAutoAspectRatio(true);
-		mCamera->setPosition(0, -300, 600);
+		mCamera->setPosition(0, -350, 600);
 		t1 = new Timer();
 
 		// Add some light
@@ -122,7 +122,7 @@ void Application::init()
 		light->setCastShadows(true);
 		light->setPosition(0, 0, 0);
 		light->setType(Ogre::Light::LightTypes::LT_POINT);
-		//mSceneManager->setSkyBox(true, "Examples/CloudySky");
+		mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
 		// Setup OISManager
 	    _oisManager = OISManager::getSingletonPtr();
@@ -132,8 +132,8 @@ void Application::init()
 
 		// Test Bullet
 		Simulator* mySim = new Simulator();
-		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, -100, 0, mSceneManager, 1.0f, mySim);
-		GameObject* b2 = createBall("test2", "sphere.mesh", -10, -400, 0, mSceneManager, 0.0f, mySim);
+		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, -100, 0, 100, mSceneManager, 1.0f, .7f, 0.0f, mySim);
+		GameObject* b2 = createBall("test2", "sphere.mesh", 5, -400, 0, 1, mSceneManager, 0.0f, .7f, 0.0f, mySim);
 
 		_theBall = b2;
 
@@ -202,29 +202,30 @@ void Application::createChildEntity(std::string name, std::string mesh, Ogre::Sc
 	ogreNode->setPosition(x, y, z);
 }
 
-Ball* Application::createBall(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::SceneManager* scnMgr, Ogre::Real mss, Simulator* mySim) {
+Ball* Application::createBall(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Simulator* mySim) {
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
 	const btTransform pos;
 	OgreMotionState* ms = new OgreMotionState(pos, sn);
+	sn->setScale(scale,scale,scale);
 
-	Ball* obj = new Ball(nme, mSceneManager, sn, ent, ms, mySim, mss);
+	Ball* obj = new Ball(nme, mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale);
 	obj->addToSimulator();
 
 	return obj;
 }
 
-Paddle* Application::createPaddle(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::SceneManager* scnMgr, Ogre::Real mss, Simulator* mySim) {
+Paddle* Application::createPaddle(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Simulator* mySim) {
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
-	sn->setScale(100.0f,100.0f,100.0f);
-	//sn->showBoundingBox(true);
+	sn->setScale(scale,scale,scale);
+	// sn->showBoundingBox(true);
 	const btTransform pos;
 	OgreMotionState* ms = new OgreMotionState(pos, sn);
 
-	Paddle* obj = new Paddle(nme, mSceneManager, sn, ent, ms, mySim, mss);
+	Paddle* obj = new Paddle(nme, mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale);
 	obj->addToSimulator();
 
 
