@@ -120,8 +120,8 @@ void Application::init()
 
 		// Test Bullet
 		Simulator* mySim = new Simulator();
-		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, -100, 0, 100, mSceneManager, 1.0f, .7f, 0.0f, mySim);
-		GameObject* b2 = createBall("test2", "sphere.mesh", 5, -400, 0, 1, mSceneManager, 0.0f, .7f, 0.0f, mySim);
+		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, -400, 50, 100, mSceneManager, 0.0f, 1.0f, 0.0f, mySim);
+		GameObject* b2 = createBall("test2", "sphere.mesh", 5, -100, 0, .2, mSceneManager, 1.0f, 1.0f, 0.0f, mySim);
 
 		_theBall = b2;
 
