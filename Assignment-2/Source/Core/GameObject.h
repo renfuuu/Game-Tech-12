@@ -5,6 +5,7 @@
 #include "Simulator.h"
 #include "CollisionContext.h"
 #include "OgreMotionState.h"
+#include "OISManager.h"
 
 #include <OgreCamera.h>
 #include <OgreEntity.h>
@@ -58,4 +59,5 @@ public:
 	void setPosition(const Ogre::Vector3& pos);
 	Ogre::SceneNode* getNode();
 	virtual void update() = 0;
+	virtual void movePaddle(OISManager* _oisManager, int height, int width);
 };

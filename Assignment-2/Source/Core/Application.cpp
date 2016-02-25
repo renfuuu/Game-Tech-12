@@ -108,6 +108,9 @@ void Application::init()
 		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/scripts", "FileSystem");
 		ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
+		score = new OgreText();
+		score->setPos(0.02f, 0.9f); // Text position, using relative co-ordinates
+		score->setCol(1.0f, 1.0f, 1.0f, 1.0f); // Text colour (Red, Green, Blue, Alpha)    
 		// Add viewport
 		Viewport * vp = mRenderWindow->addViewport(mCamera);
 		mCamera->setAutoAspectRatio(true);
@@ -145,8 +148,6 @@ void Application::init()
 		_thePaddle = b1;
 		_theBall = b2;
 
-		//_thePaddle->getNode()->yaw(Ogre::Degree(180));
-
 		_simulator = mySim;
 	}
 	catch (Exception e) {
@@ -170,7 +171,7 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 	}
 		try {
 			_oisManager->capture();
-			movePaddle();
+			_thePaddle->movePaddle(_oisManager, height, width);
 
 		// close window when ESC is pressed
 		if(_oisManager->getKeyPressed() == OIS::KC_ESCAPE)
@@ -202,44 +203,8 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 
 // Called once per predefined frame
 void Application::update(const FrameEvent &evt) {
-
-}
-
-void Application::movePaddle() {
-	int mouseX = _oisManager->getMouseXAxis();
-	int mouseY = Ogre::Math::Clamp(_oisManager->getMouseYAxis(), -100, 220);
-	int paddleZ = (height/4)-(Ogre::Math::Sqr(mouseX)/width + Ogre::Math::Sqr((width/height)*1.5*mouseY)/height);
-
-	Ogre::SceneNode* mNode = _thePaddle->getNode();
-
-	Ogre::Vector3 surfacePoint(mouseX, paddleZ, mouseY);
-	Ogre::Quaternion orient = mNode->getOrientation();
-	Ogre::Vector3 normal = surfacePoint.normalisedCopy();
-	Ogre:Vector3 normalCopy = -(surfacePoint + Ogre::Vector3(0,0,0)).normalisedCopy();
-	Ogre::Vector3 ortho1 = (Ogre::Vector3(0, 1, 0).crossProduct(normalCopy)).normalisedCopy();
-	Ogre::Vector3 ortho2 = (normalCopy.crossProduct(ortho1)).normalisedCopy();
-
-	Ogre::Quaternion newOrientation(ortho1, ortho2, normalCopy);
-	mNode->setOrientation(newOrientation);
-
-	_thePaddle->setPosition(surfacePoint + normal*50);
-
-	if (mouseX < 0) {
-		Ogre::Vector3 u = newOrientation.yAxis();
-		Ogre::Vector3 v = Ogre::Vector3(0, 0, 1);
-		Ogre::Real cosine = u.dotProduct(v);
-
-		Ogre::Real sin = u.crossProduct(v).length();
-		_thePaddle->getNode()->roll(Ogre::Math::ATan2(sin, cosine));
-	}
-	else {
-		Ogre::Vector3 u = -newOrientation.yAxis();
-		Ogre::Vector3 v = Ogre::Vector3(0, 0, 1);
-		Ogre::Real cosine = u.dotProduct(v);
-
-		Ogre::Real sin = u.crossProduct(v).length();
-		_thePaddle->getNode()->roll(Ogre::Math::ATan2(sin, cosine));
-	}
+	static int points = 0;
+	score->setText("Score: " + std::to_string(points));
 }
 
 
