@@ -41,21 +41,16 @@ void Paddle::movePaddle(OISManager* _oisManager, int height, int width) {
 	mNode->setOrientation(newOrientation);
 
 	this->setPosition(surfacePoint + normal*50);
+	
+	Ogre::Vector3 u
+	if (mouseX < 0) 
+		u = newOrientation.yAxis();
+	else 
+		u = -newOrientation.yAxis();
+	
+	Ogre::Vector3 v = Ogre::Vector3(0, 0, 1);
+	Ogre::Real cosine = u.dotProduct(v);
 
-	if (mouseX < 0) {
-		Ogre::Vector3 u = newOrientation.yAxis();
-		Ogre::Vector3 v = Ogre::Vector3(0, 0, 1);
-		Ogre::Real cosine = u.dotProduct(v);
-
-		Ogre::Real sin = u.crossProduct(v).length();
-		mNode->roll(Ogre::Math::ATan2(sin, cosine));
-	}
-	else {
-		Ogre::Vector3 u = -newOrientation.yAxis();
-		Ogre::Vector3 v = Ogre::Vector3(0, 0, 1);
-		Ogre::Real cosine = u.dotProduct(v);
-
-		Ogre::Real sin = u.crossProduct(v).length();
-		mNode->roll(Ogre::Math::ATan2(sin, cosine));
-	}
+	Ogre::Real sin = u.crossProduct(v).length();
+	mNode->roll(Ogre::Math::ATan2(sin, cosine));
 }
