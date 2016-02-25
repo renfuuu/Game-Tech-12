@@ -61,5 +61,6 @@ public:
 	Ogre::SceneNode* getNode();
 	void reset();
 	virtual void update() = 0;
+	virtual void getPoints();
 	virtual void movePaddle(OISManager* _oisManager, int height, int width);
 };

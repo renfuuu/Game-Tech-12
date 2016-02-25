@@ -213,7 +213,7 @@ OIS::Keyboard* OISManager::getKeyboard( void ) {
  
 bool OISManager::keyPressed( const OIS::KeyEvent &e ) {
     if ( e.key == OIS::KC_SPACE )
-        MultiPlatformHelper::print("Pressed: P\n");
+        MultiPlatformHelper::print("Pressed: SPACE\n");
     mKeyPressed = e.key;
 
     return true;
