@@ -108,6 +108,9 @@ void Application::init()
 		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/scripts", "FileSystem");
 		ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
+		score = new OgreText();
+		score->setPos(0.02f, 0.9f); // Text position, using relative co-ordinates
+		score->setCol(1.0f, 1.0f, 1.0f, 1.0f); // Text colour (Red, Green, Blue, Alpha)    
 		// Add viewport
 		Viewport * vp = mRenderWindow->addViewport(mCamera);
 		mCamera->setAutoAspectRatio(true);
@@ -201,7 +204,8 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 
 // Called once per predefined frame
 void Application::update(const FrameEvent &evt) {
-
+	static int points = 0;
+	score->setText("Score: " + std::to_string(points));
 }
 
 void Application::movePaddle() {

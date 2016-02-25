@@ -79,3 +79,4 @@ int OgreText::init = 0;
 static Ogre::String text;
 OgreText *trueFPS;
 OgreText *setFPS;
+OgreText *score;
