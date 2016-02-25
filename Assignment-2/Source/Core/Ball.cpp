@@ -21,13 +21,13 @@ void Ball::updateTransform() {
 
 void Ball::update() {
 	if (context->hit) {
-		if(context->getTheObject() != previousHit && context->getTheObject()-> == ){
+		if(context->getTheObject() != previousHit && context->getTheObject()->getName() == "test" ){
 			ballPoints++;
 		}
 	}
 	previousHit = context->getTheObject(); 
 }
 
-int getPoints(){
+int Ball::getPoints(){
 	return ballPoints;
 }
