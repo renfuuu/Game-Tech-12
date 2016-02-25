@@ -115,13 +115,15 @@ void Application::init()
 		t1 = new Timer();
 
 		// Add some light
-		mSceneManager->setAmbientLight(Ogre::ColourValue(0.2, 0.2, 0.2));
+		mSceneManager->setAmbientLight(Ogre::ColourValue(0.4, 0.4, 0.4));
 		mSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
 		Ogre::Light* light = mSceneManager->createLight("MainLight");
 		light->setCastShadows(true);
 		light->setPosition(0, 500, 0);
 		light->setType(Ogre::Light::LightTypes::LT_POINT);
+		// light->setDiffuseColour(99.2, 72.2, 7.5);
+		// light->setSpecularColour(Ogre::ColourValue::White);
 		mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
 		// Setup OISManager
@@ -133,13 +135,12 @@ void Application::init()
 		// Test Bullet
 		Simulator* mySim = new Simulator();
 		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, 0, 0, 100, mSceneManager, 0.0f, 1.0f, 0.8f, true, mySim);
-		GameObject* b2 = createBall("test2", "sphere.mesh", 5, 300, 0, .35, mSceneManager, 10000.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b3 = createWall("test3", "floor.mesh", 0, -100, 0, 100, Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, .1f, 0.8f, false, mySim);
-		GameObject* b4 = createWall("test4", "ceiling.mesh", 0, 600, 0, 100, Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, .1f, 0.8f, false, mySim);
-		//TODO: need to move the walls into the right position, also add textures to the rest of planes
-		// GameObject* b5 = createWall("test5", "backwall.mesh", 0, 0, -400, 100, Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
-		// GameObject* b6 = createWall("test6", "leftwall.mesh", 400, 0, 0, 100, Ogre::Degree(90), Ogre::Degree(90), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
-		// GameObject* b7 = createWall("test7", "rightwall.mesh", -400, 0, 0, 100, Ogre::Degree(90), Ogre::Degree(90), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b2 = createBall("test2", "sphere.mesh", 5, 300, 0, .35, mSceneManager, 1.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b3 = createWall("test3", "floor.mesh", 0, -100, -530, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b4 = createWall("test4", "ceiling.mesh", 0, 600, -530, Ogre::Vector3(120, 120, 200), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 0.3f, 0.8f, false, mySim);
+		GameObject* b5 = createWall("test5", "backwall.mesh", 0, 300, -1450, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 0.3f, 0.8f, false, mySim);
+		GameObject* b6 = createWall("test6", "leftwall.mesh", 600, 0, -530, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b7 = createWall("test7", "rightwall.mesh", -600, 0, -530, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
 
 		_thePaddle = b1;
 		_theBall = b2;
@@ -288,13 +289,13 @@ Paddle* Application::createPaddle(Ogre::String nme, Ogre::String meshName, int x
 	return obj;
 }
 
-Wall* Application::createWall(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::Degree pitch, Ogre::Degree yaw, Ogre::Degree roll, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
+Wall* Application::createWall(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::Vector3 scale, Ogre::Degree pitch, Ogre::Degree yaw, Ogre::Degree roll, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
 	const btTransform pos;
 	OgreMotionState* ms = new OgreMotionState(pos, sn);
-	sn->setScale(scale,scale,scale);
+	sn->setScale(scale.x, scale.y, scale.z);
 
 	sn->pitch(pitch);
 	sn->yaw(yaw);

@@ -9,6 +9,12 @@ GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::Scene
 		inertia.setZero();
 }
 
+GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Vector3 scal, bool kin) :
+	name(nme), sceneMgr(scnMgr), rootNode(node), geom(ent), vscale(scal), motionState(ms), simulator(sim), tr(), inertia(), restitution(rest), friction(frict), kinematic(kin),
+	needsUpdates(false), mass(mss) {
+		inertia.setZero();
+}
+
 void GameObject::updateTransform() {
 	Ogre::Vector3 pos = rootNode->getPosition();
 	tr.setOrigin(btVector3(pos.x, pos.y, pos.z));
