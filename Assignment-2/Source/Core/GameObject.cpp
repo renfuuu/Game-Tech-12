@@ -7,6 +7,7 @@ GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::Scene
 	name(nme), sceneMgr(scnMgr), rootNode(node), geom(ent), scale(scal), motionState(ms), simulator(sim), tr(), inertia(), restitution(rest), friction(frict), kinematic(kin),
 	needsUpdates(false), mass(mss) {
 		inertia.setZero();
+		startPos = Ogre::Vector3(rootNode->getPosition());
 }
 
 GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Vector3 scal, bool kin) :
@@ -39,7 +40,8 @@ void GameObject::setPosition(float x, float y, float z) {
 		updateTransform();
 	}
 	else {
-		// body->
+		rootNode->setPosition(x,y,z);
+		updateTransform();
 	}
 }
 
@@ -48,10 +50,21 @@ void GameObject::setPosition(const Ogre::Vector3& pos) {
 		rootNode->setPosition(pos);
 		updateTransform();
 	}
+	else {
+		btTransform transform = body->getCenterOfMassTransform();
+		transform.setOrigin(btVector3(pos.x, pos.y, pos.z));
+		body->setCenterOfMassTransform(transform);
+		updateTransform();
+	}
 }
 
 Ogre::SceneNode* GameObject::getNode() {
 	return rootNode;
+}
+
+void GameObject::reset() {
+	setPosition(startPos);
+	body->setLinearVelocity(btVector3(0,0,0));
 }
 
 void GameObject::applyForce(float x, float y, float z) {

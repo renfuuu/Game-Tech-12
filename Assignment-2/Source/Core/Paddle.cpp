@@ -24,9 +24,9 @@ void Paddle::update() {
 }
 
 void Paddle::movePaddle(OISManager* _oisManager, int height, int width) {
-	int mouseX = _oisManager->getMouseXAxis();
-	int mouseY = Ogre::Math::Clamp(_oisManager->getMouseYAxis(), -100, 220);
-	int paddleZ = (height/4)-(Ogre::Math::Sqr(mouseX)/width + Ogre::Math::Sqr((width/height)*1.5*mouseY)/height);
+	int mouseX = Ogre::Math::Clamp(_oisManager->getMouseXAxis(), -300, 300);
+	int mouseY = Ogre::Math::Clamp(_oisManager->getMouseYAxis(), -100, 200);
+	int paddleZ = (height/3)-(Ogre::Math::Sqr(mouseX)/(width*.75) + Ogre::Math::Sqr((width/height)*1.5*mouseY)/(height*.75));
 
 	Ogre::SceneNode* mNode = rootNode;
 

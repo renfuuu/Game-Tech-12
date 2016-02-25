@@ -37,6 +37,7 @@ public:
     int getMouseXAxis();
     int getMouseYAxis();
     OIS::KeyCode getKeyPressed();
+    OIS::KeyCode lastKeyPressed();
 
 private:
     OISManager( void );
