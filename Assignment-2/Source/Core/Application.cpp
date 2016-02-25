@@ -179,10 +179,6 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		// close window when ESC is pressed
 		if(_oisManager->getKeyPressed() == OIS::KC_ESCAPE)
 			mRunning = false;
-		else if(_oisManager->lastKeyPressed() == OIS::KC_SPACE){
-			//restart game
-			points = 0;
-		}
 	}
 	catch (Exception e) {
 
@@ -214,6 +210,7 @@ void Application::update(const FrameEvent &evt) {
 
 	if(_oisManager->lastKeyPressed() == OIS::KC_SPACE) {
 		_theBall->reset();
+		points = 0;
 	}
 }
 
