@@ -21,6 +21,7 @@
 #include "Simulator.h"
 #include "Ball.h"
 #include "Paddle.h"
+#include "Wall.h"
 
 class Application : public Ogre::FrameListener, public Ogre::WindowEventListener, public Ogre::RenderTargetListener
 {
@@ -54,5 +55,6 @@ public:
 	void update(const Ogre::FrameEvent &evt);
 	Ball* createBall(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim);
 	Paddle* createPaddle(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim);
+	Wall* createWall(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::Degree pitch, Ogre::Degree yaw, Ogre::Degree roll, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim);
 	void setupResources(void);
 };

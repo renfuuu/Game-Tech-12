@@ -134,9 +134,15 @@ void Application::init()
 		Simulator* mySim = new Simulator();
 		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, 0, 0, 100, mSceneManager, 0.0f, 1.0f, 0.8f, true, mySim);
 		GameObject* b2 = createBall("test2", "sphere.mesh", 5, 300, 0, .15, mSceneManager, 1.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b3 = createWall("test3", "floor.mesh", 0, -100, 0, 100, Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b4 = createWall("test4", "ceiling.mesh", 0, 600, 0, 100, Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		//TODO: need to move the walls into the right position, also add textures to the rest of planes
+		// GameObject* b5 = createWall("test5", "backwall.mesh", 0, 0, -400, 100, Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		// GameObject* b6 = createWall("test6", "leftwall.mesh", 400, 0, 0, 100, Ogre::Degree(90), Ogre::Degree(90), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		// GameObject* b7 = createWall("test7", "rightwall.mesh", -400, 0, 0, 100, Ogre::Degree(90), Ogre::Degree(90), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
 
-		_theBall = b2;
 		_thePaddle = b1;
+		_theBall = b2;
 
 		_simulator = mySim;
 	}
@@ -198,6 +204,7 @@ void Application::update(const FrameEvent &evt) {
 		// Ogre::Quaternion quat = src.getRotationTo(normal);
 		// mNode->rotate(quat);
 
+		// close window when ESC is pressed
 		if(_oisManager->getKeyPressed() == OIS::KC_ESCAPE)
 			mRunning = false;
 	}
@@ -249,6 +256,24 @@ Paddle* Application::createPaddle(Ogre::String nme, Ogre::String meshName, int x
 	Paddle* obj = new Paddle(nme, mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
 	obj->addToSimulator();
 
+
+	return obj;
+}
+
+Wall* Application::createWall(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::Degree pitch, Ogre::Degree yaw, Ogre::Degree roll, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
+	createRootEntity(nme, meshName, x, y, z);
+	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
+	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
+	const btTransform pos;
+	OgreMotionState* ms = new OgreMotionState(pos, sn);
+	sn->setScale(scale,scale,scale);
+
+	sn->pitch(pitch);
+	sn->yaw(yaw);
+	sn->roll(roll);
+
+	Wall* obj = new Wall(nme, mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
+	obj->addToSimulator();
 
 	return obj;
 }
