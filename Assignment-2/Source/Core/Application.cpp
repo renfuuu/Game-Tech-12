@@ -19,7 +19,8 @@
 
 using namespace Ogre;
 
-Application::Application()
+Application::Application():
+points(0)
 {
 }
 
@@ -144,6 +145,8 @@ void Application::init()
 		GameObject* b5 = createWall("test5", "backwall.mesh", 0, 300, -1450, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 0.8f, 0.8f, false, mySim);
 		GameObject* b6 = createWall("test6", "leftwall.mesh", 600, 0, -530, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
 		GameObject* b7 = createWall("test7", "rightwall.mesh", -600, 0, -530, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b8 = createWall("test8", "rightwall.mesh", -600, 0, -530, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b9 = createWall("test9", "backwall.mesh", 0, 300, 400, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, 0.0f, 0.8f, 0.8f, false, mySim);
 
 		_thePaddle = b1;
 		_theBall = b2;
@@ -176,6 +179,10 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		// close window when ESC is pressed
 		if(_oisManager->getKeyPressed() == OIS::KC_ESCAPE)
 			mRunning = false;
+		else if(_oisManager->getKeyPressed() == OIS::KC_SPACE){
+			//restart game
+			points = 0;
+		}
 	}
 	catch (Exception e) {
 
@@ -202,8 +209,7 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 }
 
 // Called once per predefined frame
-void Application::update(const FrameEvent &evt) {
-	static int points = 0;
+void Application::update(const FrameEvent &evt) {	
 	score->setText("Score: " + std::to_string(points));
 
 	if(_oisManager->lastKeyPressed() == OIS::KC_SPACE) {
