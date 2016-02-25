@@ -97,3 +97,11 @@ void GameObject::addToSimulator() {
 	cCallBack = new BulletContactCallback(*body, *context);
 	simulator->addObject(this);
 }
+
+int GameObject::getPoints(){
+	return 0;
+}
+
+Ogre::String GameObject::getName(){
+	return name;
+}
