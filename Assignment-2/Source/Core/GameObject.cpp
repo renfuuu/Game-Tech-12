@@ -32,6 +32,9 @@ void GameObject::setPosition(float x, float y, float z) {
 		rootNode->setPosition(x,y,z);
 		updateTransform();
 	}
+	else {
+		// body->
+	}
 }
 
 void GameObject::setPosition(const Ogre::Vector3& pos) {
@@ -44,7 +47,6 @@ void GameObject::setPosition(const Ogre::Vector3& pos) {
 Ogre::SceneNode* GameObject::getNode() {
 	return rootNode;
 }
-
 
 void GameObject::applyForce(float x, float y, float z) {
 	body->applyCentralForce(btVector3(x, y, z));

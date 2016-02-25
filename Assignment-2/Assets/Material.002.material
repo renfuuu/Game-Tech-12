@@ -1,4 +1,4 @@
-// Material.002 genrated by blender2ogre 0.6.0
+// Material.001 genrated by blender2ogre 0.6.0
 
 material Material.002 
 {
@@ -6,10 +6,10 @@ material Material.002
 
     technique
     {
-        pass Material.002
+        pass Material.001
         {
-            ambient 0.05442681908607483 0.05496611073613167 0.051019422709941864 1.0
-            diffuse 0.04354145591767811 0.043972889244152435 0.040815538776152405 1.0
+            ambient 1.0 0.06035815179347992 0.0 1.0
+            diffuse 0.800000011920929 0.048286522154309175 0.0 1.0
             specular 0.5 0.5 0.5 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 

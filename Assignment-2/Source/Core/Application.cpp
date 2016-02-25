@@ -133,9 +133,9 @@ void Application::init()
 		// Test Bullet
 		Simulator* mySim = new Simulator();
 		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, 0, 0, 100, mSceneManager, 0.0f, 1.0f, 0.8f, true, mySim);
-		GameObject* b2 = createBall("test2", "sphere.mesh", 5, 300, 0, .15, mSceneManager, 1.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b3 = createWall("test3", "floor.mesh", 0, -100, 0, 100, Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b4 = createWall("test4", "ceiling.mesh", 0, 600, 0, 100, Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b2 = createBall("test2", "sphere.mesh", 5, 300, 0, .35, mSceneManager, 10000.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b3 = createWall("test3", "floor.mesh", 0, -100, 0, 100, Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, .1f, 0.8f, false, mySim);
+		GameObject* b4 = createWall("test4", "ceiling.mesh", 0, 600, 0, 100, Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, .1f, 0.8f, false, mySim);
 		//TODO: need to move the walls into the right position, also add textures to the rest of planes
 		// GameObject* b5 = createWall("test5", "backwall.mesh", 0, 0, -400, 100, Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
 		// GameObject* b6 = createWall("test6", "leftwall.mesh", 400, 0, 0, 100, Ogre::Degree(90), Ogre::Degree(90), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
@@ -167,59 +167,9 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 	{
 		return false;
 	}
-
-	// Code per frame in fixed FPS
-	float temp = t1->getMilliseconds();
-	if ((temp - dTime) >= (1.0 / fps)*1000.0) {
-		update(evt);
-		dTime = temp;
-	}
-
-	_simulator->stepSimulation(evt.timeSinceLastFrame, 10, 1 / fps);
-
-	return true;
-}
-
-// Called once per predefined frame
-void Application::update(const FrameEvent &evt) {
-	try {
-		_oisManager->capture();
-		int mouseX = _oisManager->getMouseXAxis();
-		int mouseY = Ogre::Math::Clamp(_oisManager->getMouseYAxis(), -100, 220);
-		int paddleZ = (height/4)-(Ogre::Math::Sqr(mouseX)/width + Ogre::Math::Sqr((width/height)*1.5*mouseY)/height);
-
-		Ogre::SceneNode* mNode = _thePaddle->getNode();
-
-		Ogre::Vector3 surfacePoint(mouseX, paddleZ, mouseY);
-		Ogre::Quaternion orient = mNode->getOrientation();
-		Ogre::Vector3 normal = surfacePoint.normalisedCopy();
-		Ogre:Vector3 normalCopy = -(surfacePoint + Ogre::Vector3(0,0,0)).normalisedCopy();
-		Ogre::Vector3 ortho1 = (Ogre::Vector3(0, 1, 0).crossProduct(normalCopy)).normalisedCopy();
-		Ogre::Vector3 ortho2 = (normalCopy.crossProduct(ortho1)).normalisedCopy();
-
-		Ogre::Quaternion newOrientation(ortho1, ortho2, normalCopy);
-		mNode->setOrientation(newOrientation);
-
-		_thePaddle->setPosition(surfacePoint + normal*50);
-
-		if (mouseX < 0) {
-			Ogre::Vector3 u = newOrientation.yAxis();
-			//Ogre::Vector3 v = (Ogre::Vector3(0, 0, 500) - surfacePoint).normalisedCopy();
-			Ogre::Vector3 v = Ogre::Vector3(0, 0, 1);
-			Ogre::Real cosine = u.dotProduct(v);
-
-			Ogre::Real sin = u.crossProduct(v).length();
-			_thePaddle->getNode()->roll(Ogre::Math::ATan2(sin, cosine));
-		}
-		else {
-			Ogre::Vector3 u = -newOrientation.yAxis();
-			//Ogre::Vector3 v = (Ogre::Vector3(0, 0, 500) - surfacePoint).normalisedCopy();
-			Ogre::Vector3 v = Ogre::Vector3(0, 0, 1);
-			Ogre::Real cosine = u.dotProduct(v);
-
-			Ogre::Real sin = u.crossProduct(v).length();
-			_thePaddle->getNode()->roll(Ogre::Math::ATan2(sin, cosine));
-		}
+		try {
+			_oisManager->capture();
+			movePaddle();
 
 		// close window when ESC is pressed
 		if(_oisManager->getKeyPressed() == OIS::KC_ESCAPE)
@@ -227,6 +177,67 @@ void Application::update(const FrameEvent &evt) {
 	}
 	catch (Exception e) {
 
+	}
+	// Code per frame in fixed FPS
+	float temp = t1->getMilliseconds();
+	if ((temp - dTime) >= (1.0 / fps)*1000.0) {
+		update(evt);
+		dTime = temp;
+	}
+
+	_simulator->stepSimulation(evt.timeSinceLastFrame, 50, 1 / fps);
+
+	// Constrains the ball's speed
+	static int maxSpeed = 3500;
+	btVector3 velocity = _theBall->getBody()->getLinearVelocity();
+    btScalar speed = velocity.length();
+    if(speed > maxSpeed) {
+        velocity *= maxSpeed/speed;
+        _theBall->getBody()->setLinearVelocity(velocity);
+    }
+
+	return true;
+}
+
+// Called once per predefined frame
+void Application::update(const FrameEvent &evt) {
+
+}
+
+void Application::movePaddle() {
+	int mouseX = _oisManager->getMouseXAxis();
+	int mouseY = Ogre::Math::Clamp(_oisManager->getMouseYAxis(), -100, 220);
+	int paddleZ = (height/4)-(Ogre::Math::Sqr(mouseX)/width + Ogre::Math::Sqr((width/height)*1.5*mouseY)/height);
+
+	Ogre::SceneNode* mNode = _thePaddle->getNode();
+
+	Ogre::Vector3 surfacePoint(mouseX, paddleZ, mouseY);
+	Ogre::Quaternion orient = mNode->getOrientation();
+	Ogre::Vector3 normal = surfacePoint.normalisedCopy();
+	Ogre:Vector3 normalCopy = -(surfacePoint + Ogre::Vector3(0,0,0)).normalisedCopy();
+	Ogre::Vector3 ortho1 = (Ogre::Vector3(0, 1, 0).crossProduct(normalCopy)).normalisedCopy();
+	Ogre::Vector3 ortho2 = (normalCopy.crossProduct(ortho1)).normalisedCopy();
+
+	Ogre::Quaternion newOrientation(ortho1, ortho2, normalCopy);
+	mNode->setOrientation(newOrientation);
+
+	_thePaddle->setPosition(surfacePoint + normal*50);
+
+	if (mouseX < 0) {
+		Ogre::Vector3 u = newOrientation.yAxis();
+		Ogre::Vector3 v = Ogre::Vector3(0, 0, 1);
+		Ogre::Real cosine = u.dotProduct(v);
+
+		Ogre::Real sin = u.crossProduct(v).length();
+		_thePaddle->getNode()->roll(Ogre::Math::ATan2(sin, cosine));
+	}
+	else {
+		Ogre::Vector3 u = -newOrientation.yAxis();
+		Ogre::Vector3 v = Ogre::Vector3(0, 0, 1);
+		Ogre::Real cosine = u.dotProduct(v);
+
+		Ogre::Real sin = u.crossProduct(v).length();
+		_thePaddle->getNode()->roll(Ogre::Math::ATan2(sin, cosine));
 	}
 }
 
