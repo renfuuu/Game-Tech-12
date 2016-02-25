@@ -34,6 +34,13 @@ void GameObject::setPosition(float x, float y, float z) {
 	}
 }
 
+void GameObject::setPosition(const Ogre::Vector3& pos) {
+	if (kinematic) {
+		rootNode->setPosition(pos);
+		updateTransform();
+	}
+}
+
 Ogre::SceneNode* GameObject::getNode() {
 	return rootNode;
 }

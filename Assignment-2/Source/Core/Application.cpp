@@ -144,6 +144,8 @@ void Application::init()
 		_thePaddle = b1;
 		_theBall = b2;
 
+		//_thePaddle->getNode()->yaw(Ogre::Degree(180));
+
 		_simulator = mySim;
 	}
 	catch (Exception e) {
@@ -183,26 +185,41 @@ void Application::update(const FrameEvent &evt) {
 	try {
 		_oisManager->capture();
 		int mouseX = _oisManager->getMouseXAxis();
-		int mouseY = Ogre::Math::Clamp(_oisManager->getMouseYAxis(), 1, 220);
+		int mouseY = Ogre::Math::Clamp(_oisManager->getMouseYAxis(), -100, 220);
 		int paddleZ = (height/4)-(Ogre::Math::Sqr(mouseX)/width + Ogre::Math::Sqr((width/height)*1.5*mouseY)/height);
 
-		_thePaddle->setPosition(mouseX, paddleZ ,mouseY);
-/*
 		Ogre::SceneNode* mNode = _thePaddle->getNode();
 
- 		Ogre::Quaternion orient = mNode->getOrientation();
-		Ogre::Vector3 oldUp = orient.yAxis();
-		Ogre::Vector3 newUp = mNode->getPosition().normalisedCopy();
-		Ogre::Quaternion rot = oldUp.getRotationTo(newUp);
-		mNode->rotate(rot);
-*/
-		
+		Ogre::Vector3 surfacePoint(mouseX, paddleZ, mouseY);
+		Ogre::Quaternion orient = mNode->getOrientation();
+		Ogre::Vector3 normal = surfacePoint.normalisedCopy();
+		Ogre:Vector3 normalCopy = -(surfacePoint + Ogre::Vector3(0,0,0)).normalisedCopy();
+		Ogre::Vector3 ortho1 = (Ogre::Vector3(0, 1, 0).crossProduct(normalCopy)).normalisedCopy();
+		Ogre::Vector3 ortho2 = (normalCopy.crossProduct(ortho1)).normalisedCopy();
 
-		// Ogre::Vector3 normal = mNode->getPosition();
-		// normal.normalise();
-		// Ogre::Vector3 src = -mNode->getOrientation().zAxis();
-		// Ogre::Quaternion quat = src.getRotationTo(normal);
-		// mNode->rotate(quat);
+		Ogre::Quaternion newOrientation(ortho1, ortho2, normalCopy);
+		mNode->setOrientation(newOrientation);
+
+		_thePaddle->setPosition(surfacePoint + normal*50);
+
+		if (mouseX < 0) {
+			Ogre::Vector3 u = newOrientation.yAxis();
+			//Ogre::Vector3 v = (Ogre::Vector3(0, 0, 500) - surfacePoint).normalisedCopy();
+			Ogre::Vector3 v = Ogre::Vector3(0, 0, 1);
+			Ogre::Real cosine = u.dotProduct(v);
+
+			Ogre::Real sin = u.crossProduct(v).length();
+			_thePaddle->getNode()->roll(Ogre::Math::ATan2(sin, cosine));
+		}
+		else {
+			Ogre::Vector3 u = -newOrientation.yAxis();
+			//Ogre::Vector3 v = (Ogre::Vector3(0, 0, 500) - surfacePoint).normalisedCopy();
+			Ogre::Vector3 v = Ogre::Vector3(0, 0, 1);
+			Ogre::Real cosine = u.dotProduct(v);
+
+			Ogre::Real sin = u.crossProduct(v).length();
+			_thePaddle->getNode()->roll(Ogre::Math::ATan2(sin, cosine));
+		}
 
 		// close window when ESC is pressed
 		if(_oisManager->getKeyPressed() == OIS::KC_ESCAPE)
