@@ -212,11 +212,17 @@ OIS::Keyboard* OISManager::getKeyboard( void ) {
 
  
 bool OISManager::keyPressed( const OIS::KeyEvent &e ) {
-    if ( e.key == OIS::KC_P )
+    if ( e.key == OIS::KC_SPACE )
         MultiPlatformHelper::print("Pressed: P\n");
     mKeyPressed = e.key;
 
     return true;
+}
+
+OIS::KeyCode OISManager::lastKeyPressed() {
+    OIS::KeyCode ret = mKeyPressed;
+    mKeyPressed = OIS::KC_UNASSIGNED;
+    return ret;
 }
 
 bool OISManager::keyReleased( const OIS::KeyEvent &e ) {

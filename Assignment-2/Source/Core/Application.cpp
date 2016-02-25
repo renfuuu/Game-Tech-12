@@ -205,6 +205,10 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 void Application::update(const FrameEvent &evt) {
 	static int points = 0;
 	score->setText("Score: " + std::to_string(points));
+
+	if(_oisManager->lastKeyPressed() == OIS::KC_SPACE) {
+		_theBall->reset();
+	}
 }
 
 

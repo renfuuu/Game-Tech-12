@@ -29,6 +29,7 @@ protected:
 	Ogre::Entity* geom;
 	Ogre::Real scale;
 	Ogre::Vector3 vscale;
+	Ogre::Vector3 startPos;
 	OgreMotionState* motionState;
 
 	Simulator* simulator;
@@ -58,6 +59,7 @@ public:
 	void setPosition(float x, float y, float z);
 	void setPosition(const Ogre::Vector3& pos);
 	Ogre::SceneNode* getNode();
+	void reset();
 	virtual void update() = 0;
 	virtual void movePaddle(OISManager* _oisManager, int height, int width);
 };
