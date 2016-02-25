@@ -237,6 +237,7 @@ Ball* Application::createBall(Ogre::String nme, Ogre::String meshName, int x, in
 	const btTransform pos;
 	OgreMotionState* ms = new OgreMotionState(pos, sn);
 	sn->setScale(scale,scale,scale);
+	ent->setMaterialName("blue");
 
 	Ball* obj = new Ball(nme, mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
 	obj->addToSimulator();

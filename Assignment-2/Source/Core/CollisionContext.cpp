@@ -14,3 +14,7 @@ void CollisionContext::reset() {
 	normal.setZero();
 	velocity.setZero();
 }
+
+GameObject* CollisionContext::getTheObject(void){
+	return theObject;
+}

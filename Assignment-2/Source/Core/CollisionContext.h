@@ -20,4 +20,7 @@ struct CollisionContext {
 	CollisionContext();
 
 	void reset();
+
+public:
+	GameObject* getTheObject(void);
 };

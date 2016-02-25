@@ -10,6 +10,10 @@
 * ./assignment2
 
 ##### To build from source:
+* chmod u+x ./create
+* ./create
+
+##### Alternative build
 * mkdir build
 * cp -avr Linux-Build-Tools/. build/
 * cd build
@@ -17,7 +21,3 @@
 * ./makeit
 Then, to run it,
 * ./assignment2
-
-##### Alternative build
-* chmod u+x ./create
-* ./create
