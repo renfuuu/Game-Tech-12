@@ -42,6 +42,8 @@ public:
 	Simulator* _simulator;
 	GameObject* _theBall;
 	GameObject* _thePaddle;
+	int points;
+
 	int width;
 	int height;
 
