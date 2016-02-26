@@ -42,7 +42,7 @@ void Paddle::movePaddle(OISManager* _oisManager, int height, int width) {
 
 	this->setPosition(surfacePoint + normal*50);
 	
-	Ogre::Vector3 u
+	Ogre::Vector3 u;
 	if (mouseX < 0) 
 		u = newOrientation.yAxis();
 	else 
