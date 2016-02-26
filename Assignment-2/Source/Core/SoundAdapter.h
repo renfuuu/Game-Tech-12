@@ -13,11 +13,11 @@
 #include <SDL/SDL_mixer.h>
 #endif
 
-
-#define NUM_SOUNDS 5  //WallBounce, PaddleBounce, GameWin, GameLoss, ClickTesting
+//#define NUM_SOUNDS 4
 
 class SoundAdapter {
 	public:
+		enum { WALL_BOUNCE, PADDLE_BOUNCE, GAME_WIN, GAME_LOSS, NUM_SOUNDS } sounds;
 		SoundAdapter(void);
 		~SoundAdapter(void);
 		void playSound(int);

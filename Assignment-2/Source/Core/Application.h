@@ -17,6 +17,7 @@
 
 #include <unordered_map>
 #include <string>
+#include "SoundAdapter.h"
 #include "OISManager.h"
 #include "Simulator.h"
 #include "Ball.h"
@@ -38,6 +39,7 @@ public:
 	Ogre::SceneManager * mSceneManager;
 	Ogre::Camera * mCamera;
 	Ogre::Timer* t1;
+	SoundAdapter* sa;
 	OISManager* _oisManager;
 	Simulator* _simulator;
 	GameObject* _theBall;

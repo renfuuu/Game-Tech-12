@@ -12,7 +12,6 @@
 #include <string>
 #include "btBulletDynamicsCommon.h"
 #include "OISManager.h"
-#include "SoundAdapter.h"
 #include "OgreMotionState.h"
 #include "Simulator.h"
 #include "GameObject.h"
@@ -91,7 +90,7 @@ void Application::init()
 
 	// These objects are just to test that we can build bullet and sdl
 	btBoxShape* bulletTest = new btBoxShape(btVector3(1, 1, 1));
-	SoundAdapter* soundTest = new SoundAdapter();
+	sa = new SoundAdapter();
 	// GameObject* obj = new GameObject();
 
 
@@ -244,7 +243,7 @@ Ball* Application::createBall(Ogre::String nme, Ogre::String meshName, GameObjec
 	sn->setScale(scale,scale,scale);
 	ent->setMaterialName("blue");
 
-	Ball* obj = new Ball(nme, paddle->getName(), mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
+	Ball* obj = new Ball(nme, paddle->getName(), mSceneManager, sn, ent, ms, mySim, sa, mss, rest, frict, scale, kinematic);
 	obj->addToSimulator();
 
 	return obj;
