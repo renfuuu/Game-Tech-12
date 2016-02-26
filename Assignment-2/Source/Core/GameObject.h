@@ -64,4 +64,5 @@ public:
 	virtual int getPoints();
 	virtual void movePaddle(OISManager* _oisManager, int height, int width);
 	virtual Ogre::String getName(void);
+	virtual void setPoints(int points);
 };

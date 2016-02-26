@@ -139,16 +139,18 @@ void Application::init()
 		// Test Bullet
 		Simulator* mySim = new Simulator();
 		GameObject* b1 = createPaddle("test", "paddle.mesh", 0, 0, 0, 100, mSceneManager, 0.0f, 1.0f, 0.8f, true, mySim);
-		GameObject* b2 = createBall("test2", "sphere.mesh", 5, 300, 0, .35, mSceneManager, 1.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b3 = createWall("test3", "floor.mesh", 0, -100, -530, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b4 = createWall("test4", "ceiling.mesh", 0, 600, -530, Ogre::Vector3(120, 120, 200), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 0.3f, 0.8f, false, mySim);
-		GameObject* b5 = createWall("test5", "backwall.mesh", 0, 300, -1450, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 0.8f, 0.8f, false, mySim);
-		GameObject* b6 = createWall("test6", "leftwall.mesh", 600, 0, -530, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b7 = createWall("test7", "rightwall.mesh", -600, 0, -530, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b8 = createWall("test8", "rightwall.mesh", -600, 0, -530, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b9 = createWall("test9", "backwall.mesh", 0, 300, 400, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, 0.0f, 0.8f, 0.8f, false, mySim);
 
 		_thePaddle = b1;
+
+		GameObject* b2 = createBall("test2", "sphere.mesh", _thePaddle, 5, 300, 0, .35, mSceneManager, 1.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b3 = createWall("test3", "floor.mesh", 0, -100, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b4 = createWall("test4", "ceiling.mesh", 0, 600, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 0.3f, 0.8f, false, mySim);
+		GameObject* b5 = createWall("test5", "backwall.mesh", 0, 300, -1350, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 0.8f, 0.8f, false, mySim);
+		GameObject* b6 = createWall("test6", "leftwall.mesh", 600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b7 = createWall("test7", "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b8 = createWall("test8", "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
+		GameObject* b9 = createWall("test9", "backwall.mesh", 0, 300, 500, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, 0.0f, 0.8f, 0.8f, false, mySim);
+
 		_theBall = b2;
 
 		_simulator = mySim;
@@ -212,6 +214,7 @@ void Application::update(const FrameEvent &evt) {
 	if(_oisManager->lastKeyPressed() == OIS::KC_SPACE) {
 		_theBall->reset();
 		points = 0;
+		_theBall->setPoints(0);
 	}
 }
 
@@ -232,7 +235,7 @@ void Application::createChildEntity(std::string name, std::string mesh, Ogre::Sc
 	ogreNode->setPosition(x, y, z);
 }
 
-Ball* Application::createBall(Ogre::String nme, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
+Ball* Application::createBall(Ogre::String nme, Ogre::String meshName, GameObject* paddle, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
@@ -241,7 +244,7 @@ Ball* Application::createBall(Ogre::String nme, Ogre::String meshName, int x, in
 	sn->setScale(scale,scale,scale);
 	ent->setMaterialName("blue");
 
-	Ball* obj = new Ball(nme, mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
+	Ball* obj = new Ball(nme, paddle->getName(), mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
 	obj->addToSimulator();
 
 	return obj;

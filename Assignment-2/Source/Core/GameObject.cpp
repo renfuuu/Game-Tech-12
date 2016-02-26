@@ -105,3 +105,7 @@ int GameObject::getPoints(){
 Ogre::String GameObject::getName(){
 	return name;
 }
+
+void GameObject::setPoints(int points){
+	//overwritten in ball class
+}
