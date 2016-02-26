@@ -32,15 +32,13 @@ SoundAdapter::SoundAdapter(void)
 
 		/* Since we havent figured out what sound's we're using yet, I just used a single test sound. 
 			The other gameSounds I left as NULL until we find soudns to use. */
-	gameSounds[0] = NULL;
-	gameSounds[1] = NULL;
-	gameSounds[2] = NULL;
-	gameSounds[3] = NULL;
-	gameSounds[4] = Mix_LoadWAV( "scratch.wav" );
-	if( gameSounds[4] == NULL ) {
-		printf( "Failed to load clickTest sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
-		success = false;
-	}
+	gameSounds[0] = Mix_LoadWAV( "scratch.wav" );
+	/*for ( int i = 0 ; i < NUM_SOUNDS ; i++ ) {
+		if( gameSounds[i] == NULL ) {
+			printf( "Failed to load clickTest sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+			success = false;
+		}
+	}*/
 
 }
 //-------------------------------------------------------------------------------------
@@ -49,10 +47,14 @@ SoundAdapter::~SoundAdapter(void) {
  
 /* Play a sound based on the soundID. (Sound IDs are identified in the header) */
 void SoundAdapter::playSound(int soundID) {
-	if ( gameSounds[soundID] != NULL )
+	if ( gameSounds[soundID] != NULL ) {
 		Mix_PlayChannel( -1, gameSounds[soundID], 0 );
-	else
+	}
+	else {
 		std::cout << "No sound file defined for soundID: " << soundID << std::endl;
+	}
+
+	std::cout << "Sound Played" << std::endl;
 }
 
 /* Free resources */
