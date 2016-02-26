@@ -212,8 +212,6 @@ OIS::Keyboard* OISManager::getKeyboard( void ) {
 
  
 bool OISManager::keyPressed( const OIS::KeyEvent &e ) {
-    if ( e.key == OIS::KC_SPACE )
-        MultiPlatformHelper::print("Pressed: SPACE\n");
     mKeyPressed = e.key;
 
     return true;
@@ -226,8 +224,6 @@ OIS::KeyCode OISManager::lastKeyPressed() {
 }
 
 bool OISManager::keyReleased( const OIS::KeyEvent &e ) {
-    MultiPlatformHelper::print("Released\n");
-
     return true;
 }
  
@@ -236,17 +232,15 @@ bool OISManager::mouseMoved( const OIS::MouseEvent &e ) {
     // From -width/2 to +width/2
     mouseXAxis = (e.state.X.abs) - e.state.width/2;
     mouseYAxis = (e.state.Y.abs) - e.state.height/2;
-    // std::cout << e.state.X.abs << std::endl;
+
     return true;
 }
  
 bool OISManager::mousePressed( const OIS::MouseEvent &e, OIS::MouseButtonID id ) {
-    MultiPlatformHelper::print("Mouse Pressed!\n");
     return true;
 }
  
 bool OISManager::mouseReleased( const OIS::MouseEvent &e, OIS::MouseButtonID id ) {
-    MultiPlatformHelper::print("Mouse Released!\n");
     return true;
 }
  
