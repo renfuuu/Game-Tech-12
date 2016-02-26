@@ -109,9 +109,11 @@ void Application::init()
 		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/scripts", "FileSystem");
 		ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
+#ifdef __linux__
 		score = new OgreText();
 		score->setPos(0.02f, 0.9f); // Text position, using relative co-ordinates
 		score->setCol(1.0f, 1.0f, 1.0f, 1.0f); // Text colour (Red, Green, Blue, Alpha)    
+#endif
 		// Add viewport
 		Viewport * vp = mRenderWindow->addViewport(mCamera);
 		mCamera->setAutoAspectRatio(true);
@@ -209,7 +211,9 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 // Called once per predefined frame
 void Application::update(const FrameEvent &evt) {
 	points = _theBall->getPoints();	
+#ifdef __linux__
 	score->setText("Score: " + std::to_string(points));
+#endif
 
 	if(_oisManager->lastKeyPressed() == OIS::KC_SPACE) {
 		_theBall->reset();
