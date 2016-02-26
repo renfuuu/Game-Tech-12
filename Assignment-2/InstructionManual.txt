@@ -1,5 +1,0 @@
-Instructions:
-
-Mouse/Mousepad will control the paddle as described in the documentation
-Press ESC to quit the game
-Prss SPACEBAR to reset the game
