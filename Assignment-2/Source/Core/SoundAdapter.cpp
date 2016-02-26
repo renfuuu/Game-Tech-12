@@ -35,8 +35,6 @@ SoundAdapter::SoundAdapter(void)
 
 	/* Load sound effects */
 
-		/* Since we havent figured out what sound's we're using yet, I just used a single test sound. 
-			The other gameSounds I left as NULL until we find soudns to use. */
 #ifdef __linux__
 	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../Assets/ball.wav");
 	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../Assets/wall.wav");
@@ -65,8 +63,6 @@ void SoundAdapter::playSound(int soundID) {
 	else {
 		std::cout << "No sound file defined for soundID: " << soundID << std::endl;
 	}
-
-	std::cout << "Sound Played" << std::endl;
 }
 
 /* Free resources */
