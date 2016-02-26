@@ -1,3 +1,58 @@
+## Milestone 2
+
+### How to play
+* Move the mouse up/down and left/right on the game window to control the paddle
+* Strike the ball with the paddle to propel it through the room and increase your score
+* Space bar resets score and the ball back to its inital position
+
+### Progress
+
+#### Summary
+We feel that we are actually ahead of schedule and everything went smoothly this week and we did not get behind on any of our deliverables.
+
+#### Implemented
+* We were able to get gameobjects of types paddle, wall and ball set up and working perfectly.
+* Bullet simulator with motionstate wrapper that handles motions between bullet transforms and ogre scene transforms
+* Working collisions / collision detection
+* User controls are there for the most part especially for the mouse
+* Paddle moves on parabolic arc in 3d space that gives a more realsitic feel for the motion of the paddle
+* Ball loses velocity over time until the player hits it again with the paddle
+* Different sounds played for collision between ball/paddle and ball/wall
+* Added scoring system that increases points with each strike of the ball
+* Added GUI to display score to the user
+* Ball reset
+
+#### Stil Need Implementation
+* Camera controls - not yet implemented, need to add an option for user to change his view
+* Game polishing - need to smooth out the interaction with the paddle and the paddle to the ball
+* Add extra credits - Background music, end condition, particles, user interface GUI
+* Muting - mute all volume and sounds
+
+#### C++ Classes Used
+* Application - Sets up scene, controls game logic
+* Simulator - Holds a list of gameobjects, steps them inside the bullet dynamic world
+* BulletContactCallback - Bullet calls this class when a collision between two objects is detected
+* CollisionContext - Stores information about the collision that is passed through the contact callback
+* OgreMotionState - Updates transforms between Ogre world and bullet world
+* GameObject - A wrapper for storing bullet/ogre information and methods to abstract their usage
+* Paddle - Child of GameObject, adds a collider shape around a paddle mesh
+* Ball - Child of GameObject, adds a collider sphere shape around a ball mesh
+* Wall - Child of GameObject, adds a cube collider shape around a plane mesh
+* OISManager - Event driven user input detection class
+* SoundAdapter - Stores sounds and plays them into the ogre scene
+* OgreText - Quick and dirty text overlay for Ogre
+* SceneHelper - Allows us to get information faster from scennodes to entities
+* MultiPlatFormHelper - Abstract usages for things like timing and printing on different platforms
+
+### Code and Outside resources used
+* Paddle model downloaded from: http://www.blendswap.com/blends/view/49333 credit: Bruno Matheus
+* Started with some of the bullet example code from the lecture slides
+* Sound files from the public domain
+* OgreText - Copied from http://ogre3d.org/tikiwiki/tiki-index.php?page=Simple+text
+
+
+## Milestone 1
+
 ### Project Description
 
 #### Overall Design
