@@ -38,10 +38,12 @@ SoundAdapter::SoundAdapter(void)
 		/* Since we havent figured out what sound's we're using yet, I just used a single test sound. 
 			The other gameSounds I left as NULL until we find soudns to use. */
 #ifdef __linux__
-	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV( "scratch.wav" );
+	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../Assets/ball.wav");
+	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../Assets/wall.wav");
 #endif
 #ifdef _WIN32
-	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/ball2.wav");
+	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/ball.wav");
+	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/wall.wav");
 #endif
 	/*for ( int i = 0 ; i < NUM_SOUNDS ; i++ ) {
 		if( gameSounds[i] == NULL ) {
