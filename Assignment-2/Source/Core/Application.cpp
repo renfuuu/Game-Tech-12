@@ -145,12 +145,12 @@ void Application::init()
 
 		GameObject* b2 = createBall("test2", "sphere.mesh", _thePaddle, 5, 300, 0, .35, mSceneManager, 1.0f, 1.0f, 0.8f, false, mySim);
 		GameObject* b3 = createWall("test3", "floor.mesh", 0, -100, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b4 = createWall("test4", "ceiling.mesh", 0, 600, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 0.3f, 0.8f, false, mySim);
+		GameObject* b4 = createWall("test4", "ceiling.mesh", 0, 600, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 0.5f, 0.8f, false, mySim);
 		GameObject* b5 = createWall("test5", "backwall.mesh", 0, 300, -1350, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 0.8f, 0.8f, false, mySim);
 		GameObject* b6 = createWall("test6", "leftwall.mesh", 600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
 		GameObject* b7 = createWall("test7", "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
 		GameObject* b8 = createWall("test8", "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b9 = createWall("test9", "backwall.mesh", 0, 300, 500, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, 0.0f, 0.8f, 0.8f, false, mySim);
+		GameObject* b9 = createWall("test9", "backwall.mesh", 0, 300, 500, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, 0.0f, 0.9f, 0.8f, false, mySim);
 
 		_theBall = b2;
 
@@ -219,6 +219,11 @@ void Application::update(const FrameEvent &evt) {
 		points = 0;
 		_theBall->setPoints(0);
 	}
+
+	// Small pull toward paddle to make it easier for the player to hit the ball
+	int pull = 1000;
+	Ogre::Vector3 paddleAttract = (_thePaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).normalisedCopy();
+	_theBall->applyForce(paddleAttract.x * pull, paddleAttract.y * pull, paddleAttract.z * pull);
 }
 
 
