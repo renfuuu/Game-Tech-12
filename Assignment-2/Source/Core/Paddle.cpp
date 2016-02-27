@@ -8,10 +8,10 @@ GameObject(nme, scnMgr, node, ent, ms, sim, mss, rest, frict, scal, kin) {
 	// Gets the radius of the Ogre::Entity sphere
 	kinematic = true;
 	auto var = ent->getBoundingBox();
-	auto size = var.getSize();
+	auto size = var.getSize()/2;
 
-	// We scale the y lower than .5 because the handle increases the bounding box's size
-	shape = new btBoxShape(btVector3((var.getSize().x*scale)*.5, (var.getSize().y*scale)*2, (var.getSize().z*scale)*.5));
+	// We had things backwards lol
+	shape = new btBoxShape(btVector3(size.y*scale, size.x*scale, size.z*scale));
 }
 
 Paddle::~Paddle() {
