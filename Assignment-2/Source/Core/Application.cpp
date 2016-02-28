@@ -78,7 +78,7 @@ void Application::init()
 
 	// Create scene manager, render window, and camera
 	mSceneManager = mRoot->createSceneManager(ST_GENERIC);
-	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, width = 800, height = 600, false, &params);
+	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, width = 1440, height = 1080, false, &params);
 	mCamera = mSceneManager->createCamera("Main Camera");
 
 	Ogre::OverlaySystem* pOverlaySystem = new Ogre::OverlaySystem();
@@ -127,8 +127,6 @@ void Application::init()
 		light->setCastShadows(true);
 		light->setPosition(0, 500, 0);
 		light->setType(Ogre::Light::LightTypes::LT_POINT);
-		// light->setDiffuseColour(99.2, 72.2, 7.5);
-		// light->setSpecularColour(Ogre::ColourValue::White);
 		mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
 		// Setup OISManager
@@ -177,9 +175,7 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 	}
 		try {
 			_oisManager->capture();
-
-			if (_thePaddle != nullptr)
-				_thePaddle->movePaddle(_oisManager, height, width);
+			_thePaddle->movePaddle(_oisManager, height, width);
 
 		// close window when ESC is pressed
 		if(_oisManager->getKeyPressed() == OIS::KC_ESCAPE)
@@ -271,7 +267,6 @@ Paddle* Application::createPaddle(Ogre::String nme, Ogre::String meshName, int x
 
 	Paddle* obj = new Paddle(nme, mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
 	obj->addToSimulator();
-
 
 	return obj;
 }

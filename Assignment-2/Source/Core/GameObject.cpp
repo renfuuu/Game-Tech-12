@@ -41,22 +41,15 @@ void GameObject::setPosition(float x, float y, float z) {
 		updateTransform();
 	}
 	else {
-		rootNode->setPosition(x,y,z);
+		btTransform transform = body->getCenterOfMassTransform();
+		transform.setOrigin(btVector3(x, y, z));
+		body->setCenterOfMassTransform(transform);
 		updateTransform();
 	}
 }
 
 void GameObject::setPosition(const Ogre::Vector3& pos) {
-	if (kinematic) {
-		rootNode->setPosition(pos);
-		updateTransform();
-	}
-	else {
-		btTransform transform = body->getCenterOfMassTransform();
-		transform.setOrigin(btVector3(pos.x, pos.y, pos.z));
-		body->setCenterOfMassTransform(transform);
-		updateTransform();
-	}
+	setPosition(pos.x, pos.y, pos.z);
 }
 
 Ogre::SceneNode* GameObject::getNode() {

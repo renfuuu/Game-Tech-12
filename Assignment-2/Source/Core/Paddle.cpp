@@ -24,13 +24,20 @@ void Paddle::update() {
 }
 
 void Paddle::movePaddle(OISManager* _oisManager, int height, int width) {
-	int mouseX = Ogre::Math::Clamp(_oisManager->getMouseXAxis(), -300, 300);
-	int mouseY = Ogre::Math::Clamp(_oisManager->getMouseYAxis(), -100, 200);
-	int paddleZ = (height/3)-(Ogre::Math::Sqr(mouseX)/(width*.75) + Ogre::Math::Sqr((width/height)*1.5*mouseY)/(height*.75));
+
+	// Standardize the positions into -1.0 to 1.0 for X and Y then scale them to 800x600. This works for all resolutions now.
+	float t1 = ((float)width / 2.0f);
+	float t2 = ((float)height / 2.0f);
+	float realX = (float)_oisManager->getMouseXAxis() / t1;
+	float realY = (float)_oisManager->getMouseYAxis() / t2;
+
+	int mouseX = Ogre::Math::Clamp((int)(realX*600), -300, 300);
+	int mouseY = Ogre::Math::Clamp((int)(realY*300), -100, 200);
+	int paddleZ = (600/3)-(Ogre::Math::Sqr(mouseX)/(800*.75) + Ogre::Math::Sqr((800/600)*1.5*mouseY)/(600*.75));
 
 	Ogre::SceneNode* mNode = rootNode;
 
-	Ogre::Vector3 surfacePoint(mouseX, paddleZ, mouseY);
+	Ogre::Vector3 surfacePoint = Ogre::Vector3(mouseX, paddleZ, mouseY);
 	Ogre::Quaternion orient = mNode->getOrientation();
 	Ogre::Vector3 normal = surfacePoint.normalisedCopy();
 	Ogre::Vector3 normalCopy = -(surfacePoint + Ogre::Vector3(0,0,0)).normalisedCopy();
@@ -40,7 +47,7 @@ void Paddle::movePaddle(OISManager* _oisManager, int height, int width) {
 	Ogre::Quaternion newOrientation(ortho1, ortho2, normalCopy);
 	mNode->setOrientation(newOrientation);
 
-	this->setPosition(surfacePoint + normal*50);
+	this->setPosition(surfacePoint + normal*50 - startPos);
 	
 	Ogre::Vector3 u;
 	if (mouseX < 0) 
