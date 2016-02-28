@@ -2,16 +2,16 @@
 #include "MultiPlatformHelper.h"
 #include "SceneHelper.h"
 
-
 Paddle::Paddle(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin) : 
 GameObject(nme, scnMgr, node, ent, ms, sim, mss, rest, frict, scal, kin) {
 	// Gets the radius of the Ogre::Entity sphere
 	kinematic = true;
 	auto var = ent->getBoundingBox();
+
+	// Bullet uses half margins for collider
 	auto size = var.getSize()/2;
 
-	// We had things backwards lol
-	shape = new btBoxShape(btVector3(size.y*scale, size.x*scale, size.z*scale));
+	shape = new btBoxShape(btVector3(size.x*scale, size.y*scale, size.z*scale));
 }
 
 Paddle::~Paddle() {
@@ -53,4 +53,6 @@ void Paddle::movePaddle(OISManager* _oisManager, int height, int width) {
 
 	Ogre::Real sin = u.crossProduct(v).length();
 	mNode->roll(Ogre::Math::ATan2(sin, cosine));
+
+	updateTransform();
 }

@@ -177,7 +177,9 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 	}
 		try {
 			_oisManager->capture();
-			_thePaddle->movePaddle(_oisManager, height, width);
+
+			if (_thePaddle != nullptr)
+				_thePaddle->movePaddle(_oisManager, height, width);
 
 		// close window when ESC is pressed
 		if(_oisManager->getKeyPressed() == OIS::KC_ESCAPE)

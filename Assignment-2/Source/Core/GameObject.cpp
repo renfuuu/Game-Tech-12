@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "MultiPlatformHelper.h"
 #include <btBulletDynamicsCommon.h>
+#include <OgreWireBoundingBox.h>
 
 //Add the game object to the simulator
 GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin) :
@@ -108,4 +109,21 @@ Ogre::String GameObject::getName(){
 
 void GameObject::setPoints(int points){
 	//overwritten in ball class
+}
+
+void GameObject::showColliderBox() {
+	auto var = geom->getBoundingBox();
+
+	// Bullet uses half margins for collider
+	auto size = var.getSize() / 2;
+
+	btVector3 min(0, 0, 0);
+	btVector3 max(0, 0, 0);
+	shape->getAabb(tr, min, max);
+	Ogre::WireBoundingBox* box = new Ogre::WireBoundingBox();
+	Ogre::AxisAlignedBox abb(Ogre::Vector3(-size.x*scale, -size.y*scale, -size.z*scale), Ogre::Vector3(size.x*scale, size.y*scale, size.z*scale));
+	box->setupBoundingBox(abb);
+	box->setVisible(true);
+	box->setRenderQueueGroup(Ogre::RENDER_QUEUE_OVERLAY);
+	sceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(box);
 }
