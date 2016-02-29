@@ -69,6 +69,7 @@ void SoundAdapter::playSound(int soundID) {
 	}
 }
 
+// Mute all sounds
 void SoundAdapter::mute(void) {
 	muted = !muted;
 	mutedM = muted;
@@ -81,6 +82,10 @@ void SoundAdapter::mute(void) {
 	muteMusic(mutedM);
 }
 
+/* As of now sounds and music
+cannot be muted independently. */
+
+// Mute music only
 void SoundAdapter::muteMusic(bool mute) {
 	 if ( mute ) {
 	 	Mix_PauseMusic();
@@ -89,6 +94,8 @@ void SoundAdapter::muteMusic(bool mute) {
 	 	Mix_ResumeMusic();
 	 }
 }
+
+// Mute sounds only
 void SoundAdapter::muteSounds(bool mute) {
 	mutedS = mute;
 }
