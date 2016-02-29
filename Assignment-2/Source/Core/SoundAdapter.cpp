@@ -43,7 +43,7 @@ SoundAdapter::SoundAdapter(void)
 	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../Assets/wall.wav");
 #endif
 #ifdef _WIN32
-	music = Mix_LoadMUS( "../Game-Tech-12/Assignment-2/Assets/music_loop.wav" ); 
+	music = Mix_LoadMUS( "../../../Game-Tech-12/Assignment-2/Assets/music_loop.wav" ); 
 	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/ball.wav");
 	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/wall.wav");
 #endif
