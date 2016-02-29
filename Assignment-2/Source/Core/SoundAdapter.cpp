@@ -38,12 +38,12 @@ SoundAdapter::SoundAdapter(void)
 	/* Load music & sound effects */
 
 #ifdef __linux__
-	music = Mix_LoadMUS( "../Assets/halo_theme.wav" ); 
+	music = Mix_LoadMUS( "../Assets/music_loop.wav" ); 
 	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../Assets/ball.wav");
 	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../Assets/wall.wav");
 #endif
 #ifdef _WIN32
-	music = Mix_LoadMUS( "../Game-Tech-12/Assignment-2/Assets/halo_theme.wav" ); 
+	music = Mix_LoadMUS( "../Game-Tech-12/Assignment-2/Assets/music_loop.wav" ); 
 	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/ball.wav");
 	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/wall.wav");
 #endif
