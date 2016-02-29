@@ -23,6 +23,7 @@
 #include "Ball.h"
 #include "Paddle.h"
 #include "Wall.h"
+#include "OgreText.h"
 
 class Application : public Ogre::FrameListener, public Ogre::WindowEventListener, public Ogre::RenderTargetListener
 {
@@ -44,6 +45,8 @@ public:
 	Simulator* _simulator;
 	GameObject* _theBall;
 	GameObject* _thePaddle;
+	OgreText* score;
+
 
 	int points;
 

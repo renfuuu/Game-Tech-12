@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 #include "SoundAdapter.h"
+#include "OgreText.h"
 
 class Ball : public GameObject {
 public:

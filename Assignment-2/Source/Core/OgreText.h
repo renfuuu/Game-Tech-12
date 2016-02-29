@@ -11,7 +11,7 @@ using namespace Ogre;
 class OgreText
 {
 public:
-	OgreText()
+	OgreText() : init(0)
 	{
 		olm = OverlayManager::getSingletonPtr();
 		if (init == 0)
@@ -42,7 +42,7 @@ public:
 			olm->destroy("GUI_OVERLAY");
 		}
 	}
-	void setText(char *szString)
+	inline void setText(char *szString)
 	{
 		textArea->setCaption(szString);
 		textArea->setDimensions(1.0f, 1.0f);
@@ -50,7 +50,7 @@ public:
 		textArea->setFontName("MyFont");
 		textArea->setCharHeight(0.03f);
 	}
-	void setText(String szString) // now You can use Ogre::String as text
+	inline void setText(String szString) // now You can use Ogre::String as text
 	{
 		textArea->setCaption(szString);
 		textArea->setDimensions(1.0f, 1.0f);
@@ -58,11 +58,11 @@ public:
 		textArea->setFontName("MyFont");
 		textArea->setCharHeight(0.03f);
 	}
-	void setPos(float x, float y)
+	inline void setPos(float x, float y)
 	{
 		textArea->setPosition(x, y);
 	}
-	void setCol(float R, float G, float B, float I)
+	inline void setCol(float R, float G, float B, float I)
 	{
 		textArea->setColour(Ogre::ColourValue(R, G, B, I));
 	}
@@ -71,12 +71,6 @@ private:
 	OverlayContainer *panel;
 	Overlay *overlay;
 	TextAreaOverlayElement *textArea;
-	static int init;
+	int init;
 	String szElement;
 };
-
-int OgreText::init = 0;
-static Ogre::String text;
-OgreText *trueFPS;
-OgreText *setFPS;
-OgreText *score;

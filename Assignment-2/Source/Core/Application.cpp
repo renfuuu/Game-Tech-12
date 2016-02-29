@@ -195,7 +195,7 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 	_simulator->stepSimulation(evt.timeSinceLastFrame, 50, 1 / fps);
 
 	// Constrains the ball's speed
-	static int maxSpeed = 3500;
+	static int maxSpeed = 4000;
 	btVector3 velocity = _theBall->getBody()->getLinearVelocity();
     btScalar speed = velocity.length();
     if(speed > maxSpeed) {

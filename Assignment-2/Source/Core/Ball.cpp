@@ -37,7 +37,6 @@ void Ball::update() {
 		if ( context->getTheObject()->getType() == GameObject::FLOOR_OBJECT && dt > 50 ) {
 			floorHitCount++;
 			if ( floorHitCount >= 2 ) {
-				std::cout << "Game Over\n";
 				gameOver();
 			}
 		}
