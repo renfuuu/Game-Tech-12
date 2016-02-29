@@ -91,6 +91,7 @@ void Application::init()
 	// These objects are just to test that we can build bullet and sdl
 	btBoxShape* bulletTest = new btBoxShape(btVector3(1, 1, 1));
 	sa = new SoundAdapter();
+	sa->startMusic();
 	// GameObject* obj = new GameObject();
 
 
@@ -211,11 +212,16 @@ void Application::update(const FrameEvent &evt) {
 #ifdef __linux__
 	score->setText("Score: " + std::to_string(points));
 #endif
+	OIS::KeyCode lastKey = _oisManager->lastKeyPressed();
 
-	if(_oisManager->lastKeyPressed() == OIS::KC_SPACE) {
+	if(lastKey == OIS::KC_SPACE) {
 		_theBall->reset();
 		points = 0;
 		_theBall->setPoints(0);
+
+	}
+	else if (lastKey == OIS::KC_M) {
+		sa->mute();
 	}
 
 	// Small pull toward paddle to make it easier for the player to hit the ball

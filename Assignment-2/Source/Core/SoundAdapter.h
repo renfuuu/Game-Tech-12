@@ -21,8 +21,16 @@ class SoundAdapter {
 		SoundAdapter(void);
 		~SoundAdapter(void);
 		void playSound(int);
+		void startMusic(void);
+		void mute(void);
+		void muteMusic(bool mute);
+		void muteSounds(bool mute);
 		void destroy(void);
 	private:
+		bool muted; //overall muted
+		bool mutedM; //music
+		bool mutedS; //sounds
+		Mix_Music *music = NULL;
 		Mix_Chunk *gameSounds[NUM_SOUNDS];
 
 };

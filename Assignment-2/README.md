@@ -4,6 +4,7 @@
 * Move the mouse up/down and left/right on the game window to control the paddle
 * Strike the ball with the paddle to propel it through the room and increase your score
 * Space bar resets score and the ball back to its inital position
+* M mutes the sounds
 
 ### Progress
 
@@ -25,8 +26,8 @@ We feel that we are actually ahead of schedule and everything went smoothly this
 #### Stil Need Implementation
 * Camera controls - not yet implemented, need to add an option for user to change his view
 * Game polishing - need to smooth out the interaction with the paddle and the paddle to the ball
-* Add extra credits - Background music, end condition, particles, user interface GUI
-* Muting - mute all volume and sounds
+* Add extra credits - End condition, particles, user interface GUI
+* Muting - mute volume and sounds specifically?
 
 #### C++ Classes Used
 * Application - Sets up scene, controls game logic
