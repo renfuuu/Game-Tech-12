@@ -78,7 +78,7 @@ void Application::init()
 
 	// Create scene manager, render window, and camera
 	mSceneManager = mRoot->createSceneManager(ST_GENERIC);
-	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, width = 1440, height = 1080, false, &params);
+	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, width = 800, height = 600, false, &params);
 	mCamera = mSceneManager->createCamera("Main Camera");
 
 	Ogre::OverlaySystem* pOverlaySystem = new Ogre::OverlaySystem();
