@@ -50,6 +50,7 @@ We feel that we are actually ahead of schedule and everything went smoothly this
 * Started with some of the bullet example code from the lecture slides
 * Sound files from the public domain
 * OgreText - Copied from http://ogre3d.org/tikiwiki/tiki-index.php?page=Simple+text
+* Background Music - http://www.orangefreesounds.com/music-loop-120-bpm/
 
 
 ## Milestone 1
