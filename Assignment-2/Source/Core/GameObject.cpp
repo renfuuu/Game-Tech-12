@@ -4,17 +4,18 @@
 #include <OgreWireBoundingBox.h>
 
 //Add the game object to the simulator
-GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin) :
-	name(nme), sceneMgr(scnMgr), rootNode(node), geom(ent), scale(scal), motionState(ms), simulator(sim), tr(), inertia(), restitution(rest), friction(frict), kinematic(kin),
+GameObject::GameObject(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin) :
+	name(nme), type(tp), sceneMgr(scnMgr), rootNode(node), geom(ent), scale(scal), motionState(ms), simulator(sim), tr(), inertia(), restitution(rest), friction(frict), kinematic(kin),
 	needsUpdates(false), mass(mss) {
 		inertia.setZero();
 		startPos = Ogre::Vector3(rootNode->getPosition());
 }
 
-GameObject::GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Vector3 scal, bool kin) :
-	name(nme), sceneMgr(scnMgr), rootNode(node), geom(ent), vscale(scal), motionState(ms), simulator(sim), tr(), inertia(), restitution(rest), friction(frict), kinematic(kin),
+GameObject::GameObject(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Vector3 scal, bool kin) :
+	name(nme), type(tp), sceneMgr(scnMgr), rootNode(node), geom(ent), vscale(scal), motionState(ms), simulator(sim), tr(), inertia(), restitution(rest), friction(frict), kinematic(kin),
 	needsUpdates(false), mass(mss) {
 		inertia.setZero();
+		startPos = Ogre::Vector3(rootNode->getPosition());
 }
 
 void GameObject::updateTransform() {
@@ -98,6 +99,10 @@ int GameObject::getPoints(){
 
 Ogre::String GameObject::getName(){
 	return name;
+}
+
+GameObject::objectType GameObject::getType(){
+	return type;
 }
 
 void GameObject::setPoints(int points){

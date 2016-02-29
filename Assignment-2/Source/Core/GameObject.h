@@ -22,6 +22,9 @@
 
 //Some declarations within the game object class
 class GameObject {
+public: 
+	enum objectType {PADDLE_OBJECT, BALL_OBJECT, FLOOR_OBJECT, WALL_OBJECT, FRONT_WALL_OBJECT, BACK_WALL_OBJECT, NO_TYPE};
+
 protected:
 	Ogre::String name;
 	Ogre::SceneManager* sceneMgr;
@@ -38,6 +41,8 @@ protected:
 	btTransform tr;
 	btVector3 inertia;
 
+	GameObject::objectType type;
+
 	btScalar mass;
 	btScalar restitution;
 	btScalar friction;
@@ -49,8 +54,8 @@ protected:
 public:
 	BulletContactCallback* cCallBack;
 
-	GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin);
-	GameObject(Ogre::String nme, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Vector3 scal, bool kin);
+	GameObject(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin);
+	GameObject(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Vector3 scal, bool kin);
 	inline btRigidBody* getBody() { return body; }
 	void addToSimulator();
 	virtual void updateTransform();
@@ -62,6 +67,7 @@ public:
 	void reset();
 	virtual void update() = 0;
 	virtual int getPoints();
+	virtual GameObject::objectType getType();
 	virtual void movePaddle(OISManager* _oisManager, int height, int width);
 	virtual Ogre::String getName(void);
 	virtual void setPoints(int points);
