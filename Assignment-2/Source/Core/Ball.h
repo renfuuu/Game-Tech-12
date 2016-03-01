@@ -3,7 +3,6 @@
 #include "GameObject.h"
 #include "SoundAdapter.h"
 #include "ScoreManager.h"
-#include "OgreText.h"
 
 class Ball : public GameObject {
 public:
@@ -19,6 +18,7 @@ public:
 	virtual void update();
 	virtual void updateTransform();
 	virtual void resetScore();
+	virtual void startScore();
 
 };
 

@@ -1,6 +1,5 @@
  #pragma once
 
-#include "OgreText.h"
 #include "GameObject.h"
 #include "TextOverlay.h"
 #include "MultiPlatformHelper.h"
@@ -25,13 +24,13 @@
  	int gameScore;
  	int highScore;
  	int floorHitCount;
- 	//OgreText* score;
+ 	Ogre::OverlayContainer* overlayContainer;
  	TextOverlay* scoreOverlay;
  	TextOverlay* highScoreOverlay;
  	TextOverlay* gameOverOverlay;
-	Ogre::String scoreText;
+	std::string scoreText;
 	Ogre::String scoreLabel;
-	Ogre::String highScoreText;
+	std::string highScoreText;
 	Ogre::String highScoreLabel;
 	Ogre::String gameOverText;
 	Ogre::String gameOverLabel;

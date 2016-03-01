@@ -1,15 +1,15 @@
-// blue genrated by blender2ogre 0.6.0
+// court genrated by blender2ogre 0.6.0
 
-material blue 
+material court 
 {
     receive_shadows on 
 
     technique
     {
-        pass blue
+        pass court
         {
-            ambient 0.1265529990196228 0.2303309589624405 1.0 1.0
-            diffuse 0.10124240072432755 0.1842647699157114 0.800000011920929 1.0
+            ambient 0.800000011920929 0.800000011920929 0.800000011920929 1.0
+            diffuse 0.6400000190734865 0.6400000190734865 0.6400000190734865 1.0
             specular 0.5 0.5 0.5 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 
@@ -30,6 +30,13 @@ material blue
             shading gouraud
             transparent_sorting on
 
+            texture_unit 
+            {
+                texture basketball-floor-texture.jpg
+                tex_address_mode wrap
+                scale .1 .1
+                colour_op modulate
+            }
         }
     }
 }

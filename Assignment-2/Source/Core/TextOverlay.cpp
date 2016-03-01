@@ -1,20 +1,20 @@
 #include "TextOverlay.h"
 
-TextOverlay::TextOverlay(Ogre::String nme, float x, float y, float ch) : name(nme), charHeight(ch) {
+TextOverlay::TextOverlay(Ogre::Overlay* ovly, Ogre::String nme, float x, float y, float ch) : name(nme), charHeight(ch), overlay(ovly) {
 	olm = Ogre::OverlayManager::getSingletonPtr();
-	panel = static_cast<Ogre::OverlayContainer*>(olm->createOverlayElement("Panel", name + "GUI"));
-	panel->setMetricsMode(Ogre::GMM_PIXELS);
-	panel->setPosition(0, 0);
-	panel->setDimensions(1.0f, 1.0f);
-	overlay = olm->create(name);
-	overlay->add2D(panel);
-	overlay = olm->getByName(name);
-	panel = static_cast<Ogre::OverlayContainer*>(olm->getOverlayElement(name + "GUI"));
-	textArea = static_cast<Ogre::TextAreaOverlayElement*>(olm->createOverlayElement("TextArea", name));
-	panel->addChild(textArea);
-	this->setPos(x, y);
-	this->showOverlay();
-	//Color->setCol(1.0f, 1.0f, 1.0f, 1.0f);
+	Ogre::OverlayElement* elem1 = olm->createOverlayElement("Panel", name + "GUI");
+	elem1->setMetricsMode(Ogre::GMM_PIXELS);
+	elem1->setPosition(x, y);
+	elem1->setDimensions(1.0f, 1.0f);
+
+	Ogre::OverlayContainer* overlayCon = static_cast<Ogre::OverlayContainer*>(elem1);
+
+	// Cast the parent pointer from factory
+	textArea = static_cast<Ogre::TextAreaOverlayElement*>(olm->createOverlayElementFromFactory("TextArea", name));
+	overlayCon->addChild(textArea);
+
+	overlay->add2D(overlayCon);
+	setPos(x,y);
 }
 
 TextOverlay::~TextOverlay(void) {

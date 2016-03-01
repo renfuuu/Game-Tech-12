@@ -1,6 +1,4 @@
-// blue genrated by blender2ogre 0.6.0
-
-material blue 
+material wall 
 {
     receive_shadows on 
 
@@ -8,10 +6,10 @@ material blue
     {
         pass blue
         {
-            ambient 0.1265529990196228 0.2303309589624405 1.0 1.0
-            diffuse 0.10124240072432755 0.1842647699157114 0.800000011920929 1.0
-            specular 0.5 0.5 0.5 1.0 12.5
-            emissive 0.0 0.0 0.0 1.0
+            ambient 0.1265529990196228 0.8 0.9 0.2
+            diffuse 0.1265529990196228 1.0 0.4 0.2
+            specular 1 1 1 .2 12.5
+            emissive 0.0 0.0 0.0 0.3
 
             alpha_to_coverage off
             colour_write on
@@ -29,6 +27,7 @@ material blue
             scene_blend_op add
             shading gouraud
             transparent_sorting on
+
 
         }
     }

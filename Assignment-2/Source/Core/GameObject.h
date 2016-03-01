@@ -72,5 +72,6 @@ public:
 	virtual Ogre::String getName(void);
 	virtual void setPoints(int points);
 	virtual void resetScore();
+	virtual void startScore();
 	void showColliderBox();
 };

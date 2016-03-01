@@ -23,6 +23,7 @@ void Ball::updateTransform() {
 }
 
 void Ball::update() {
+	startScore();
 	if (context->hit) {
 		dt = timer->getMilliseconds() - dt;
 		if( context->getTheObject() != previousHit && context->getTheObject()->getType() == GameObject::PADDLE_OBJECT ) {
@@ -54,4 +55,9 @@ void Ball::update() {
 void Ball::resetScore() {
 	this->GameObject::reset();
 	scoreManager->resetScore();
+}
+
+void Ball::startScore() {
+	scoreManager->postScore();
+	scoreManager->postHighScore();
 }

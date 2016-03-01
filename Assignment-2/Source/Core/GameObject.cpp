@@ -112,6 +112,10 @@ void GameObject::resetScore() {
 	//Overridden in ball class
 }
 
+void GameObject::startScore() {
+	//Overridden in ball class
+}
+
 void GameObject::showColliderBox() {
 	auto var = geom->getBoundingBox();
 

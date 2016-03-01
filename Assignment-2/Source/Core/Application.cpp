@@ -1,6 +1,5 @@
 #include "Application.h"
 #include "CoreConfig.h"
-#include "OgreText.h"
 #include "MultiPlatformHelper.h"
 #include "SceneHelper.h"
 #include <Overlay/OgreOverlaySystem.h>
@@ -164,7 +163,7 @@ void Application::init()
 
 		_simulator = mySim;
 
-		_theBall->resetScore();
+		_theBall->startScore();
 	}
 	catch (Exception e) {
 		std::cout << "Exception Caught: " << e.what() << std::endl;
@@ -299,6 +298,10 @@ Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre:
 	const btTransform pos;
 	OgreMotionState* ms = new OgreMotionState(pos, sn);
 	sn->setScale(scale.x, scale.y, scale.z);
+
+	if(meshName != "floor.mesh") {
+		ent->setMaterialName("wall");
+	}
 
 	sn->pitch(pitch);
 	sn->yaw(yaw);
