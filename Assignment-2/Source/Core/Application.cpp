@@ -78,7 +78,29 @@ void Application::init()
 	// Create scene manager, render window, and camera
 	mSceneManager = mRoot->createSceneManager(ST_GENERIC);
 	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, width = 800, height = 600, false, &params);
+
 	mCamera = mSceneManager->createCamera("Main Camera");
+	Ogre::Camera* cam2 = mSceneManager->createCamera("Cam2");
+	ballCam = mSceneManager->createCamera("Ball Cam");
+
+	// Add viewport and cameras
+	mRenderWindow->addViewport(mCamera);
+
+	mCamera->setAutoAspectRatio(true);
+	mCamera->setPosition(0, 120, 1000);
+
+	cam2->setAutoAspectRatio(true);
+	cam2->setPosition(1350, 0, -400);
+	cam2->yaw(Ogre::Degree(90));
+	cam2->pitch(Ogre::Degree(15));
+
+	ballCam->setAutoAspectRatio(true);
+	ballCam->setPosition(0, 120, 800);
+
+	cameras = std::vector<Ogre::Camera*>();
+	cameras.push_back(mCamera);
+	cameras.push_back(cam2);
+	cameras.push_back(ballCam);
 
 	Ogre::OverlaySystem* pOverlaySystem = new Ogre::OverlaySystem();
 	mSceneManager->addRenderQueueListener(pOverlaySystem);
@@ -87,11 +109,8 @@ void Application::init()
 	WindowEventUtilities::addWindowEventListener(mRenderWindow, this);
 	mRenderWindow->addListener(this);
 
-	// These objects are just to test that we can build bullet and sdl
-	btBoxShape* bulletTest = new btBoxShape(btVector3(1, 1, 1));
 	sa = new SoundAdapter();
 	sa->startMusic();
-	// GameObject* obj = new GameObject();
 
 
 #ifdef _WIN32
@@ -108,10 +127,6 @@ void Application::init()
 		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/scripts", "FileSystem");
 		ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
-		// Add viewport
-		Viewport * vp = mRenderWindow->addViewport(mCamera);
-		mCamera->setAutoAspectRatio(true);
-		mCamera->setPosition(0, 120, 1000);
 		t1 = new Timer();
 
 		// Add some light
@@ -213,6 +228,15 @@ void Application::update(const FrameEvent &evt) {
 	else if (lastKey == OIS::KC_M) {
 		sa->mute();
 	}
+	else if (lastKey == OIS::KC_1 || lastKey == OIS::KC_2 || lastKey == OIS::KC_3) {
+		int index = lastKey - 2;
+		if (index >= 0 && index < cameras.size()) {
+			mRenderWindow->removeAllViewports();
+			mRenderWindow->addViewport(cameras[index]);
+		}
+	}
+
+	ballCam->lookAt(_theBall->getNode()->getPosition());
 
 	// Small pull toward paddle to make it easier for the player to hit the ball
 	int pull = 1000;

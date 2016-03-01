@@ -39,13 +39,17 @@ public:
 	Ogre::RenderWindow * mRenderWindow;
 	Ogre::SceneManager * mSceneManager;
 	Ogre::Camera * mCamera;
+	Ogre::Camera * ballCam;
 	Ogre::Timer* t1;
 	SoundAdapter* sa;
 	OISManager* _oisManager;
 	Simulator* _simulator;
 	GameObject* _theBall;
 	GameObject* _thePaddle;
+	
+	std::vector<Ogre::Camera*> cameras;
 
+	int points;
 	int width;
 	int height;
 
