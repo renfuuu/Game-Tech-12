@@ -2,14 +2,14 @@
 
 #include "GameObject.h"
 #include "SoundAdapter.h"
+#include "ScoreManager.h"
 #include "OgreText.h"
 
 class Ball : public GameObject {
 public:
 	GameObject* previousHit;
 	SoundAdapter* soundAdapter;
-	int ballPoints;
-	int floorHitCount;
+	ScoreManager* scoreManager;
 	Ogre::Timer* timer;
 	Ogre::Real dt;
 
@@ -18,9 +18,7 @@ public:
 	~Ball();
 	virtual void update();
 	virtual void updateTransform();
-	virtual void gameOver();
-	virtual int getPoints();
-	virtual void setPoints(int points);
+	virtual void resetScore();
 
 };
 

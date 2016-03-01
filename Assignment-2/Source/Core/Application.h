@@ -45,10 +45,6 @@ public:
 	Simulator* _simulator;
 	GameObject* _theBall;
 	GameObject* _thePaddle;
-	OgreText* score;
-
-
-	int points;
 
 	int width;
 	int height;

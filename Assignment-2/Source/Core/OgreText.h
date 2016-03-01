@@ -47,7 +47,7 @@ public:
 		textArea->setCaption(szString);
 		textArea->setDimensions(1.0f, 1.0f);
 		textArea->setMetricsMode(Ogre::GMM_RELATIVE);
-		textArea->setFontName("MyFont");
+		textArea->setFontName("dameron");
 		textArea->setCharHeight(0.03f);
 	}
 	inline void setText(String szString) // now You can use Ogre::String as text
@@ -55,7 +55,7 @@ public:
 		textArea->setCaption(szString);
 		textArea->setDimensions(1.0f, 1.0f);
 		textArea->setMetricsMode(Ogre::GMM_RELATIVE);
-		textArea->setFontName("MyFont");
+		textArea->setFontName("dameron");
 		textArea->setCharHeight(0.03f);
 	}
 	inline void setPos(float x, float y)

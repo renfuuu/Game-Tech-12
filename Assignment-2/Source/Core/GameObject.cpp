@@ -108,6 +108,9 @@ GameObject::objectType GameObject::getType(){
 void GameObject::setPoints(int points){
 	//overwritten in ball class
 }
+void GameObject::resetScore() {
+	//Overridden in ball class
+}
 
 void GameObject::showColliderBox() {
 	auto var = geom->getBoundingBox();
