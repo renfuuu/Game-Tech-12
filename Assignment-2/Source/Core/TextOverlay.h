@@ -8,7 +8,7 @@
 
 class TextOverlay {
 public:
-	TextOverlay(Ogre::String, float, float, float, float);
+	TextOverlay(Ogre::String, float, float, float);
 	~TextOverlay(void);
 	virtual void setText(Ogre::String);
 	virtual void setPos(float, float);
@@ -16,6 +16,7 @@ public:
 	virtual void showOverlay(void);
 
 protected:
+	float charHeight;
 	Ogre::OverlayManager* olm;
 	Ogre::OverlayContainer* panel;
 	Ogre::Overlay *overlay;

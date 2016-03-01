@@ -162,10 +162,9 @@ void Application::init()
 
 		_theBall = b2;
 
-		_theBall->resetScore();
-
 		_simulator = mySim;
 
+		_theBall->resetScore();
 	}
 	catch (Exception e) {
 		std::cout << "Exception Caught: " << e.what() << std::endl;

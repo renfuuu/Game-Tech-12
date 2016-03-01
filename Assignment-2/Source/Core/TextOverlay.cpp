@@ -1,11 +1,11 @@
 #include "TextOverlay.h"
 
-TextOverlay::TextOverlay(Ogre::String nme, float x, float y, float w, float h) : name(nme) {
+TextOverlay::TextOverlay(Ogre::String nme, float x, float y, float ch) : name(nme), charHeight(ch) {
 	olm = Ogre::OverlayManager::getSingletonPtr();
 	panel = static_cast<Ogre::OverlayContainer*>(olm->createOverlayElement("Panel", name + "GUI"));
 	panel->setMetricsMode(Ogre::GMM_PIXELS);
 	panel->setPosition(0, 0);
-	panel->setDimensions(w, h);
+	panel->setDimensions(1.0f, 1.0f);
 	overlay = olm->create(name);
 	overlay->add2D(panel);
 	overlay = olm->getByName(name);
@@ -28,7 +28,7 @@ void TextOverlay::setText(Ogre::String str) {
 	textArea->setDimensions(1.0f, 1.0f);
 	textArea->setMetricsMode(Ogre::GMM_RELATIVE);
 	textArea->setFontName("dameron");
-	textArea->setCharHeight(0.03f);
+	textArea->setCharHeight(charHeight);
 }
 
 void TextOverlay::setPos(float x, float y) {
