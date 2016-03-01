@@ -4,6 +4,8 @@
 #include "GameObject.h"
 #include "TextOverlay.h"
 #include "MultiPlatformHelper.h"
+#include <fstream>
+#include <iostream>
 
  class ScoreManager {
  public:
@@ -17,6 +19,7 @@
  	bool floorHit(void);
  	void resetScore(void);
  	void gameOver(void);
+ 	void writeScore();
 
  protected:
  	int gameScore;
@@ -32,5 +35,5 @@
 	Ogre::String highScoreLabel;
 	Ogre::String gameOverText;
 	Ogre::String gameOverLabel;
-
+	std::fstream highScoreFile;
  };
