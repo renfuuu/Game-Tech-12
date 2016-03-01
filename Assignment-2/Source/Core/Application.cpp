@@ -162,6 +162,8 @@ void Application::init()
 
 		_theBall = b2;
 
+		_theBall->resetScore();
+
 		_simulator = mySim;
 
 	}

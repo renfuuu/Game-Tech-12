@@ -33,7 +33,7 @@ void Ball::update() {
 			soundAdapter->playSound(SoundAdapter::WALL_BOUNCE);
 			if ( context->getTheObject()->getType() == GameObject::FLOOR_OBJECT ) {
 				if ( !(scoreManager->floorHit()) ) {
-					resetScore();
+					this->resetScore();
 					return;
 				}
 			}

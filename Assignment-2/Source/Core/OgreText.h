@@ -42,6 +42,7 @@ public:
 			olm->destroy("GUI_OVERLAY");
 		}
 	}
+
 	inline void setText(char *szString)
 	{
 		textArea->setCaption(szString);
@@ -50,6 +51,7 @@ public:
 		textArea->setFontName("dameron");
 		textArea->setCharHeight(0.03f);
 	}
+
 	inline void setText(String szString) // now You can use Ogre::String as text
 	{
 		textArea->setCaption(szString);
@@ -58,14 +60,21 @@ public:
 		textArea->setFontName("dameron");
 		textArea->setCharHeight(0.03f);
 	}
+
 	inline void setPos(float x, float y)
 	{
 		textArea->setPosition(x, y);
 	}
+
 	inline void setCol(float R, float G, float B, float I)
 	{
 		textArea->setColour(Ogre::ColourValue(R, G, B, I));
 	}
+
+	inline OverlayManager* getOLM(void) {
+		return olm;
+	}
+
 private:
 	OverlayManager *olm;
 	OverlayContainer *panel;

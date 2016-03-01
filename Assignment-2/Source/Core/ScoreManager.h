@@ -2,6 +2,7 @@
 
 #include "OgreText.h"
 #include "GameObject.h"
+#include "TextOverlay.h"
 #include "MultiPlatformHelper.h"
 
  class ScoreManager {
@@ -19,8 +20,17 @@
 
  protected:
  	int gameScore;
+ 	int highScore;
  	int floorHitCount;
- 	OgreText* score;
+ 	//OgreText* score;
+ 	TextOverlay* scoreOverlay;
+ 	TextOverlay* highScoreOverlay;
+ 	TextOverlay* gameOverOverlay;
 	Ogre::String scoreText;
+	Ogre::String scoreLabel;
+	Ogre::String highScoreText;
+	Ogre::String highScoreLabel;
+	Ogre::String gameOverText;
+	Ogre::String gameOverLabel;
 
  };

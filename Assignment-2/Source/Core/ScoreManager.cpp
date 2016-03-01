@@ -1,12 +1,13 @@
 #include "ScoreManager.h"
 
 
-ScoreManager::ScoreManager(void) : gameScore(0), floorHitCount(0) {
+ScoreManager::ScoreManager(void) : gameScore(0), highScore(0), floorHitCount(0), scoreLabel("SCORE_"), scoreText("Score: "), highScoreLabel("HIGH_SCORE_"), highScoreText("High Score: "), gameOverLabel("GAME_OVER_"), gameOverText("Game Over!") {
 
-	gameScore = 0;
-	score = new OgreText();
-	score->setPos(0.02f, 0.9f); // Text position, using relative co-ordinates
-	score->setCol(1.0f, 1.0f, 1.0f, 1.0f); // Text colour (Red, Green, Blue, Alpha)    
+	scoreOverlay = new TextOverlay(scoreLabel, 0.02f, 0.9f, 2.0f, 2.0f);
+	scoreOverlay->setCol(1.0f, 1.0f, 1.0f, 1.0f);
+	highScoreOverlay = new TextOverlay(highScoreLabel, 0.75f, 0.9f, 1.0f, 1.0f);
+	highScoreOverlay->setCol(1.0f, 1.0f, 1.0f, 1.0f);
+	this->postHighScore();
 	this->postScore();
 }
 
@@ -14,13 +15,13 @@ ScoreManager::~ScoreManager(void) {
 }
 
 void ScoreManager::postScore(void) {
-	/* Set and display ogreText */
-	scoreText = "Score: " + std::to_string(gameScore);
-	score->setText(scoreText);
+	scoreOverlay->showOverlay();
+	scoreOverlay->setText(scoreText + std::to_string(gameScore));
 }
 
 void ScoreManager::postHighScore(void) {
-	return;
+	highScoreOverlay->showOverlay();
+	highScoreOverlay->setText(highScoreText + std::to_string(highScore));
 }
 
 
@@ -28,6 +29,7 @@ void ScoreManager::scorePoints(int points) {
 	gameScore += points;
 	this->nonFloorHit();
 	this->postScore();
+	this->postHighScore();
 }
 
 void ScoreManager::nonFloorHit(void) {
@@ -45,24 +47,29 @@ bool ScoreManager::floorHit(void) {
 }
 
 void ScoreManager::resetScore(void) {
+	if ( gameScore > highScore ) {
+		highScore = gameScore;
+		this->postHighScore();
+	}
 	floorHitCount = 0;
-	gameScore = 0;	
-	score->setPos(0.02f, 0.9f); // Text position, using relative co-ordinates
-	score->setCol(1.0f, 1.0f, 1.0f, 1.0f); // Text colour (Red, Green, Blue, Alpha)    
+	gameScore = 0;
 	this->postScore();
 }
 
 void ScoreManager::gameOver() {
-	
+	if ( gameScore > highScore ) {
+		highScore = gameScore;
+		this->postHighScore();
+	}
 	std::cout << "Game Over\n";
-	/*scoreText = "Game Over!";
-	score->setCol(1.0f, 1.0f, 1.0f, 1.0f);
-	score->setText(scoreText);
-	*/
-	// Cant create new OgreText, and can't modify score's text here for some reason?
-
+	// Overlay generated on the fly wont display, yet...
+	/*gameOverOverlay = new TextOverlay(gameOverLabel, 0.4f, 0.5f, 5.0f, 5.0f);
+	gameOverOverlay->showOverlay();
+	gameOverOverlay->setCol(1.0f, 0.0f, 0.0f, 1.0f);
+	gameOverOverlay->setText(gameOverText);*/
 	MultiPlatformHelper::sleep(1000);
 	this->resetScore();
+	//delete gameOverOverlay;
 
 
 }
