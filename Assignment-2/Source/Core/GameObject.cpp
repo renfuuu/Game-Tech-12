@@ -9,6 +9,7 @@ GameObject::GameObject(Ogre::String nme, GameObject::objectType tp, Ogre::SceneM
 	needsUpdates(false), mass(mss) {
 		inertia.setZero();
 		startPos = Ogre::Vector3(rootNode->getPosition());
+		particle = sceneMgr->createParticleSystem("Particle" + name, "BallTrail");
 }
 
 GameObject::GameObject(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Vector3 scal, bool kin) :
@@ -16,6 +17,7 @@ GameObject::GameObject(Ogre::String nme, GameObject::objectType tp, Ogre::SceneM
 	needsUpdates(false), mass(mss) {
 		inertia.setZero();
 		startPos = Ogre::Vector3(rootNode->getPosition());
+		particle = sceneMgr->createParticleSystem("Particle" + name, "BallTrail");
 }
 
 void GameObject::updateTransform() {

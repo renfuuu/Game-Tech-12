@@ -17,6 +17,7 @@
 #include <OgreConfigFile.h>
 #include <OgreWindowEventUtilities.h>
 #include <OgreRenderTargetListener.h>
+#include <OgreParticleSystem.h>
 
 // Simulator & GameObject inclue each other (circular reference).
 
@@ -50,6 +51,8 @@ protected:
 	bool needsUpdates;
 
 	CollisionContext* context;
+
+	Ogre::ParticleSystem* particle;
 
 public:
 	BulletContactCallback* cCallBack;

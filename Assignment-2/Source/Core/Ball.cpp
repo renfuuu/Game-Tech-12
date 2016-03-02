@@ -9,6 +9,8 @@ GameObject(nme, tp, scnMgr, node, ent, ms, sim, mss, rest, frict, scal, kin), pr
 	scoreManager = new ScoreManager();
 	timer = new Ogre::Timer();
 	dt = timer->getMilliseconds();
+	Ogre::SceneNode* particleNode = rootNode->createChildSceneNode("Particle");
+	particleNode->attachObject(particle);
 }
 
 Ball::~Ball() {
