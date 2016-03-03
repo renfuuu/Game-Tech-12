@@ -7,25 +7,38 @@ GameObject(nme, tp, scnMgr, ssm, node, ent, ms, sim, mss, rest, frict, scal, kin
 	auto var = ent->getBoundingBox();
 	auto size = var.getSize();
 
-	timer = new Ogre::Timer();
-	dt = timer->getMilliseconds();
-
 	shape = new btBoxShape(btVector3((var.getSize().x*vscale.x)/2, (var.getSize().y*vscale.y)/2, (var.getSize().z*vscale.z)/2));
 }
 
 Wall::~Wall(){
+	if (context->hit) {
+		soundScoreManager->playSound(SoundScoreManager::WALL_BOUNCE);
+		soundScoreManager->setDT(soundScoreManager->getDT());
+		if( context->getTheObject() != previousHit && context->getTheObject()->getType() == GameObject::PADDLE_OBJECT ) {
+			soundScoreManager->playSound(SoundScoreManager::PADDLE_BOUNCE);
+			soundScoreManager->scorePoints(1);
+		}
+		else if ( soundScoreManager->getDT() > 10 ) {
+			if ( context->getTheObject()->getType() == GameObject::FLOOR_OBJECT ) {
+				if ( !(soundScoreManager->floorHit()) ) {
+					this->resetScore();
+					return;
+				}
+			}
+			else
+				soundScoreManager->nonFloorHit();
+		}
 
+		if( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT && previousHit->getType() == GameObject::PADDLE_OBJECT ) {
+			soundScoreManager->playSound(SoundScoreManager::HEADSHOT);
+			soundScoreManager->scorePoints(1);
+		}
+
+		soundScoreManager->setDT();
+	}
+	previousHit = context->getTheObject();
 }
 
 void Wall::update() {	
-	if (context->hit) {
-		dt = timer->getMilliseconds() - dt;
-		
-		if ( dt > 5 )
-			soundScoreManager->playSound(SoundScoreManager::WALL_BOUNCE);
 
-		dt = timer->getMilliseconds();
-	}
-	
-	previousHit = context->getTheObject();
 }

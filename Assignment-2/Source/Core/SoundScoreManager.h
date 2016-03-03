@@ -9,6 +9,8 @@
 #include <SDL/SDL_mixer.h>
 #endif
 
+#include <OgreRoot.h>
+
 #include "TextOverlay.h"
 #include "MultiPlatformHelper.h"
 
@@ -22,6 +24,11 @@ public:
 
 	SoundScoreManager(void);
 	~SoundScoreManager(void);
+
+ 	void setDT();
+ 	void setDT(Ogre::Real last);
+ 	Ogre::Real getDT();
+
 	void playSound(int);
 	void startMusic(void);
 	void mute(void);
@@ -39,6 +46,11 @@ public:
  	void writeScore();
 
 private:
+
+	// Timing Info
+	Ogre::Timer* timer;
+	Ogre::Real dt;
+
 	// Sound Data
 	bool muted; //overall muted
 	bool mutedM; //music

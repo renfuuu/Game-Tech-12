@@ -10,6 +10,4 @@ public:
 
 protected:
 	GameObject* previousHit;
-	Ogre::Timer* timer;
-	Ogre::Real dt;
 };

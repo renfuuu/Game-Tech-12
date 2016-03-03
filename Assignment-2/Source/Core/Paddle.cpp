@@ -19,7 +19,11 @@ Paddle::~Paddle() {
 
 void Paddle::update() {
 	if (context->hit) {
-		
+		soundScoreManager->setDT(soundScoreManager->getDT());
+		if ( soundScoreManager->getDT() > 5 ) {
+			soundScoreManager->playSound(SoundScoreManager::WALL_BOUNCE);
+		}
+		soundScoreManager->setDT();
 	}
 }
 

@@ -2,8 +2,13 @@
 
 SoundScoreManager::SoundScoreManager(void) : gameScore(0), highScoreFile(), highScore(0), floorHitCount(0), scoreLabel("SCORE_"), scoreText("Score: "), highScoreLabel("HIGH_SCORE_"), highScoreText("High Score: "), gameOverLabel("GAME_OVER_"), gameOverText("Game Over!") {
 
-	/* Load Sound Resources */
 
+	/* The global timer */
+	timer = new Ogre::Timer();
+	dt = timer->getMilliseconds();
+
+
+	/* Load Sound Resources */
 	bool success = true;
 	muted = false;
 	mutedM = false;
@@ -69,7 +74,20 @@ SoundScoreManager::SoundScoreManager(void) : gameScore(0), highScoreFile(), high
 
 SoundScoreManager::~SoundScoreManager(void) {
 }
- 
+
+
+void SoundScoreManager::setDT() {
+	dt = timer->getMilliseconds();
+}
+
+void SoundScoreManager::setDT(Ogre::Real last) {
+	dt = timer->getMilliseconds() - last;
+}
+
+Ogre::Real SoundScoreManager::getDT() {
+	return dt;
+}
+
 void SoundScoreManager::startMusic(void) {
 	Mix_PlayMusic( music, -1 );
 }
@@ -177,7 +195,7 @@ void SoundScoreManager::gameOver() {
 		writeScore();
 		postHighScore();
 	}
-	
+
 	MultiPlatformHelper::sleep(1000);
 	resetScore();
 }

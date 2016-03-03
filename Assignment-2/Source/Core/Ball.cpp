@@ -6,9 +6,6 @@ GameObject(nme, tp, scnMgr, ssm, node, ent, ms, sim, mss, rest, frict, scal, kin
 	// Gets the radius of the Ogre::Entity sphere
 	shape = new btSphereShape((ent->getBoundingBox().getHalfSize().x)*scale);
 
-	timer = new Ogre::Timer();
-	dt = timer->getMilliseconds();
-
 	Ogre::SceneNode* particleNode = rootNode->createChildSceneNode("Particle");
 	particleNode->attachObject(particle);
 }
@@ -31,12 +28,13 @@ void Ball::update() {
 	startScore();
 
 	if (context->hit) {
-		dt = timer->getMilliseconds() - dt;
+		soundScoreManager->setDT(soundScoreManager->getDT());
 		if( context->getTheObject() != previousHit && context->getTheObject()->getType() == GameObject::PADDLE_OBJECT ) {
 			soundScoreManager->playSound(SoundScoreManager::PADDLE_BOUNCE);
 			soundScoreManager->scorePoints(1);
 		}
-		else if ( dt > 5 ) {
+		else if ( soundScoreManager->getDT() > 10 ) {
+			soundScoreManager->playSound(SoundScoreManager::WALL_BOUNCE);
 			if ( context->getTheObject()->getType() == GameObject::FLOOR_OBJECT ) {
 				if ( !(soundScoreManager->floorHit()) ) {
 					this->resetScore();
@@ -52,7 +50,7 @@ void Ball::update() {
 			soundScoreManager->scorePoints(1);
 		}
 
-		dt = timer->getMilliseconds();
+		soundScoreManager->setDT();
 	}
 	previousHit = context->getTheObject();
 }
