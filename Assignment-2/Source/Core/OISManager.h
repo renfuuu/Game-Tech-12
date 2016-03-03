@@ -7,9 +7,6 @@
 
 #include <OgreRenderWindow.h>
 
-#include "SoundAdapter.h"
-
-
 class OISManager : public OIS::KeyListener, public OIS::MouseListener {
 public:
     virtual ~OISManager( void );

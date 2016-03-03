@@ -108,9 +108,8 @@ void Application::init()
 	WindowEventUtilities::addWindowEventListener(mRenderWindow, this);
 	mRenderWindow->addListener(this);
 
-	sa = new SoundAdapter();
-	sa->startMusic();
-
+	_soundScoreManager = new SoundScoreManager();
+	_soundScoreManager->startMusic();
 
 #ifdef _WIN32
 		std::string relative = "../../../ogre/build/sdk/media";
@@ -119,51 +118,52 @@ void Application::init()
 #ifdef __linux__
 		std::string relative = "/lusr/opt/ogre-1.9/share/OGRE/Media";
 #endif
-		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/models", "FileSystem");
-		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials", "FileSystem");
-		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/textures", "FileSystem");
-		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/programs/GLSL", "FileSystem");
-		ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/scripts", "FileSystem");
-		ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
-		t1 = new Timer();
+	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/models", "FileSystem");
+	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials", "FileSystem");
+	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/textures", "FileSystem");
+	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/programs/GLSL", "FileSystem");
+	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/scripts", "FileSystem");
+	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
-		// Add some light
-		mSceneManager->setAmbientLight(Ogre::ColourValue(0.4, 0.4, 0.4));
-		mSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+	t1 = new Timer();
 
-		Ogre::Light* light = mSceneManager->createLight("MainLight");
-		light->setCastShadows(true);
-		light->setPosition(0, 500, 0);
-		light->setType(Ogre::Light::LightTypes::LT_POINT);
-		mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
+	// Add some light
+	mSceneManager->setAmbientLight(Ogre::ColourValue(0.4, 0.4, 0.4));
+	mSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
-		// Setup OISManager
-	    _oisManager = OISManager::getSingletonPtr();
-	    _oisManager->initialise( mRenderWindow );
-	    _oisManager->addKeyListener( (OIS::KeyListener*)_oisManager, "keyboardListener" );
-	    _oisManager->addMouseListener( (OIS::MouseListener*)_oisManager, "mouseListener" );
+	Ogre::Light* light = mSceneManager->createLight("MainLight");
+	light->setCastShadows(true);
+	light->setPosition(0, 500, 0);
+	light->setType(Ogre::Light::LightTypes::LT_POINT);
+	mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
-		// Test Bullet
-		Simulator* mySim = new Simulator();
-		GameObject* b1 = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, 0, 100, mSceneManager, 0.0f, 1.0f, 0.8f, true, mySim);
+	// Setup OISManager
+    _oisManager = OISManager::getSingletonPtr();
+    _oisManager->initialise( mRenderWindow );
+    _oisManager->addKeyListener( (OIS::KeyListener*)_oisManager, "keyboardListener" );
+    _oisManager->addMouseListener( (OIS::MouseListener*)_oisManager, "mouseListener" );
 
-		_thePaddle = b1;
+	// Test Bullet
+	Simulator* mySim = new Simulator();
+	GameObject* b1 = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, 0, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, mySim);
 
-		GameObject* b2 = createBall("ball", GameObject::objectType::BALL_OBJECT, "sphere.mesh", 5, 300, 0, .35, mSceneManager, 1.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b3 = createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b4 = createWall("ceiling", GameObject::objectType::WALL_OBJECT, "ceiling.mesh", 0, 600, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 0.5f, 0.8f, false, mySim);
-		GameObject* b5 = createWall("backwall", GameObject::objectType::BACK_WALL_OBJECT, "backwall.mesh", 0, 300, -1350, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, 0.0f, 0.8f, 0.8f, false, mySim);
-		GameObject* b6 = createWall("leftwall", GameObject::objectType::WALL_OBJECT, "leftwall.mesh", 600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b7 = createWall("rightwall", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b8 = createWall("ceiling?", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, 0.0f, 1.0f, 0.8f, false, mySim);
-		GameObject* b9 = createWall("frontwall?", GameObject::objectType::FRONT_WALL_OBJECT, "backwall.mesh", 0, 300, 500, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, 0.0f, 0.9f, 0.8f, false, mySim);
+	_thePaddle = b1;
 
-		_theBall = b2;
+	GameObject* b2 = createBall("ball", GameObject::objectType::BALL_OBJECT, "sphere.mesh", 5, 300, 0, .35, mSceneManager, _soundScoreManager, 1.0f, 1.0f, 0.8f, false, mySim);
+	GameObject* b3 = createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, mySim);
+	GameObject* b4 = createWall("ceiling", GameObject::objectType::WALL_OBJECT, "ceiling.mesh", 0, 600, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.5f, 0.8f, false, mySim);
+	GameObject* b5 = createWall("backwall", GameObject::objectType::BACK_WALL_OBJECT, "backwall.mesh", 0, 300, -1350, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.8f, 0.8f, false, mySim);
+	GameObject* b6 = createWall("leftwall", GameObject::objectType::WALL_OBJECT, "leftwall.mesh", 600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, mySim);
+	GameObject* b7 = createWall("rightwall", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, mySim);
+	GameObject* b8 = createWall("ceiling?", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, mySim);
+	GameObject* b9 = createWall("frontwall?", GameObject::objectType::FRONT_WALL_OBJECT, "backwall.mesh", 0, 300, 500, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, _soundScoreManager, 0.0f, 0.9f, 0.8f, false, mySim);
 
-		_simulator = mySim;
+	_theBall = b2;
 
-		_theBall->startScore();
+	_simulator = mySim;
+
+	_theBall->startScore();
 	}
 	catch (Exception e) {
 		std::cout << "Exception Caught: " << e.what() << std::endl;
@@ -226,7 +226,7 @@ void Application::update(const FrameEvent &evt) {
 
 	}
 	else if (lastKey == OIS::KC_M) {
-		sa->mute();
+		_soundScoreManager->mute();
 	}
 	else if (lastKey == OIS::KC_1 || lastKey == OIS::KC_2 || lastKey == OIS::KC_3) {
 		int index = lastKey - 2;
@@ -261,7 +261,7 @@ void Application::createChildEntity(std::string name, std::string mesh, Ogre::Sc
 	ogreNode->setPosition(x, y, z);
 }
 
-Ball* Application::createBall(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
+Ball* Application::createBall(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
@@ -270,13 +270,13 @@ Ball* Application::createBall(Ogre::String nme, GameObject::objectType tp, Ogre:
 	sn->setScale(scale,scale,scale);
 	ent->setMaterialName("blue");
 
-	Ball* obj = new Ball(nme, tp, mSceneManager, sn, ent, ms, mySim, sa, mss, rest, frict, scale, kinematic);
+	Ball* obj = new Ball(nme, tp, mSceneManager, ssm, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
 	obj->addToSimulator();
 
 	return obj;
 }
 
-Paddle* Application::createPaddle(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
+Paddle* Application::createPaddle(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
@@ -285,13 +285,13 @@ Paddle* Application::createPaddle(Ogre::String nme, GameObject::objectType tp, O
 	const btTransform pos;
 	OgreMotionState* ms = new OgreMotionState(pos, sn);
 
-	Paddle* obj = new Paddle(nme, tp, mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
+	Paddle* obj = new Paddle(nme, tp, mSceneManager, ssm, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
 	obj->addToSimulator();
 
 	return obj;
 }
 
-Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Vector3 scale, Ogre::Degree pitch, Ogre::Degree yaw, Ogre::Degree roll, Ogre::SceneManager* scnMgr, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
+Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Vector3 scale, Ogre::Degree pitch, Ogre::Degree yaw, Ogre::Degree roll, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
@@ -307,7 +307,7 @@ Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre:
 	sn->yaw(yaw);
 	sn->roll(roll);
 
-	Wall* obj = new Wall(nme, tp, mSceneManager, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
+	Wall* obj = new Wall(nme, tp, mSceneManager, ssm, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
 	obj->addToSimulator();
 
 	return obj;
