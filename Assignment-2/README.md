@@ -34,8 +34,8 @@ We feel that this game is fun and intuitive. It has been textured, lit and polis
 
 #### Extra Credit
 * Improved Camera Controls (1 point) - We added the option for the user to switch between 3 different camera modes. Each mode has a seperate camera in the scene. The last camera mode actually lets the user follow the ball in a chase-like camera.
-* Background Music (2 points) - Plays in a loop, can also be muted at the player's will with the M key.]
-* End Condition (2 points) - The game ends if the ball bounces twice on the ground without colliding with another object. If a new highscore has been reached then that score is saved then everything is reset (ball goes back to center and the player's score is 0).
+* Background Music (2 points) - Plays in a loop, can also be muted at the player's will with the M key.
+* End Condition (2 points) - The game ends if the ball bounces twice on the ground without colliding with another object. If a new highscore has been reached then that score is saved and everything is reset (ball goes back to center and the player's current score is 0).
 * Particle Effects (2 points) - Ball has a purple plasma trail behind it that is attached to the ball.
 * Paddle Position (Suggested) - We would like to add our system for positioning the paddle here since we believe it is worthy of some extra points. The paddle actually follows an elliptical paraboloid shape that is a function of the x, and y inputs from the screen. A z value is computed from a function f(x,y) in order to create an arc like shape that feels more like a player is using his shoulder. In addition to this, the paddle needed to be oriented in a way that made sense. To achieve this, the normal from the paraboloid to the paddle is computed. That normal then becomes the local Z axis for the new paddle orientation. An arbitrary orthonormal x, and y axis are computed by the cross product of the z-axis with the global y-axis (0,1,0), then the final taking the cross product of that result with the z-axis gives us the last orthonormal vector for constructing a quaterinion. This keeps the paddle's handle tangent to the paraboloid. The final challenge was making sure the paddle faces forward. So we rotate (roll) the paddle by angle computed from the arctan2 of the cos(a) and the sin(a) between the paddle and the global y-axis (0,1,0). The results came out to be very high quality and we wanted to see if Sarah or the grader would agree to give out some extra points for our hard work.
 
@@ -60,7 +60,7 @@ We feel that this game is fun and intuitive. It has been textured, lit and polis
 * Started with some of the bullet example code from the lecture slides
 * Sound files from the public domain
 * Background Music - http://www.orangefreesounds.com/music-loop-120-bpm/
-* TODO Add font download
+* Dameron font downloaded from http://www.dafont.com/dameron.font
 * Wall image downloaded from http://4.bp.blogspot.com/-5xNMmxVjWKg/UA5bNp_0jaI/AAAAAAAAB4s/QXcwBUUPPKw/s1600/Seamless+wall+white+paint+stucco+plaster+texture.jpg
 * Headshot sound downloaded from http://gs.bel-net.ru/cs/download/sound/misc/headshot.wav
 
