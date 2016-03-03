@@ -1,10 +1,76 @@
-## Milestone 2
+## Milestone 3
 
 ### How to play
 * Move the mouse up/down and left/right on the game window to control the paddle
 * Strike the ball with the paddle to propel it through the room and increase your score
 * Space bar resets score and the ball back to its inital position
 * M mutes the sounds
+* Keys 1,2 and 3 change the camera angle (front, side, and ball chase view)
+* Game ends if the ball bounces on the ground twice without hitting any other wall or the paddle
+* Escape key to quit
+
+### Progress
+
+#### Summary
+We feel that this game is fun and intuitive. It has been textured, lit and polished in a manner that doesn't leave the player confused or dizzzy. 
+
+#### Implemented
+* We were able to get gameobjects of types paddle, wall and ball set up and working perfectly.
+* Bullet simulator with motionstate wrapper that handles motions between bullet transforms and ogre scene transforms
+* Working collisions / collision detection
+* User controls
+* Paddle moves on parabolic arc in 3d space that gives a more realsitic feel for the motion of the paddle
+* Ball loses velocity over time until the player hits it again with the paddle
+* Different sounds played for collision between ball/paddle and ball/wall
+* Added scoring system that increases points with each strike of the ball
+* Added GUI to display score to the user
+* Textures for the walls, paddle and the ground
+* Ball reset
+* Sound muting
+* Additional camera angles
+* Particle effects (purple lazer trail on the ball)
+* Highscore is saved and written out to a file so it remains between loads of the game
+* HEADSHOT! If the player hits the back wall directly with the ball an extra point is awarded and a headshot sound is played
+
+#### Extra Credit
+* Improved Camera Controls (1 point) - We added the option for the user to switch between 3 different camera modes. Each mode has a seperate camera in the scene. The last camera mode actually lets the user follow the ball in a chase-like camera.
+* Background Music (2 points) - Plays in a loop, can also be muted at the player's will with the M key.]
+* End Condition (2 points) - The game ends if the ball bounces twice on the ground without colliding with another object. If a new highscore has been reached then that score is saved then everything is reset (ball goes back to center and the player's score is 0).
+* Particle Effects (2 points) - Ball has a purple plasma trail behind it that is attached to the ball.
+* Paddle Position (Suggested) - We would like to add our system for positioning the paddle here since we believe it is worthy of some extra points. The paddle actually follows an elliptical paraboloid shape that is a function of the x, and y inputs from the screen. A z value is computed from a function f(x,y) in order to create an arc like shape that feels more like a player is using his shoulder. In addition to this, the paddle needed to be oriented in a way that made sense. To achieve this, the normal from the paraboloid to the paddle is computed. That normal then becomes the local Z axis for the new paddle orientation. An arbitrary orthonormal x, and y axis are computed by the cross product of the z-axis with the global y-axis (0,1,0), then the final taking the cross product of that result with the z-axis gives us the last orthonormal vector for constructing a quaterinion. This keeps the paddle's handle tangent to the paraboloid. The final challenge was making sure the paddle faces forward. So we rotate (roll) the paddle by angle computed from the arctan2 of the cos(a) and the sin(a) between the paddle and the global y-axis (0,1,0). The results came out to be very high quality and we wanted to see if Sarah or the grader would agree to give out some extra points for our hard work.
+
+#### C++ Classes Used
+* Application - Sets up scene, controls game logic
+* Simulator - Holds a list of gameobjects, steps them inside the bullet dynamic world
+* BulletContactCallback - Bullet calls this class when a collision between two objects is detected
+* CollisionContext - Stores information about the collision that is passed through the contact callback
+* OgreMotionState - Updates transforms between Ogre world and bullet world
+* GameObject - A wrapper for storing bullet/ogre information and methods to abstract their usage
+* Paddle - Child of GameObject, adds a collider shape around a paddle mesh
+* Ball - Child of GameObject, adds a collider sphere shape around a ball mesh
+* Wall - Child of GameObject, adds a cube collider shape around a plane mesh
+* OISManager - Event driven user input detection class
+* TextOverlay - Allows us to put 2D gui and text elements onto the screen
+* SoundScoreManager - Stores sounds and plays them into the ogre scene, manages and updates the score of the player
+* SceneHelper - Allows us to get information faster from scennodes to entities
+* MultiPlatFormHelper - Abstract usages for things like timing and printing on different platforms
+
+### Code and Outside resources used
+* Paddle model downloaded from: http://www.blendswap.com/blends/view/49333 credit: Bruno Matheus
+* Started with some of the bullet example code from the lecture slides
+* Sound files from the public domain
+* Background Music - http://www.orangefreesounds.com/music-loop-120-bpm/
+* TODO Add font download
+* Wall image downloaded from http://4.bp.blogspot.com/-5xNMmxVjWKg/UA5bNp_0jaI/AAAAAAAAB4s/QXcwBUUPPKw/s1600/Seamless+wall+white+paint+stucco+plaster+texture.jpg
+* Headshot sound downloaded from http://gs.bel-net.ru/cs/download/sound/misc/headshot.wav
+
+
+## Milestone 2
+
+### How to play
+* Move the mouse up/down and left/right on the game window to control the paddle
+* Strike the ball with the paddle to propel it through the room and increase your score
+* Space bar resets score and the ball back to its inital position
 
 ### Progress
 
@@ -50,7 +116,6 @@ We feel that we are actually ahead of schedule and everything went smoothly this
 * Started with some of the bullet example code from the lecture slides
 * Sound files from the public domain
 * OgreText - Copied from http://ogre3d.org/tikiwiki/tiki-index.php?page=Simple+text
-* Background Music - http://www.orangefreesounds.com/music-loop-120-bpm/
 
 
 ## Milestone 1
