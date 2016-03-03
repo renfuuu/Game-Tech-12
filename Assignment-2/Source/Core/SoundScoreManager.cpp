@@ -1,12 +1,9 @@
 #include "SoundScoreManager.h"
 
 SoundScoreManager::SoundScoreManager(void) : gameScore(0), highScoreFile(), highScore(0), floorHitCount(0), scoreLabel("SCORE_"), scoreText("Score: "), highScoreLabel("HIGH_SCORE_"), highScoreText("High Score: "), gameOverLabel("GAME_OVER_"), gameOverText("Game Over!") {
-
-
 	/* The global timer */
 	timer = new Ogre::Timer();
 	dt = timer->getMilliseconds();
-
 
 	/* Load Sound Resources */
 	bool success = true;
@@ -75,6 +72,9 @@ SoundScoreManager::SoundScoreManager(void) : gameScore(0), highScoreFile(), high
 SoundScoreManager::~SoundScoreManager(void) {
 }
 
+Ogre::Real SoundScoreManager::getTime() {
+	return timer->getMilliseconds();
+}
 
 void SoundScoreManager::setDT() {
 	dt = timer->getMilliseconds();
@@ -164,6 +164,7 @@ void SoundScoreManager::scorePoints(int points) {
 	postScore();
 }
 
+
 void SoundScoreManager::nonFloorHit(void) {
 	floorHitCount = 0;
 }
@@ -190,12 +191,6 @@ void SoundScoreManager::resetScore(void) {
 }
 
 void SoundScoreManager::gameOver() {
-	if ( gameScore > highScore ) {
-		highScore = gameScore;
-		writeScore();
-		postHighScore();
-	}
-
 	MultiPlatformHelper::sleep(1000);
 	resetScore();
 }

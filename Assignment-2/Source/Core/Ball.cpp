@@ -2,7 +2,7 @@
 #include "MultiPlatformHelper.h"
 
 Ball::Ball(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin) : 
-GameObject(nme, tp, scnMgr, ssm, node, ent, ms, sim, mss, rest, frict, scal, kin), previousHit(0) {
+GameObject(nme, tp, scnMgr, ssm, node, ent, ms, sim, mss, rest, frict, scal, kin) {
 	// Gets the radius of the Ogre::Entity sphere
 	shape = new btSphereShape((ent->getBoundingBox().getHalfSize().x)*scale);
 
@@ -25,32 +25,41 @@ void Ball::updateTransform() {
 
 void Ball::update() {
 
+	static int MAX_DT = 7;
+
 	startScore();
 
 	if (context->hit) {
-		soundScoreManager->setDT(soundScoreManager->getDT());
-		if( context->getTheObject() != previousHit && context->getTheObject()->getType() == GameObject::PADDLE_OBJECT ) {
+		Ogre::Real dt = soundScoreManager->getTime() - lastHitTime;
+		if ( dt > MAX_DT )
+			lastHitTime = soundScoreManager->getTime();
+
+		// Check for paddle collision but not twice in a row
+		if( context->getTheObject()->getType() == GameObject::PADDLE_OBJECT && context->getTheObject() != previousHit ) {
 			soundScoreManager->playSound(SoundScoreManager::PADDLE_BOUNCE);
+			soundScoreManager->nonFloorHit();
 			soundScoreManager->scorePoints(1);
 		}
-		else if ( soundScoreManager->getDT() > 10 ) {
-			soundScoreManager->playSound(SoundScoreManager::WALL_BOUNCE);
-			if ( context->getTheObject()->getType() == GameObject::FLOOR_OBJECT ) {
+
+		// Check for floor collision
+		if ( context->getTheObject()->getType() == GameObject::FLOOR_OBJECT ) {
+			if ( dt > MAX_DT ) {
 				if ( !(soundScoreManager->floorHit()) ) {
 					this->resetScore();
 					return;
 				}
 			}
-			else
-				soundScoreManager->nonFloorHit();
+		}
+		else {
+			soundScoreManager->nonFloorHit();
 		}
 
+		// Headshot
 		if( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT && previousHit->getType() == GameObject::PADDLE_OBJECT ) {
 			soundScoreManager->playSound(SoundScoreManager::HEADSHOT);
 			soundScoreManager->scorePoints(1);
+			soundScoreManager->nonFloorHit();
 		}
-
-		soundScoreManager->setDT();
 	}
 	previousHit = context->getTheObject();
 }

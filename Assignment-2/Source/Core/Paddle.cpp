@@ -18,12 +18,13 @@ Paddle::~Paddle() {
 }
 
 void Paddle::update() {
+
+	static int MAX_DT = 5;
+
 	if (context->hit) {
-		soundScoreManager->setDT(soundScoreManager->getDT());
-		if ( soundScoreManager->getDT() > 5 ) {
-			soundScoreManager->playSound(SoundScoreManager::WALL_BOUNCE);
-		}
-		soundScoreManager->setDT();
+		Ogre::Real dt = soundScoreManager->getTime() - lastHitTime;
+		if ( dt > MAX_DT )
+			lastHitTime = soundScoreManager->getTime();
 	}
 }
 

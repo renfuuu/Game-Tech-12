@@ -8,4 +8,5 @@ public:
 	~Paddle();
 	virtual void update();
 	virtual void movePaddle(OISManager* _oisManager, int height, int width);
+
 };

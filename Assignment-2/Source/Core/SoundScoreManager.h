@@ -27,6 +27,7 @@ public:
 
  	void setDT();
  	void setDT(Ogre::Real last);
+ 	Ogre::Real getTime();
  	Ogre::Real getDT();
 
 	void playSound(int);
@@ -74,5 +75,4 @@ private:
 	Ogre::String gameOverText;
 	Ogre::String gameOverLabel;
 	std::fstream highScoreFile;
-
 };

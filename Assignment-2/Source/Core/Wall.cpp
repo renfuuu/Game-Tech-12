@@ -3,7 +3,7 @@
 #include "SceneHelper.h"
 
 Wall::Wall(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Vector3 scal, bool kin) : 
-GameObject(nme, tp, scnMgr, ssm, node, ent, ms, sim, mss, rest, frict, scal, kin), previousHit(0) {
+GameObject(nme, tp, scnMgr, ssm, node, ent, ms, sim, mss, rest, frict, scal, kin) {
 	auto var = ent->getBoundingBox();
 	auto size = var.getSize();
 
@@ -11,34 +11,22 @@ GameObject(nme, tp, scnMgr, ssm, node, ent, ms, sim, mss, rest, frict, scal, kin
 }
 
 Wall::~Wall(){
-	if (context->hit) {
-		soundScoreManager->playSound(SoundScoreManager::WALL_BOUNCE);
-		soundScoreManager->setDT(soundScoreManager->getDT());
-		if( context->getTheObject() != previousHit && context->getTheObject()->getType() == GameObject::PADDLE_OBJECT ) {
-			soundScoreManager->playSound(SoundScoreManager::PADDLE_BOUNCE);
-			soundScoreManager->scorePoints(1);
-		}
-		else if ( soundScoreManager->getDT() > 10 ) {
-			if ( context->getTheObject()->getType() == GameObject::FLOOR_OBJECT ) {
-				if ( !(soundScoreManager->floorHit()) ) {
-					this->resetScore();
-					return;
-				}
-			}
-			else
-				soundScoreManager->nonFloorHit();
-		}
-
-		if( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT && previousHit->getType() == GameObject::PADDLE_OBJECT ) {
-			soundScoreManager->playSound(SoundScoreManager::HEADSHOT);
-			soundScoreManager->scorePoints(1);
-		}
-
-		soundScoreManager->setDT();
-	}
-	previousHit = context->getTheObject();
 }
 
-void Wall::update() {	
+void Wall::update() {
+
+	static int MAX_DT = 4;
+
+	if (context->hit) {
+		Ogre::Real dt = soundScoreManager->getTime() - lastHitTime;
+		if ( dt > MAX_DT && context->getTheObject()->getType() == GameObject::BALL_OBJECT ) {
+			lastHitTime = soundScoreManager->getTime();
+			soundScoreManager->playSound(SoundScoreManager::WALL_BOUNCE);
+		}
+
+		if ( type != GameObject::FLOOR_OBJECT ) {
+			soundScoreManager->nonFloorHit();
+		}
+	}
 
 }

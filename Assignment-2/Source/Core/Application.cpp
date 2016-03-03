@@ -202,7 +202,7 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		dTime = temp;
 	}
 
-	_simulator->stepSimulation(evt.timeSinceLastFrame, 50, 1 / fps);
+	_simulator->stepSimulation(evt.timeSinceLastFrame, 1, 1.0/fps);
 
 	// Constrains the ball's speed
 	static int maxSpeed = 4000;
@@ -239,7 +239,7 @@ void Application::update(const FrameEvent &evt) {
 	ballCam->lookAt(_theBall->getNode()->getPosition());
 
 	// Small pull toward paddle to make it easier for the player to hit the ball
-	int pull = 1000;
+	int pull = 500;
 	Ogre::Vector3 paddleAttract = (_thePaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).normalisedCopy();
 	_theBall->applyForce(paddleAttract.x * pull, paddleAttract.y * pull, paddleAttract.z * pull);
 }

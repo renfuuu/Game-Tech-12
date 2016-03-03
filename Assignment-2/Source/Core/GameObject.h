@@ -44,6 +44,9 @@ protected:
 	btVector3 inertia;
 
 	SoundScoreManager* soundScoreManager;
+	
+	GameObject* previousHit;
+	Ogre::Real lastHitTime;
 
 	GameObject::objectType type;
 
