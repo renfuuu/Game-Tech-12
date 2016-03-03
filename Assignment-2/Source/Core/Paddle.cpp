@@ -2,8 +2,8 @@
 #include "MultiPlatformHelper.h"
 #include "SceneHelper.h"
 
-Paddle::Paddle(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin) : 
-GameObject(nme, tp, scnMgr, node, ent, ms, sim, mss, rest, frict, scal, kin) {
+Paddle::Paddle(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin) : 
+GameObject(nme, tp, scnMgr, ssm, node, ent, ms, sim, mss, rest, frict, scal, kin) {
 	// Gets the radius of the Ogre::Entity sphere
 	kinematic = true;
 	auto var = ent->getBoundingBox();
@@ -19,7 +19,11 @@ Paddle::~Paddle() {
 
 void Paddle::update() {
 	if (context->hit) {
-		
+		soundScoreManager->setDT(soundScoreManager->getDT());
+		if ( soundScoreManager->getDT() > 5 ) {
+			soundScoreManager->playSound(SoundScoreManager::WALL_BOUNCE);
+		}
+		soundScoreManager->setDT();
 	}
 }
 

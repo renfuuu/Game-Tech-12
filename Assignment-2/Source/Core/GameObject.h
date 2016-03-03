@@ -6,6 +6,7 @@
 #include "CollisionContext.h"
 #include "OgreMotionState.h"
 #include "OISManager.h"
+#include "SoundScoreManager.h"
 
 #include <OgreCamera.h>
 #include <OgreEntity.h>
@@ -42,6 +43,8 @@ protected:
 	btTransform tr;
 	btVector3 inertia;
 
+	SoundScoreManager* soundScoreManager;
+
 	GameObject::objectType type;
 
 	btScalar mass;
@@ -57,8 +60,8 @@ protected:
 public:
 	BulletContactCallback* cCallBack;
 
-	GameObject(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin);
-	GameObject(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Vector3 scal, bool kin);
+	GameObject(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin);
+	GameObject(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Vector3 scal, bool kin);
 	inline btRigidBody* getBody() { return body; }
 	void addToSimulator();
 	virtual void updateTransform();
@@ -67,14 +70,16 @@ public:
 	void setPosition(float x, float y, float z);
 	void setPosition(const Ogre::Vector3& pos);
 	Ogre::SceneNode* getNode();
+	
 	void reset();
+	void resetScore();
+	void startScore();
+	void showColliderBox();
+
 	virtual void update() = 0;
 	virtual int getPoints();
 	virtual GameObject::objectType getType();
 	virtual void movePaddle(OISManager* _oisManager, int height, int width);
 	virtual Ogre::String getName(void);
 	virtual void setPoints(int points);
-	virtual void resetScore();
-	virtual void startScore();
-	void showColliderBox();
 };
