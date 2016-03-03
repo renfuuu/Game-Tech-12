@@ -70,14 +70,16 @@ public:
 	void setPosition(float x, float y, float z);
 	void setPosition(const Ogre::Vector3& pos);
 	Ogre::SceneNode* getNode();
+	
 	void reset();
+	void resetScore();
+	void startScore();
+	void showColliderBox();
+
 	virtual void update() = 0;
 	virtual int getPoints();
 	virtual GameObject::objectType getType();
 	virtual void movePaddle(OISManager* _oisManager, int height, int width);
 	virtual Ogre::String getName(void);
 	virtual void setPoints(int points);
-	virtual void resetScore();
-	virtual void startScore();
-	void showColliderBox();
 };

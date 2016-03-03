@@ -13,8 +13,6 @@ public:
 	~Ball();
 	virtual void update();
 	virtual void updateTransform();
-	virtual void resetScore();
-	virtual void startScore();
 
 };
 

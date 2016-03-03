@@ -110,12 +110,15 @@ GameObject::objectType GameObject::getType(){
 void GameObject::setPoints(int points){
 	//overwritten in ball class
 }
+
 void GameObject::resetScore() {
-	//Overridden in ball class
+	this->GameObject::reset();
+	soundScoreManager->resetScore();
 }
 
 void GameObject::startScore() {
-	//Overridden in ball class
+	soundScoreManager->postScore();
+	soundScoreManager->postHighScore();
 }
 
 void GameObject::showColliderBox() {

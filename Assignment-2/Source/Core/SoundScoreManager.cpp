@@ -177,7 +177,7 @@ void SoundScoreManager::gameOver() {
 		writeScore();
 		postHighScore();
 	}
-	std::cout << "Game Over\n";
+	
 	MultiPlatformHelper::sleep(1000);
 	resetScore();
 }

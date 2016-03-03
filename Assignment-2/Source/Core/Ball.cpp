@@ -37,7 +37,6 @@ void Ball::update() {
 			soundScoreManager->scorePoints(1);
 		}
 		else if ( dt > 5 ) {
-			soundScoreManager->playSound(SoundScoreManager::WALL_BOUNCE);
 			if ( context->getTheObject()->getType() == GameObject::FLOOR_OBJECT ) {
 				if ( !(soundScoreManager->floorHit()) ) {
 					this->resetScore();
@@ -47,7 +46,7 @@ void Ball::update() {
 			else
 				soundScoreManager->nonFloorHit();
 		}
-		
+
 		if( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT && previousHit->getType() == GameObject::PADDLE_OBJECT ) {
 			soundScoreManager->playSound(SoundScoreManager::HEADSHOT);
 			soundScoreManager->scorePoints(1);
@@ -56,14 +55,4 @@ void Ball::update() {
 		dt = timer->getMilliseconds();
 	}
 	previousHit = context->getTheObject();
-}
-
-void Ball::resetScore() {
-	this->GameObject::reset();
-	soundScoreManager->resetScore();
-}
-
-void Ball::startScore() {
-	soundScoreManager->postScore();
-	soundScoreManager->postHighScore();
 }
