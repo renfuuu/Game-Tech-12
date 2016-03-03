@@ -1,15 +1,17 @@
+// wall genrated by blender2ogre 0.6.0
+
 material wall 
 {
     receive_shadows on 
 
     technique
     {
-        pass blue
+        pass wall
         {
-            ambient 0.1265529990196228 0.8 0.9 0.2
-            diffuse 0.1265529990196228 1.0 0.4 0.2
-            specular 1 1 1 .2 12.5
-            emissive 0.0 0.0 0.0 0.3
+            ambient 0.800000011920929 0.800000011920929 0.800000011920929 1.0
+            diffuse 0.6400000190734865 0.6400000190734865 0.6400000190734865 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.800000011920929 0.800000011920929 0.800000011920929 1.0
 
             alpha_to_coverage off
             colour_write on
@@ -28,7 +30,13 @@ material wall
             shading gouraud
             transparent_sorting on
 
-
+            texture_unit 
+            {
+                texture wall.jpg
+                tex_address_mode wrap
+                scale 1.0 1.0
+                colour_op modulate
+            }
         }
     }
 }
