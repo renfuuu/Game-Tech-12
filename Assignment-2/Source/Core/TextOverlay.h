@@ -14,6 +14,7 @@ public:
 	virtual void setPos(float, float);
 	virtual void setCol(float, float, float, float);
 	virtual void showOverlay(void);
+	virtual void hideOverlay(void);
 
 protected:
 	float charHeight;

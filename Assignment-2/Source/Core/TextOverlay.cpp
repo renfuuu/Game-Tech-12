@@ -40,5 +40,9 @@ void TextOverlay::setCol(float r, float g, float b, float a) {
 }
 
 void TextOverlay::showOverlay(void) {
-	overlay->show();
+	textArea->show();
+}
+
+void TextOverlay::hideOverlay(void) {
+	textArea->hide();
 }
