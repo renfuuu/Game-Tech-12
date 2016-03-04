@@ -46,6 +46,7 @@ void Application::init()
 	// load plugins
 #ifdef _WIN32
 	mRoot->loadPlugin("RenderSystem_GL_d");
+	mRoot->loadPlugin("Plugin_ParticleFX_d");
 #endif
 #ifdef __linux__
 	mRoot->loadPlugin("/lusr/opt/ogre-1.9/lib/OGRE/RenderSystem_GL");
@@ -124,6 +125,7 @@ void Application::init()
 	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/textures", "FileSystem");
 	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/programs/GLSL", "FileSystem");
 	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/scripts", "FileSystem");
+	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/particle", "FileSystem");
 	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 	t1 = new Timer();
@@ -202,7 +204,7 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		dTime = temp;
 	}
 
-	_simulator->stepSimulation(evt.timeSinceLastFrame, 1, 1.0/fps);
+	_simulator->stepSimulation(evt.timeSinceLastFrame, 1, 1.0 / fps);
 
 	// Constrains the ball's speed
 	static int maxSpeed = 4000;

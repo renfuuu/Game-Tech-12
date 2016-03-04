@@ -40,7 +40,7 @@ SoundScoreManager::SoundScoreManager(void) : gameScore(0), highScoreFile(), high
 	music = Mix_LoadMUS( "../../../Game-Tech-12/Assignment-2/Assets/music_loop.wav" ); 
 	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/ball.wav");
 	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/wall.wav");
-	gameSounds[HEADSHOT] = Mix_LoadWAV("../Game-Tech-12/Assignment-2/Assets/headshot.wav");
+	gameSounds[HEADSHOT] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/headshot.wav");
 #endif
 
 	/* Load Score Resources */
