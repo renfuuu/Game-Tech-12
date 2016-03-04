@@ -125,7 +125,9 @@ void Application::init()
 	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/textures", "FileSystem");
 	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/programs/GLSL", "FileSystem");
 	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/scripts", "FileSystem");
+#ifdef _WIN32
 	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/particle", "FileSystem");
+#endif
 	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 	t1 = new Timer();
