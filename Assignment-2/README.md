@@ -31,6 +31,7 @@ We feel that this game is fun and intuitive. It has been textured, lit and polis
 * Particle effects (purple lazer trail on the ball)
 * Highscore is saved and written out to a file so it remains between loads of the game
 * HEADSHOT! If the player hits the back wall directly with the ball an extra point is awarded and a headshot sound is played
+* "Game Over" is displayed after the game is over and is removed on the start of a new game.
 
 #### Extra Credit
 * Improved Camera Controls (1 point) - We added the option for the user to switch between 3 different camera modes. Each mode has a seperate camera in the scene. The last camera mode actually lets the user follow the ball in a chase-like camera.
@@ -51,7 +52,9 @@ We feel that this game is fun and intuitive. It has been textured, lit and polis
 * Wall - Child of GameObject, adds a cube collider shape around a plane mesh
 * OISManager - Event driven user input detection class
 * TextOverlay - Allows us to put 2D gui and text elements onto the screen
-* SoundScoreManager - Stores sounds and plays them into the ogre scene, manages and updates the score of the player
+* SoundScoreManager - A combination of SoundManager & ScoreManager.
+* SoundManager - Stores sounds and plays them into the ogre scene
+* ScoreManager - Manages and updates the score of the player
 * SceneHelper - Allows us to get information faster from scennodes to entities
 * MultiPlatFormHelper - Abstract usages for things like timing and printing on different platforms
 
