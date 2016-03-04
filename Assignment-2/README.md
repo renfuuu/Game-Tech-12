@@ -1,5 +1,8 @@
 ## Milestone 3
 
+### How to Build
+* Refer to "HOW_TO_BUILD" file!
+
 ### How to play
 * Move the mouse up/down and left/right on the game window to control the paddle
 * Strike the ball with the paddle to propel it through the room and increase your score
