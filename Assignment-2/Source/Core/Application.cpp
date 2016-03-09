@@ -81,6 +81,12 @@ void Application::init()
 
 	bool begin = false;
 
+	// Setup OISManager
+    _oisManager = OISManager::getSingletonPtr();
+    _oisManager->initialise( mRenderWindow );
+    _oisManager->addKeyListener( (OIS::KeyListener*)_oisManager, "keyboardListener" );
+    _oisManager->addMouseListener( (OIS::MouseListener*)_oisManager, "mouseListener" );
+
 	mRenderer = &CEGUI::OgreRenderer::bootstrapSystem(*mRenderWindow);
 	CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
 	CEGUI::Font::setDefaultResourceGroup("Fonts");
@@ -93,7 +99,9 @@ void Application::init()
 	
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
 	CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
+	
 	CEGUI::Window *quit = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
+	quit->setText( "QUIT!" );
 
 	sheet->addChild(quit);
 	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
@@ -163,12 +171,6 @@ void Application::init()
 	light->setPosition(0, 500, 0);
 	light->setType(Ogre::Light::LightTypes::LT_POINT);
 	mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
-
-	// Setup OISManager
-    _oisManager = OISManager::getSingletonPtr();
-    _oisManager->initialise( mRenderWindow );
-    _oisManager->addKeyListener( (OIS::KeyListener*)_oisManager, "keyboardListener" );
-    _oisManager->addMouseListener( (OIS::MouseListener*)_oisManager, "mouseListener" );
 
 	// Test Bullet
 	Simulator* mySim = new Simulator();
