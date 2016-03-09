@@ -79,6 +79,28 @@ void Application::init()
 	mSceneManager = mRoot->createSceneManager(ST_GENERIC);
 	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, width = 800, height = 600, false, &params);
 
+	bool begin = false;
+
+	mRenderer = &CEGUI::OgreRenderer::bootstrapSystem(*mRenderWindow);
+	CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
+	CEGUI::Font::setDefaultResourceGroup("Fonts");
+	CEGUI::Scheme::setDefaultResourceGroup("Schemes");
+	CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
+	CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
+
+	CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+	CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+	
+	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+	CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
+	CEGUI::Window *quit = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
+
+	sheet->addChild(quit);
+	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
+
+//	while ( !begin ) {
+		//
+//	}
 	mCamera = mSceneManager->createCamera("Main Camera");
 	Ogre::Camera* cam2 = mSceneManager->createCamera("Cam2");
 	ballCam = mSceneManager->createCamera("Ball Cam");
@@ -226,6 +248,9 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
         velocity *= maxSpeed/speed;
         _theBall->getBody()->setLinearVelocity(velocity);
     }
+
+
+    //CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 
 	return true;
 }

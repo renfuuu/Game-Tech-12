@@ -15,6 +15,9 @@
 #include <OISKeyboard.h>
 #include <OISInputManager.h>
 
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
+
 #include <unordered_map>
 #include <string>
 
@@ -47,6 +50,8 @@ public:
 	Simulator* _simulator;
 	GameObject* _theBall;
 	GameObject* _thePaddle;
+
+    CEGUI::OgreRenderer* mRenderer;
 	
 	std::vector<Ogre::Camera*> cameras;
 
