@@ -79,8 +79,6 @@ void Application::init()
 	mSceneManager = mRoot->createSceneManager(ST_GENERIC);
 	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, width = 800, height = 600, false, &params);
 
-	bool begin = false;
-
 	// Setup OISManager
     _oisManager = OISManager::getSingletonPtr();
     _oisManager->initialise( mRenderWindow );
@@ -106,9 +104,6 @@ void Application::init()
 	sheet->addChild(quit);
 	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 
-//	while ( !begin ) {
-		//
-//	}
 	mCamera = mSceneManager->createCamera("Main Camera");
 	Ogre::Camera* cam2 = mSceneManager->createCamera("Cam2");
 	ballCam = mSceneManager->createCamera("Ball Cam");
@@ -197,14 +192,30 @@ void Application::init()
 
 bool Application::frameRenderingQueued(const FrameEvent &evt)
 {
-	static float gameOverTime = 0.0f;
-	static float dTime = t1->getMilliseconds();
-	
+	static bool begin = false;
+
+	//TODO split this into three areas, Setup & GUI, server, client
 	if (mRenderWindow->isClosed())
 	{
 		return false;
 	}
 
+	if(!begin) {
+		_oisManager->capture();
+
+		OIS::KeyCode lastKey = _oisManager->lastKeyPressed();
+
+		if(lastKey == OIS::KC_ESCAPE) {
+			// close window when ESC is pressed
+			mRunning = false;
+			return false;
+		}
+		return true;
+	}
+
+	static float gameOverTime = 0.0f;
+	static float dTime = t1->getMilliseconds();
+	
 	if (!mRunning)
 	{
 		return false;
@@ -212,10 +223,6 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		try {
 			_oisManager->capture();
 			_thePaddle->movePaddle(_oisManager, height, width);
-
-		// close window when ESC is pressed
-		if(_oisManager->getKeyPressed() == OIS::KC_ESCAPE)
-			mRunning = false;
 	}
 	catch (Exception e) {
 
@@ -276,7 +283,11 @@ void Application::update(const FrameEvent &evt) {
 			mRenderWindow->addViewport(cameras[index]);
 		}
 	}
-
+	else if(lastKey == OIS::KC_ESCAPE) {
+		// close window when ESC is pressed
+		mRunning = false;
+	}
+		
 	ballCam->lookAt(_theBall->getNode()->getPosition());
 
 	// Small pull toward paddle to make it easier for the player to hit the ball
@@ -284,7 +295,6 @@ void Application::update(const FrameEvent &evt) {
 	Ogre::Vector3 paddleAttract = (_thePaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).normalisedCopy();
 	_theBall->applyForce(paddleAttract.x * pull, paddleAttract.y * pull, paddleAttract.z * pull);
 }
-
 
 void Application::createRootEntity(std::string name, std::string mesh, int x, int y, int z) {
 	Ogre::Entity* ogreEntity = mSceneManager->createEntity(name, mesh);
