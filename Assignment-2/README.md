@@ -1,4 +1,12 @@
-## Milestone 3
+## Milestone 3.1
+Architecture Upgrade:
+Player object that stores each Player's paddle location, camera views, and scores.
+
+Client-Server model: 
+We will create a CEGUI window at the beginning of the game. Which asks the player whether they would like to "Host a Game" or "Join a Game". The host (or server) does the bullet simulations with the received information from the players (or clients) and sends ball information to them. Players send paddle information (or the Player object in the form of packets) to the host so it can process the simulations. The CEGUI has a simple lobby containing players hosting when a new player selects to "Join a game".
+
+
+## Milestone 2.3
 
 ### How to Build
 * Refer to "HOW_TO_BUILD" file!
@@ -72,7 +80,7 @@ We feel that this game is fun and intuitive. It has been textured, lit and polis
 * Headshot sound downloaded from http://gs.bel-net.ru/cs/download/sound/misc/headshot.wav
 
 
-## Milestone 2
+## Milestone 2.2
 
 ### How to play
 * Move the mouse up/down and left/right on the game window to control the paddle
@@ -125,7 +133,7 @@ We feel that we are actually ahead of schedule and everything went smoothly this
 * OgreText - Copied from http://ogre3d.org/tikiwiki/tiki-index.php?page=Simple+text
 
 
-## Milestone 1
+## Milestone 2.1
 
 ### Project Description
 
