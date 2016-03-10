@@ -217,10 +217,10 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		return false;
 	}
 
-	// if ( handleGUI(evt) )
-	// 	return true;
-	// else if ( !updateServer(evt) ) /* Always returns true for now */
-	// 	return false;
+	if ( handleGUI(evt) )
+		return true;
+	else if ( !updateServer(evt) ) /* Always returns true for now */
+		return false;
 	else if ( !updateClient(evt) )
 		return false;
 
