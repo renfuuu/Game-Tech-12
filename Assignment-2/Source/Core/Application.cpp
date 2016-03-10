@@ -114,7 +114,8 @@ void Application::init()
 	mRenderWindow->addViewport(mCamera);
 
 	mCamera->setAutoAspectRatio(true);
-	mCamera->setPosition(0, 120, 1000);
+	mCamera->setPosition(0, 120, 1050);
+	mCamera->pitch(Ogre::Degree(10));
 
 	cam2->setAutoAspectRatio(true);
 	cam2->setPosition(1350, 0, -400);
@@ -122,7 +123,7 @@ void Application::init()
 	cam2->pitch(Ogre::Degree(15));
 
 	ballCam->setAutoAspectRatio(true);
-	ballCam->setPosition(0, 120, 800);
+	ballCam->setPosition(0, 120, 1050);
 
 	cameras = std::vector<Ogre::Camera*>();
 	cameras.push_back(mCamera);
@@ -160,13 +161,23 @@ void Application::init()
 	t1 = new Timer();
 
 	// Add some light
-	mSceneManager->setAmbientLight(Ogre::ColourValue(0.4, 0.4, 0.4));
+	mSceneManager->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 	mSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
-	Ogre::Light* light = mSceneManager->createLight("MainLight");
-	light->setCastShadows(true);
-	light->setPosition(0, 500, 0);
-	light->setType(Ogre::Light::LightTypes::LT_POINT);
+	// Ogre::Light* light = mSceneManager->createLight("MainLight");
+	// light->setCastShadows(true);
+	// light->setPosition(0, 500, 0);
+	// light->setType(Ogre::Light::LightTypes::LT_POINT);
+
+	Ogre::Light* directionalLight = mSceneManager->createLight("Sun");
+	directionalLight->setType(Ogre::Light::LightTypes::LT_DIRECTIONAL);
+	directionalLight->setCastShadows(true);
+	directionalLight->setDiffuseColour(Ogre::ColourValue(.8, .8, .8));
+	directionalLight->setSpecularColour(Ogre::ColourValue(.8, .8, .8));
+	// light2->setPosition(0, 3000, 0);
+
+	directionalLight->setDirection(Ogre::Vector3(0, -1, .1));
+
 	mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
 	// Test Bullet
@@ -182,7 +193,7 @@ void Application::init()
 	createWall("ceiling?", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, mySim);
 	createWall("frontwall?", GameObject::objectType::FRONT_WALL_OBJECT, "backwall.mesh", 0, 300, 500, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, _soundScoreManager, 0.0f, 0.9f, 0.8f, false, mySim);
 
-	createRootEntity("stadium", "stadium.mesh", 0, -99, 0);
+	createRootEntity("stadium", "stadium2.mesh", 0, -592, 0);
 	mSceneManager->getSceneNode("stadium")->setScale(100,100,100);
 	mSceneManager->getSceneNode("stadium")->yaw(Ogre::Degree(90));
 

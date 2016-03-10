@@ -8,11 +8,11 @@ material wall
         pass wall
         {
 
-            diffuse 0.2 0.2 0.2 0.1
+            diffuse 1.0 1.0 1.0 .3
 
 
 
-	    scene_blend alpha_blend
+	    scene_blend src_alpha dest_alpha
 
         }
     }

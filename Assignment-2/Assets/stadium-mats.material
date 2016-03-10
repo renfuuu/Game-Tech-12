@@ -14,42 +14,6 @@ material _missing_material_
     }
 }
 
-// Gray_Light genrated by blender2ogre 0.6.0
-
-material Gray_Light 
-{
-    receive_shadows on 
-
-    technique
-    {
-        pass Gray_Light
-        {
-            ambient 0.40891098976135254 0.40891098976135254 0.40891098976135254 1.0
-            diffuse 0.3271287966836809 0.3271287966836809 0.3271287966836809 1.0
-            specular 0.5 0.5 0.5 1.0 12.5
-            emissive 0.0 0.0 0.0 1.0
-
-            alpha_to_coverage off
-            colour_write on
-            cull_hardware clockwise
-            depth_check on
-            depth_func less_equal
-            depth_write on
-            illumination_stage 
-            light_clip_planes off
-            light_scissor off
-            lighting on
-            mesh_exporter <bpy_struct, MaterialProperties("")>
-            normalise_normals off
-            polygon_mode solid
-            scene_blend one zero
-            scene_blend_op add
-            shading gouraud
-            transparent_sorting on
-
-        }
-    }
-}
 // White genrated by blender2ogre 0.6.0
 
 material White 
@@ -158,6 +122,42 @@ material Glass
         }
     }
 }
+// White.001 genrated by blender2ogre 0.6.0
+
+material White.001 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass White.001
+        {
+            ambient 0.800000011920929 0.800000011920929 0.800000011920929 1.0
+            diffuse 0.6400000190734865 0.6400000190734865 0.6400000190734865 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            mesh_exporter <bpy_struct, MaterialProperties("")>
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
 // Yellow genrated by blender2ogre 0.6.0
 
 material Yellow 
@@ -170,6 +170,114 @@ material Yellow
         {
             ambient 0.800000011920929 0.7678359746932983 0.10688100010156631 1.0
             diffuse 0.6400000190734865 0.6142687889079568 0.08550480135537386 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            mesh_exporter <bpy_struct, MaterialProperties("")>
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// Brown genrated by blender2ogre 0.6.0
+
+material Brown 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Brown
+        {
+            ambient 0.04244700074195862 0.02031799964606762 0.0 1.0
+            diffuse 0.033957601099574575 0.016254399959063526 0.0 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            mesh_exporter <bpy_struct, MaterialProperties("")>
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// Red genrated by blender2ogre 0.6.0
+
+material Red 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Red
+        {
+            ambient 0.800000011920929 0.10751400142908096 0.1452600061893463 1.0
+            diffuse 0.6400000190734865 0.08601120242493154 0.11620800668311126 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            mesh_exporter <bpy_struct, MaterialProperties("")>
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
+// Gray_Light genrated by blender2ogre 0.6.0
+
+material Gray_Light 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Gray_Light
+        {
+            ambient 0.40891098976135254 0.40891098976135254 0.40891098976135254 1.0
+            diffuse 0.3271287966836809 0.3271287966836809 0.3271287966836809 1.0
             specular 0.5 0.5 0.5 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 
