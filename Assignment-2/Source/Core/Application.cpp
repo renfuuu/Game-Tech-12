@@ -182,6 +182,11 @@ void Application::init()
 	createWall("ceiling?", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, mySim);
 	createWall("frontwall?", GameObject::objectType::FRONT_WALL_OBJECT, "backwall.mesh", 0, 300, 500, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, _soundScoreManager, 0.0f, 0.9f, 0.8f, false, mySim);
 
+	createRootEntity("stadium", "stadium.mesh", 0, -99, 0);
+	mSceneManager->getSceneNode("stadium")->setScale(100,100,100);
+	mSceneManager->getSceneNode("stadium")->yaw(Ogre::Degree(90));
+
+
 	_simulator = mySim;
 
 	_theBall->startScore();
@@ -201,10 +206,10 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		return false;
 	}
 
-	if ( handleGUI(evt) )
-		return true;
-	else if ( !updateServer(evt) ) /* Always returns true for now */
-		return false;
+	// if ( handleGUI(evt) )
+	// 	return true;
+	// else if ( !updateServer(evt) ) /* Always returns true for now */
+	// 	return false;
 	else if ( !updateClient(evt) )
 		return false;
 
@@ -375,10 +380,6 @@ Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre:
 	const btTransform pos;
 	OgreMotionState* ms = new OgreMotionState(pos, sn);
 	sn->setScale(scale.x, scale.y, scale.z);
-
-	if(meshName != "floor.mesh") {
-		ent->setMaterialName("wall");
-	}
 
 	sn->pitch(pitch);
 	sn->yaw(yaw);
