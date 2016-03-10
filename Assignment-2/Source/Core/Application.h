@@ -66,7 +66,11 @@ public:
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent &evt) override;
 	void createRootEntity(std::string name, std::string mesh, int x, int y, int z);
 	void createChildEntity(std::string name, std::string mesh, Ogre::SceneNode* sceneNode, int x, int y, int z);
-	void update(const Ogre::FrameEvent &evt);
+	bool update(const Ogre::FrameEvent &evt);
+	bool handleGUI(const Ogre::FrameEvent &evt);
+	bool updateServer(const Ogre::FrameEvent &evt);
+	bool updateClient(const Ogre::FrameEvent &evt);
+
 	void movePaddle();
 	Ball* createBall(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim);
 	Paddle* createPaddle(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim);
