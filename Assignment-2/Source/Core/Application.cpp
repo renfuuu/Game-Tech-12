@@ -27,180 +27,46 @@ Application::~Application()
 
 void Application::init()
 {
-
-#ifdef __linux__
-	mResourcesCfg = "resources.cfg";
-	mPluginsCfg = "plugins.cfg";
-#endif
-
 	// This is really just a debugging try-catch block for catching and printing exceptions
 	try {
-	NameValuePairList params;
-	// Initialization
-	mRoot = new Root(mPluginsCfg);
-
-#ifdef __linux__
-	setupResources();
-#endif
-
-	// load plugins
-#ifdef _WIN32
-	mRoot->loadPlugin("RenderSystem_GL_d");
-	mRoot->loadPlugin("Plugin_ParticleFX_d");
-#endif
-#ifdef __linux__
-	mRoot->loadPlugin("/lusr/opt/ogre-1.9/lib/OGRE/RenderSystem_GL");
-#endif
-
-	// Select render system
-	const RenderSystemList &renderers = mRoot->getAvailableRenderers();
-	RenderSystem * renderSystem = nullptr;
-	LogManager::getSingletonPtr()->logMessage("Getting available renderers");
-	for (auto renderer = renderers.begin(); renderer != renderers.end(); renderer++)
-	{
-		String name = (*renderer)->getName();
-		LogManager::getSingletonPtr()->logMessage(name);
-		renderSystem = *renderer;
-	}
-	if (renderSystem)
-	{
-		LogManager::getSingletonPtr()->logMessage("Using renderer " + renderSystem->getName());
-		mRoot->setRenderSystem(renderSystem);
-	}
-	else
-	{
-		LogManager::getSingletonPtr()->logMessage(LML_CRITICAL, "Initializing render system failed. No renderers available.");
-	}
-
-	// Initialize with render system, no new window (yet)
-	mRoot->initialise(false);
-
-	// Create scene manager, render window, and camera
-	mSceneManager = mRoot->createSceneManager(ST_GENERIC);
-	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, width = 800, height = 600, false, &params);
-
-	// Setup OISManager
-    _oisManager = OISManager::getSingletonPtr();
-    _oisManager->initialise( mRenderWindow );
-    _oisManager->addKeyListener( (OIS::KeyListener*)_oisManager, "keyboardListener" );
-    _oisManager->addMouseListener( (OIS::MouseListener*)_oisManager, "mouseListener" );
-
-	mRenderer = &CEGUI::OgreRenderer::bootstrapSystem(*mRenderWindow);
-	CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
-	CEGUI::Font::setDefaultResourceGroup("Fonts");
-	CEGUI::Scheme::setDefaultResourceGroup("Schemes");
-	CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
-	CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
-
-	CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-	CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
-	
-	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-	CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
-	
-	CEGUI::Window *quit = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
-	quit->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.1f, 0 ), CEGUI::UDim( 0.35f, 0 ) ),
-								 CEGUI::UVector2( CEGUI::UDim( 0.4f, 0 ), CEGUI::UDim( 0.5f, 0 ) ) ) );
-	quit->setText( "Here is a large button.\n(soon) Click to Quit!" );
-
-	sheet->addChild(quit);
-	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
-
-	mCamera = mSceneManager->createCamera("Main Camera");
-	Ogre::Camera* cam2 = mSceneManager->createCamera("Cam2");
-	ballCam = mSceneManager->createCamera("Ball Cam");
-
-	// Add viewport and cameras
-	mRenderWindow->addViewport(mCamera);
-
-	mCamera->setAutoAspectRatio(true);
-	mCamera->setPosition(0, 120, 1050);
-	mCamera->pitch(Ogre::Degree(10));
-
-	cam2->setAutoAspectRatio(true);
-	cam2->setPosition(1350, 0, -400);
-	cam2->yaw(Ogre::Degree(90));
-	cam2->pitch(Ogre::Degree(15));
-
-	ballCam->setAutoAspectRatio(true);
-	ballCam->setPosition(0, 120, 1050);
-
-	cameras = std::vector<Ogre::Camera*>();
-	cameras.push_back(mCamera);
-	cameras.push_back(cam2);
-	cameras.push_back(ballCam);
-
-	Ogre::OverlaySystem* pOverlaySystem = new Ogre::OverlaySystem();
-	mSceneManager->addRenderQueueListener(pOverlaySystem);
-
-	mRoot->addFrameListener(this);
-	WindowEventUtilities::addWindowEventListener(mRenderWindow, this);
-	mRenderWindow->addListener(this);
-
-	_soundScoreManager = new SoundScoreManager();
-	_soundScoreManager->startMusic();
-
-#ifdef _WIN32
-		std::string relative = "../../../ogre/build/sdk/media";
-		ResourceGroupManager::getSingleton().addResourceLocation("../../../Game-Tech-12/Assignment-2/Assets", "FileSystem");
-#endif
-#ifdef __linux__
-		std::string relative = "/lusr/opt/ogre-1.9/share/OGRE/Media";
-#endif
-
-	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/models", "FileSystem");
-	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials", "FileSystem");
-	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/textures", "FileSystem");
-	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/programs/GLSL", "FileSystem");
-	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/scripts", "FileSystem");
-#ifdef _WIN32
-	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/particle", "FileSystem");
-#endif
-	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 	t1 = new Timer();
 
-	// Add some light
-	mSceneManager->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
-	mSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+	_simulator = new Simulator();
 
-	// Ogre::Light* light = mSceneManager->createLight("MainLight");
-	// light->setCastShadows(true);
-	// light->setPosition(0, 500, 0);
-	// light->setType(Ogre::Light::LightTypes::LT_POINT);
+	setupWindowRendererSystem();
 
-	Ogre::Light* directionalLight = mSceneManager->createLight("Sun");
-	directionalLight->setType(Ogre::Light::LightTypes::LT_DIRECTIONAL);
-	directionalLight->setCastShadows(true);
-	directionalLight->setDiffuseColour(Ogre::ColourValue(.8, .8, .8));
-	directionalLight->setSpecularColour(Ogre::ColourValue(.8, .8, .8));
-	// light2->setPosition(0, 3000, 0);
+	setupOIS();
 
-	directionalLight->setDirection(Ogre::Vector3(0, -1, .1));
+	setupCEGUI();
+
+	setupCameras();
+
+	setupSSM();
+
+	loadResources();
+
+	setupLighting();
 
 	mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
-	// Test Bullet
-	Simulator* mySim = new Simulator();
-	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, 0, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, mySim);
+	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, 0, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
+	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "tron.mesh", 5, 300, 0, 35, mSceneManager, _soundScoreManager, 1.0f, 1.0f, 0.8f, false, _simulator);
 
-	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "tron.mesh", 5, 300, 0, 35, mSceneManager, _soundScoreManager, 1.0f, 1.0f, 0.8f, false, mySim);
-	createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, mySim);
-	createWall("ceiling", GameObject::objectType::WALL_OBJECT, "ceiling.mesh", 0, 600, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.5f, 0.8f, false, mySim);
-	createWall("backwall", GameObject::objectType::BACK_WALL_OBJECT, "backwall.mesh", 0, 300, -1350, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.8f, 0.8f, false, mySim);
-	createWall("leftwall", GameObject::objectType::WALL_OBJECT, "leftwall.mesh", 600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, mySim);
-	createWall("rightwall", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, mySim);
-	createWall("ceiling?", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, mySim);
-	createWall("frontwall?", GameObject::objectType::FRONT_WALL_OBJECT, "backwall.mesh", 0, 300, 500, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, _soundScoreManager, 0.0f, 0.9f, 0.8f, false, mySim);
+	createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("ceiling", GameObject::objectType::WALL_OBJECT, "ceiling.mesh", 0, 600, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.5f, 0.8f, false, _simulator);
+	createWall("backwall", GameObject::objectType::BACK_WALL_OBJECT, "backwall.mesh", 0, 300, -1350, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.8f, 0.8f, false, _simulator);
+	createWall("leftwall", GameObject::objectType::WALL_OBJECT, "leftwall.mesh", 600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("rightwall", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("ceiling?", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("frontwall?", GameObject::objectType::FRONT_WALL_OBJECT, "backwall.mesh", 0, 300, 500, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, _soundScoreManager, 0.0f, 0.9f, 0.8f, false, _simulator);
 
 	createRootEntity("stadium", "stadium2.mesh", 0, -592, 0);
 	mSceneManager->getSceneNode("stadium")->setScale(100,100,100);
 	mSceneManager->getSceneNode("stadium")->yaw(Ogre::Degree(90));
 
-
-	_simulator = mySim;
-
 	_theBall->startScore();
+
 	}
 	catch (Exception e) {
 		std::cout << "Exception Caught: " << e.what() << std::endl;
@@ -210,6 +76,8 @@ void Application::init()
 
 bool Application::frameRenderingQueued(const FrameEvent &evt)
 {
+	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
+
 	/* Begun split this into three areas, Setup & GUI, server, client */
 	/* This line has been left here for the sake of closing the window. Maybe we'll move it later. */
 	if (mRenderWindow->isClosed())
@@ -223,8 +91,6 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		return false;
 	else if ( !updateClient(evt) )
 		return false;
-
-    //CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 
 	return true;
 }
@@ -264,8 +130,6 @@ bool Application::update(const FrameEvent &evt) {
 }
 
 bool Application::handleGUI(const FrameEvent &evt) {
-
-	static bool begin = false;
 
 	if(!begin) {
 		_oisManager->capture();
@@ -402,7 +266,61 @@ Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre:
 	return obj;
 }
 
-void Application::setupResources(void){
+void Application::setupWindowRendererSystem(void) {
+
+#ifdef __linux__
+	mResourcesCfg = "resources.cfg";
+	mPluginsCfg = "plugins.cfg";
+#endif
+
+	NameValuePairList params;
+	// Initialization
+	mRoot = new Root(mPluginsCfg);
+
+#ifdef __linux__
+	setupResources();
+#endif
+
+	// load plugins
+#ifdef _WIN32
+	mRoot->loadPlugin("RenderSystem_GL_d");
+	mRoot->loadPlugin("Plugin_ParticleFX_d");
+#endif
+#ifdef __linux__
+	mRoot->loadPlugin("/lusr/opt/ogre-1.9/lib/OGRE/RenderSystem_GL");
+#endif
+
+	// Select render system
+	const RenderSystemList &renderers = mRoot->getAvailableRenderers();
+	RenderSystem * renderSystem = nullptr;
+	LogManager::getSingletonPtr()->logMessage("Getting available renderers");
+	for (auto renderer = renderers.begin(); renderer != renderers.end(); renderer++)
+	{
+		String name = (*renderer)->getName();
+		LogManager::getSingletonPtr()->logMessage(name);
+		renderSystem = *renderer;
+	}
+	if (renderSystem)
+	{
+		LogManager::getSingletonPtr()->logMessage("Using renderer " + renderSystem->getName());
+		mRoot->setRenderSystem(renderSystem);
+	}
+	else
+	{
+		LogManager::getSingletonPtr()->logMessage(LML_CRITICAL, "Initializing render system failed. No renderers available.");
+	}
+
+	// Initialize with render system, no new window (yet)
+	mRoot->initialise(false);
+
+	// Create scene manager, render window, and camera
+	mSceneManager = mRoot->createSceneManager(ST_GENERIC);
+	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, width = 800, height = 600, false, &params);
+
+
+}
+
+void Application::setupResources(void) {
 	// Load resource paths from config file
     Ogre::ConfigFile cf;
     cf.load(mResourcesCfg);
@@ -434,3 +352,150 @@ void Application::setupResources(void){
         }
     }
 }
+
+
+void Application::setupOIS(void) {
+	// Setup OISManager
+    _oisManager = OISManager::getSingletonPtr();
+    _oisManager->initialise( mRenderWindow );
+    _oisManager->addKeyListener( (OIS::KeyListener*)_oisManager, "keyboardListener" );
+    _oisManager->addMouseListener( (OIS::MouseListener*)_oisManager, "mouseListener" );
+
+}
+
+void Application::setupCEGUI(void) {
+
+	mRenderer = &CEGUI::OgreRenderer::bootstrapSystem(*mRenderWindow);
+	CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
+	CEGUI::Font::setDefaultResourceGroup("Fonts");
+	CEGUI::Scheme::setDefaultResourceGroup("Schemes");
+	CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
+	CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
+
+	CEGUI::SchemeManager::getSingleton().createFromFile("AlfiskoSkin.scheme");
+	CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("AlfiskoSkin/MouseArrow");
+	
+	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+	CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
+	
+	CEGUI::Window *serverWindow = wmgr.createWindow("AlfiskoSkin/Button", "CEGUIDemo/QuitButton");
+	serverWindow->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.3f, 0 ) ),
+								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.45f, 0 ) ) ) );
+	//serverWindow->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::startServer, this));
+	serverWindow->setText( "Server Connect" );
+
+	CEGUI::Window *quit = wmgr.createWindow("AlfiskoSkin/Button", "CEGUIDemo/QuitButton");
+	quit->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.45f, 0 ) ),
+								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.6f, 0 ) ) ) );
+	
+	quit->setText( "Quit!" );
+
+	sheet->addChild(serverWindow);
+	sheet->addChild(quit);
+
+	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
+
+    quit->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&Application::quit, this));
+
+}
+
+void Application::setupCameras(void) {
+
+	mCamera = mSceneManager->createCamera("Main Camera");
+	Ogre::Camera* cam2 = mSceneManager->createCamera("Cam2");
+	ballCam = mSceneManager->createCamera("Ball Cam");
+
+	// Add viewport and cameras
+	mRenderWindow->addViewport(mCamera);
+
+	mCamera->setAutoAspectRatio(true);
+	mCamera->setPosition(0, 120, 1050);
+	mCamera->pitch(Ogre::Degree(10));
+
+	cam2->setAutoAspectRatio(true);
+	cam2->setPosition(1350, 0, -400);
+	cam2->yaw(Ogre::Degree(90));
+	cam2->pitch(Ogre::Degree(15));
+
+	ballCam->setAutoAspectRatio(true);
+	ballCam->setPosition(0, 120, 1050);
+
+	cameras = std::vector<Ogre::Camera*>();
+	cameras.push_back(mCamera);
+	cameras.push_back(cam2);
+	cameras.push_back(ballCam);
+
+}
+
+/* Setup SoundScoreManager */
+void Application::setupSSM(void) {
+
+	Ogre::OverlaySystem* pOverlaySystem = new Ogre::OverlaySystem();
+	mSceneManager->addRenderQueueListener(pOverlaySystem);
+
+	mRoot->addFrameListener(this);
+	WindowEventUtilities::addWindowEventListener(mRenderWindow, this);
+	mRenderWindow->addListener(this);
+
+	_soundScoreManager = new SoundScoreManager();
+	_soundScoreManager->startMusic();
+
+}
+
+void Application::loadResources(void) {
+
+#ifdef _WIN32
+		std::string relative = "../../../ogre/build/sdk/media";
+		ResourceGroupManager::getSingleton().addResourceLocation("../../../Game-Tech-12/Assignment-2/Assets", "FileSystem");
+#endif
+#ifdef __linux__
+		std::string relative = "/lusr/opt/ogre-1.9/share/OGRE/Media";
+#endif
+
+	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/models", "FileSystem");
+	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials", "FileSystem");
+	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/textures", "FileSystem");
+	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/programs/GLSL", "FileSystem");
+	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/scripts", "FileSystem");
+#ifdef _WIN32
+	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/particle", "FileSystem");
+#endif
+	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+
+}
+
+void Application::setupLighting(void) {
+
+	// Add some light
+	mSceneManager->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+	mSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
+
+	// Ogre::Light* light = mSceneManager->createLight("MainLight");
+	// light->setCastShadows(true);
+	// light->setPosition(0, 500, 0);
+	// light->setType(Ogre::Light::LightTypes::LT_POINT);
+
+	Ogre::Light* directionalLight = mSceneManager->createLight("Sun");
+	directionalLight->setType(Ogre::Light::LightTypes::LT_DIRECTIONAL);
+	directionalLight->setCastShadows(true);
+	directionalLight->setDiffuseColour(Ogre::ColourValue(.8, .8, .8));
+	directionalLight->setSpecularColour(Ogre::ColourValue(.8, .8, .8));
+	// light2->setPosition(0, 3000, 0);
+
+	directionalLight->setDirection(Ogre::Vector3(0, -1, .1));
+
+}
+
+
+bool Application::startServer(const CEGUI::EventArgs &e) {
+	begin = true;
+	return true;
+}
+
+bool Application::quit(const CEGUI::EventArgs &e) {
+	begin = true;
+	mRunning = false;
+	std::cout << "Trying to quit\n";
+    return true;
+}
+ 

@@ -61,6 +61,7 @@ public:
 
 	double fps = 300.0;
 
+	bool begin = false;
 	bool mRunning = true;
 
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent &evt) override;
@@ -75,5 +76,14 @@ public:
 	Ball* createBall(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim);
 	Paddle* createPaddle(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim);
 	Wall* createWall(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Vector3 scale, Ogre::Degree pitch, Ogre::Degree yaw, Ogre::Degree roll, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim);
+	void setupWindowRendererSystem(void);
 	void setupResources(void);
+	void setupOIS(void);
+	void setupCEGUI(void);
+	void setupCameras(void);
+	void setupSSM(void);
+	void loadResources(void);
+	void setupLighting(void);
+	bool startServer(const CEGUI::EventArgs &e);
+	bool quit(const CEGUI::EventArgs &e);
 };

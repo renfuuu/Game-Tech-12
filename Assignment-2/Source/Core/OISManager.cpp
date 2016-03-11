@@ -241,6 +241,8 @@ bool OISManager::mousePressed( const OIS::MouseEvent &e, OIS::MouseButtonID id )
 }
  
 bool OISManager::mouseReleased( const OIS::MouseEvent &e, OIS::MouseButtonID id ) {
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertButton(id));
+    std::cout<<"Just Cause\n";
     return true;
 }
  
