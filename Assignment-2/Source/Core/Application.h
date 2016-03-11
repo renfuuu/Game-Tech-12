@@ -84,6 +84,7 @@ public:
 	void setupSSM(void);
 	void loadResources(void);
 	void setupLighting(void);
+	void createObjects(void);
 	bool startServer(const CEGUI::EventArgs &e);
 	bool quit(const CEGUI::EventArgs &e);
 };

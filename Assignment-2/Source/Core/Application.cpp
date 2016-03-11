@@ -48,24 +48,7 @@ void Application::init()
 
 	setupLighting();
 
-	mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
-
-	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, 0, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
-	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "tron.mesh", 5, 300, 0, 35, mSceneManager, _soundScoreManager, 1.0f, 1.0f, 0.8f, false, _simulator);
-
-	createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
-	createWall("ceiling", GameObject::objectType::WALL_OBJECT, "ceiling.mesh", 0, 600, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.5f, 0.8f, false, _simulator);
-	createWall("backwall", GameObject::objectType::BACK_WALL_OBJECT, "backwall.mesh", 0, 300, -1350, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.8f, 0.8f, false, _simulator);
-	createWall("leftwall", GameObject::objectType::WALL_OBJECT, "leftwall.mesh", 600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
-	createWall("rightwall", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
-	createWall("ceiling?", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
-	createWall("frontwall?", GameObject::objectType::FRONT_WALL_OBJECT, "backwall.mesh", 0, 300, 500, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, _soundScoreManager, 0.0f, 0.9f, 0.8f, false, _simulator);
-
-	createRootEntity("stadium", "stadium2.mesh", 0, -592, 0);
-	mSceneManager->getSceneNode("stadium")->setScale(100,100,100);
-	mSceneManager->getSceneNode("stadium")->yaw(Ogre::Degree(90));
-
-	_theBall->startScore();
+	createObjects();
 
 	}
 	catch (Exception e) {
@@ -74,6 +57,10 @@ void Application::init()
 }
 
 
+
+/* 
+* Update Methods 
+*/
 bool Application::frameRenderingQueued(const FrameEvent &evt)
 {
 	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
@@ -200,8 +187,15 @@ bool Application::updateClient(const FrameEvent &evt) {
 
     return true;
 }
+/* 
+* End Update Methods 
+*/
 
 
+
+/* 
+* Create Object Methods 
+*/
 void Application::createRootEntity(std::string name, std::string mesh, int x, int y, int z) {
 	Ogre::Entity* ogreEntity = mSceneManager->createEntity(name, mesh);
 	ogreEntity->setCastShadows(true);
@@ -265,7 +259,15 @@ Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre:
 
 	return obj;
 }
+/*
+* End Create Object Methods 
+*/
 
+
+
+/* 
+* Initialization Methods
+*/
 void Application::setupWindowRendererSystem(void) {
 
 #ifdef __linux__
@@ -376,27 +378,26 @@ void Application::setupCEGUI(void) {
 	CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("AlfiskoSkin/MouseArrow");
 	
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-	CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
-	
+	CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "_MasterRoot");
+	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
+
 	CEGUI::Window *serverWindow = wmgr.createWindow("AlfiskoSkin/Button", "CEGUIDemo/QuitButton");
-	serverWindow->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.3f, 0 ) ),
-								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.45f, 0 ) ) ) );
-	//serverWindow->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::startServer, this));
+	serverWindow->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.35f, 0 ) ),
+								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.4f, 0 ) ) ) );
 	serverWindow->setText( "Server Connect" );
 
 	CEGUI::Window *quit = wmgr.createWindow("AlfiskoSkin/Button", "CEGUIDemo/QuitButton");
-	quit->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.45f, 0 ) ),
-								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.6f, 0 ) ) ) );
-	
+	quit->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.4f, 0 ) ),
+								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.45f, 0 ) ) ) );
 	quit->setText( "Quit!" );
 
 	sheet->addChild(serverWindow);
 	sheet->addChild(quit);
 
-	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
-
-    quit->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&Application::quit, this));
-
+	/* I'm unsure of how to get the event clicked callbacks working.
+	sheet->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.0f, 0.0f ), CEGUI::UDim( 0.0f, 100.0f ) ),
+								 CEGUI::UVector2( CEGUI::UDim( 100.0f, 0 ), CEGUI::UDim( 100.0f, 100.0f ) ) ) );
+	sheet->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::quit, this));*/
 }
 
 void Application::setupCameras(void) {
@@ -470,23 +471,47 @@ void Application::setupLighting(void) {
 	mSceneManager->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 	mSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
-	// Ogre::Light* light = mSceneManager->createLight("MainLight");
-	// light->setCastShadows(true);
-	// light->setPosition(0, 500, 0);
-	// light->setType(Ogre::Light::LightTypes::LT_POINT);
-
 	Ogre::Light* directionalLight = mSceneManager->createLight("Sun");
 	directionalLight->setType(Ogre::Light::LightTypes::LT_DIRECTIONAL);
 	directionalLight->setCastShadows(true);
 	directionalLight->setDiffuseColour(Ogre::ColourValue(.8, .8, .8));
 	directionalLight->setSpecularColour(Ogre::ColourValue(.8, .8, .8));
-	// light2->setPosition(0, 3000, 0);
 
 	directionalLight->setDirection(Ogre::Vector3(0, -1, .1));
 
 }
 
+void Application::createObjects(void) {
+	
+	mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
+	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, 0, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
+	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "tron.mesh", 5, 300, 0, 35, mSceneManager, _soundScoreManager, 1.0f, 1.0f, 0.8f, false, _simulator);
+
+	createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("ceiling", GameObject::objectType::WALL_OBJECT, "ceiling.mesh", 0, 600, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.5f, 0.8f, false, _simulator);
+	createWall("backwall", GameObject::objectType::BACK_WALL_OBJECT, "backwall.mesh", 0, 300, -1350, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.8f, 0.8f, false, _simulator);
+	createWall("leftwall", GameObject::objectType::WALL_OBJECT, "leftwall.mesh", 600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("rightwall", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("ceiling?", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("frontwall?", GameObject::objectType::FRONT_WALL_OBJECT, "backwall.mesh", 0, 300, 500, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, _soundScoreManager, 0.0f, 0.9f, 0.8f, false, _simulator);
+
+	createRootEntity("stadium", "stadium2.mesh", 0, -592, 0);
+	mSceneManager->getSceneNode("stadium")->setScale(100,100,100);
+	mSceneManager->getSceneNode("stadium")->yaw(Ogre::Degree(90));
+
+	_theBall->startScore();
+
+}
+/* 
+* End Initialization Methods
+*/
+
+
+
+/* 
+*CEGUI Button Callbacks 
+*/
 bool Application::startServer(const CEGUI::EventArgs &e) {
 	begin = true;
 	return true;
