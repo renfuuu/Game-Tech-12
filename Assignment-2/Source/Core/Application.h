@@ -21,6 +21,8 @@
 #include <unordered_map>
 #include <string>
 
+#include "NetManager.h"
+
 #include "SoundScoreManager.h"
 #include "OISManager.h"
 #include "Simulator.h"
@@ -44,6 +46,8 @@ public:
 	Ogre::Camera * mCamera;
 	Ogre::Camera * ballCam;
 	Ogre::Timer* t1;
+
+	NetManager* netManager;
 
 	SoundScoreManager* _soundScoreManager;
 	OISManager* _oisManager;

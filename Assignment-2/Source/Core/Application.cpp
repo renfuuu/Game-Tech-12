@@ -381,6 +381,11 @@ void Application::setupCEGUI(void) {
 	CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "_MasterRoot");
 	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 
+	CEGUI::Window* quitButton = wmgr.createWindow("AlfiskoSkin/Button", "QuitButton");
+	quitButton->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.0f, 0 ), CEGUI::UDim( 0.0f, 0 ) ),
+								 CEGUI::UVector2( CEGUI::UDim( 0.1f, 0 ), CEGUI::UDim( 0.05f, 0 ) ) ) );
+	quitButton->setText( "Quit" );
+
 	hostServerButton = wmgr.createWindow("AlfiskoSkin/Button", "HostButton");
 	hostServerButton->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.35f, 0 ) ),
 								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.4f, 0 ) ) ) );
@@ -393,11 +398,11 @@ void Application::setupCEGUI(void) {
 
 	sheet->addChild(hostServerButton);
 	sheet->addChild(joinServerButton);
-	//sheet->addChild(quitButton);
+	sheet->addChild(quitButton);
 
 	hostServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartServer, this));
 	//joinServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartServer, this));
-	//quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Quit, this));
+	quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Quit, this));
 }
 
 void Application::setupCameras(void) {
@@ -472,7 +477,7 @@ void Application::setupLighting(void) {
 	mSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
 	Ogre::Light* directionalLight = mSceneManager->createLight("Sun");
-	directionalLight->setType(Ogre::Light::LightTypes::LT_DIRECTIONAL);
+	directionalLight->setType(Ogre::Light::LightTypes::LT_POINT);
 	directionalLight->setCastShadows(true);
 	directionalLight->setDiffuseColour(Ogre::ColourValue(.8, .8, .8));
 	directionalLight->setSpecularColour(Ogre::ColourValue(.8, .8, .8));
