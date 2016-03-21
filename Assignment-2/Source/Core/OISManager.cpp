@@ -214,6 +214,10 @@ OIS::Keyboard* OISManager::getKeyboard( void ) {
 bool OISManager::keyPressed( const OIS::KeyEvent &e ) {
     mKeyPressed = e.key;
 
+    CEGUI::GUIContext& cxt = CEGUI::System::getSingleton().getDefaultGUIContext();
+    cxt.injectKeyDown((CEGUI::Key::Scan)e.key);
+    cxt.injectChar((CEGUI::Key::Scan)e.text);
+
     return true;
 }
 
@@ -233,10 +237,17 @@ bool OISManager::mouseMoved( const OIS::MouseEvent &e ) {
     mouseXAxis = (e.state.X.abs) - e.state.width/2;
     mouseYAxis = (e.state.Y.abs) - e.state.height/2;
 
+    CEGUI::System &sys = CEGUI::System::getSingleton();
+    sys.getDefaultGUIContext().injectMousePosition(e.state.X.abs, e.state.Y.abs);
+    // Scroll wheel.
+    if (e.state.Z.rel)
+        sys.getDefaultGUIContext().injectMouseWheelChange(e.state.Z.rel / 120.0f);
+
     return true;
 }
  
 bool OISManager::mousePressed( const OIS::MouseEvent &e, OIS::MouseButtonID id ) {
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertButton(id));
     return true;
 }
  

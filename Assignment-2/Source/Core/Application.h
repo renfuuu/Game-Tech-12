@@ -86,5 +86,5 @@ public:
 	void setupLighting(void);
 	void createObjects(void);
 	bool startServer(const CEGUI::EventArgs &e);
-	bool quit(const CEGUI::EventArgs &e);
+	bool Quit(const CEGUI::EventArgs &e);
 };

@@ -376,7 +376,7 @@ void Application::setupCEGUI(void) {
 
 	CEGUI::SchemeManager::getSingleton().createFromFile("AlfiskoSkin.scheme");
 	CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("AlfiskoSkin/MouseArrow");
-	
+
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
 	CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "_MasterRoot");
 	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
@@ -393,6 +393,7 @@ void Application::setupCEGUI(void) {
 
 	sheet->addChild(serverWindow);
 	sheet->addChild(quit);
+	quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Quit, this));
 
 	/* I'm unsure of how to get the event clicked callbacks working.
 	sheet->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.0f, 0.0f ), CEGUI::UDim( 0.0f, 100.0f ) ),
@@ -512,15 +513,14 @@ void Application::createObjects(void) {
 /* 
 *CEGUI Button Callbacks 
 */
-bool Application::startServer(const CEGUI::EventArgs &e) {
+bool Application::startServer(const CEGUI::EventArgs& e) {
 	begin = true;
 	return true;
 }
 
-bool Application::quit(const CEGUI::EventArgs &e) {
+bool Application::Quit(const CEGUI::EventArgs& e) {
 	begin = true;
 	mRunning = false;
-	std::cout << "Trying to quit\n";
     return true;
 }
  
