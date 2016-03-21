@@ -38,10 +38,6 @@ OISManager::~OISManager( void ) {
 void OISManager::initialise( Ogre::RenderWindow *renderWindow ) {
     if( !mInputSystem ) {
 
-        /*mInputSystem->destroyInputObject(mMouse);
-        mInputSystem->destroyInputObject(mKeyboard);
-        OIS::InputManager::destroyInputSystem(mInputSystem);
-*/
         // Setup basic variables
         OIS::ParamList paramList;    
         size_t windowHnd = 0;
@@ -54,39 +50,17 @@ void OISManager::initialise( Ogre::RenderWindow *renderWindow ) {
         windowHndStr << (unsigned int) windowHnd;
         paramList.insert( std::make_pair( std::string( "WINDOW" ), windowHndStr.str() ) );
  
-    #if defined OIS_WIN32_PLATFORM
-        paramList.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND" )));
-        paramList.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
-        paramList.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_FOREGROUND")));
-        paramList.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_NONEXCLUSIVE")));
-    #elif defined OIS_LINUX_PLATFORM
-        paramList.insert(std::make_pair(std::string("x11_mouse_grab"), std::string("false")));
-        paramList.insert(std::make_pair(std::string("x11_mouse_hide"), std::string("false")));
-        paramList.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("false")));
-        paramList.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
-    #endif
-
         // Create inputsystem
         mInputSystem = OIS::InputManager::createInputSystem( paramList );
     
-
-
-        //mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject( OIS::OISMouse, true ));
-        
-        // If possible create a buffered keyboard
-        // (note: if below line doesn't compile, try:  if (mInputSystem->getNumberOfDevices(OIS::OISKeyboard) > 0) {
-        //if( mInputSystem->numKeyboards() > 0 ) {
         if (mInputSystem->getNumberOfDevices(OIS::OISKeyboard) > 0) {
             mKeyboard = static_cast<OIS::Keyboard*>( mInputSystem->createInputObject( OIS::OISKeyboard, true ) );
             mKeyboard->setEventCallback( this );
         }
  
-        // If possible create a buffered mouse
-        // (note: if below line doesn't compile, try:  if (mInputSystem->getNumberOfDevices(OIS::OISMouse) > 0) {
-        //if( mInputSystem->numMice() > 0 ) {
         if (mInputSystem->getNumberOfDevices(OIS::OISMouse) > 0) {
             mMouse = static_cast<OIS::Mouse*>( mInputSystem->createInputObject( OIS::OISMouse, true ) );
-            mMouse->setEventCallback( this );
+            mMouse->setEventCallback( this );   
  
             // Get window size
             unsigned int width, height, depth;
@@ -96,6 +70,7 @@ void OISManager::initialise( Ogre::RenderWindow *renderWindow ) {
             // Set mouse region
             this->setWindowExtents( width, height );
         }
+
     }
 }
  

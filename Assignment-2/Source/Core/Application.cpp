@@ -381,24 +381,23 @@ void Application::setupCEGUI(void) {
 	CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "_MasterRoot");
 	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 
-	CEGUI::Window *serverWindow = wmgr.createWindow("AlfiskoSkin/Button", "CEGUIDemo/QuitButton");
-	serverWindow->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.35f, 0 ) ),
+	hostServerButton = wmgr.createWindow("AlfiskoSkin/Button", "HostButton");
+	hostServerButton->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.35f, 0 ) ),
 								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.4f, 0 ) ) ) );
-	serverWindow->setText( "Server Connect" );
+	hostServerButton->setText( "Host Game" );
 
-	CEGUI::Window *quit = wmgr.createWindow("AlfiskoSkin/Button", "CEGUIDemo/QuitButton");
-	quit->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.4f, 0 ) ),
+	joinServerButton = wmgr.createWindow("AlfiskoSkin/Button", "JoinButton");
+	joinServerButton->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.4f, 0 ) ),
 								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.45f, 0 ) ) ) );
-	quit->setText( "Quit!" );
+	joinServerButton->setText( "Join Game" );
 
-	sheet->addChild(serverWindow);
-	sheet->addChild(quit);
-	quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Quit, this));
+	sheet->addChild(hostServerButton);
+	sheet->addChild(joinServerButton);
+	//sheet->addChild(quitButton);
 
-	/* I'm unsure of how to get the event clicked callbacks working.
-	sheet->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.0f, 0.0f ), CEGUI::UDim( 0.0f, 100.0f ) ),
-								 CEGUI::UVector2( CEGUI::UDim( 100.0f, 0 ), CEGUI::UDim( 100.0f, 100.0f ) ) ) );
-	sheet->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::quit, this));*/
+	hostServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartServer, this));
+	//joinServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartServer, this));
+	//quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Quit, this));
 }
 
 void Application::setupCameras(void) {
@@ -513,8 +512,12 @@ void Application::createObjects(void) {
 /* 
 *CEGUI Button Callbacks 
 */
-bool Application::startServer(const CEGUI::EventArgs& e) {
+bool Application::StartServer(const CEGUI::EventArgs& e) {
 	begin = true;
+
+	hostServerButton->hide();
+	joinServerButton->hide();
+
 	return true;
 }
 

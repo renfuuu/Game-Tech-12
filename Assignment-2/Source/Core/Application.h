@@ -52,6 +52,8 @@ public:
 	GameObject* _thePaddle;
 
     CEGUI::OgreRenderer* mRenderer;
+    CEGUI::Window* hostServerButton;
+    CEGUI::Window* joinServerButton;
 	
 	std::vector<Ogre::Camera*> cameras;
 
@@ -85,6 +87,6 @@ public:
 	void loadResources(void);
 	void setupLighting(void);
 	void createObjects(void);
-	bool startServer(const CEGUI::EventArgs &e);
+	bool StartServer(const CEGUI::EventArgs &e);
 	bool Quit(const CEGUI::EventArgs &e);
 };
