@@ -5,6 +5,12 @@ Player object that stores each Player's paddle location, camera views, and score
 Client-Server model: 
 We will create a CEGUI window at the beginning of the game. Which asks the player whether they would like to "Host a Game" or "Join a Game". The host (or server) does the bullet simulations with the received information from the players (or clients) and sends ball information to them. Players send paddle information (or the Player object in the form of packets) to the host so it can process the simulations. The CEGUI has a simple lobby containing players hosting when a new player selects to "Join a game".
 
+Scoring change:
+Instead of gaining points by hitting the ball it, you gain points by getting the ball over the net behind your opponent. Similar to playing tennis or real paddle ball. 
+
+Graphic change:
+We changed our room with a basketball court floor to a stadium skybox while the game is played inside glass walls.
+
 
 ## Milestone 2.3
 
