@@ -219,7 +219,7 @@ Ball* Application::createBall(Ogre::String nme, GameObject::objectType tp, Ogre:
 	const btTransform pos;
 	OgreMotionState* ms = new OgreMotionState(pos, sn);
 	sn->setScale(scale,scale,scale);
-	// ent->setMaterialName("blue");
+	ent->setMaterialName("blue");
 
 	Ball* obj = new Ball(nme, tp, mSceneManager, ssm, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
 	obj->addToSimulator();
@@ -486,7 +486,7 @@ void Application::createObjects(void) {
 	mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
 	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, 0, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
-	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "tron.mesh", 5, 300, 0, 35, mSceneManager, _soundScoreManager, 1.0f, 1.0f, 0.8f, false, _simulator);
+	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "sphere.mesh", 5, 300, 0, .35, mSceneManager, _soundScoreManager, 1.0f, 1.0f, 0.8f, false, _simulator);
 
 	createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
 	createWall("ceiling", GameObject::objectType::WALL_OBJECT, "ceiling.mesh", 0, 600, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.5f, 0.8f, false, _simulator);
