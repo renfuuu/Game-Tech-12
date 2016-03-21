@@ -57,7 +57,6 @@ void Application::init()
 }
 
 
-
 /* 
 * Update Methods 
 */
@@ -192,7 +191,6 @@ bool Application::updateClient(const FrameEvent &evt) {
 */
 
 
-
 /* 
 * Create Object Methods 
 */
@@ -264,7 +262,6 @@ Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre:
 */
 
 
-
 /* 
 * Initialization Methods
 */
@@ -318,8 +315,6 @@ void Application::setupWindowRendererSystem(void) {
 	// Create scene manager, render window, and camera
 	mSceneManager = mRoot->createSceneManager(ST_GENERIC);
 	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, width = 800, height = 600, false, &params);
-
-
 }
 
 void Application::setupResources(void) {
@@ -477,7 +472,7 @@ void Application::setupLighting(void) {
 	mSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
 	Ogre::Light* directionalLight = mSceneManager->createLight("Sun");
-	directionalLight->setType(Ogre::Light::LightTypes::LT_POINT);
+	directionalLight->setType(Ogre::Light::LightTypes::LT_DIRECTIONAL);
 	directionalLight->setCastShadows(true);
 	directionalLight->setDiffuseColour(Ogre::ColourValue(.8, .8, .8));
 	directionalLight->setSpecularColour(Ogre::ColourValue(.8, .8, .8));
@@ -511,7 +506,6 @@ void Application::createObjects(void) {
 /* 
 * End Initialization Methods
 */
-
 
 
 /* 
