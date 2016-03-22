@@ -116,6 +116,10 @@ bool Application::update(const FrameEvent &evt) {
 	Ogre::Vector3 paddleAttract = (_thePaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).normalisedCopy();
 	_theBall->applyForce(paddleAttract.x * pull, paddleAttract.y * pull, paddleAttract.z * pull);
 
+	std::string t = "now i dont have to count";
+	// const char buf[512] = "Frank is a slut";
+	netManager->messageServer(PROTOCOL_UDP, t.c_str(), t.length() + 1);
+
 	return true;
 }
 
@@ -531,6 +535,8 @@ bool Application::StartServer(const CEGUI::EventArgs& e) {
 
 bool Application::JoinServer(const CEGUI::EventArgs& e) {
 
+	begin = true;
+
 	if(!setupNetwork(false)) {
 		mRunning = false;
 		return false;
@@ -542,7 +548,6 @@ bool Application::JoinServer(const CEGUI::EventArgs& e) {
 
 bool Application::Quit(const CEGUI::EventArgs& e) {
 
-	begin = true;
 	mRunning = false;
     return true;
 }
