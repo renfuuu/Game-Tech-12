@@ -118,7 +118,8 @@ bool Application::update(const FrameEvent &evt) {
 
 	std::string t = "now i dont have to count";
 	// const char buf[512] = "Frank is a slut";
-	netManager->messageServer(PROTOCOL_UDP, t.c_str(), t.length() + 1);
+	if ( !server )
+		netManager->messageServer(PROTOCOL_UDP, t.c_str(), t.length() + 1);
 
 	return true;
 }
@@ -520,11 +521,12 @@ void Application::createObjects(void) {
 bool Application::StartServer(const CEGUI::EventArgs& e) {
 
 	begin = true;
+	server = true;
 
 	hostServerButton->hide();
 	joinServerButton->hide();
 
-	if(!setupNetwork(true)) {
+	if(!setupNetwork(server)) {
 		mRunning = false;
 		return false;
 	}
@@ -536,8 +538,9 @@ bool Application::StartServer(const CEGUI::EventArgs& e) {
 bool Application::JoinServer(const CEGUI::EventArgs& e) {
 
 	begin = true;
+	server = false;
 
-	if(!setupNetwork(false)) {
+	if(!setupNetwork(server)) {
 		mRunning = false;
 		return false;
 	}

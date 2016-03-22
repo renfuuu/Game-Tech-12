@@ -70,6 +70,8 @@ public:
 	bool begin = false;
 	bool mRunning = true;
 
+	bool server = false;
+
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent &evt) override;
 	void createRootEntity(std::string name, std::string mesh, int x, int y, int z);
 	void createChildEntity(std::string name, std::string mesh, Ogre::SceneNode* sceneNode, int x, int y, int z);
