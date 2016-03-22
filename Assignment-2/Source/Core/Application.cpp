@@ -116,7 +116,7 @@ bool Application::update(const FrameEvent &evt) {
 	Ogre::Vector3 paddleAttract = (_thePaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).normalisedCopy();
 	_theBall->applyForce(paddleAttract.x * pull, paddleAttract.y * pull, paddleAttract.z * pull);
 
-	std::string t = "now i dont have to count";
+	std::string t = "my string";
 	// const char buf[512] = "Frank is a slut";
 	if ( !server )
 		netManager->messageServer(PROTOCOL_UDP, t.c_str(), t.length() + 1);
@@ -565,7 +565,7 @@ bool Application::setupNetwork(bool isServer) {
 	}
 	else {
 		// Opens a connection on port 51215
-		netManager->addNetworkInfo(PROTOCOL_UDP, isServer ? NULL : "128.83.144.177", 51215);
+		netManager->addNetworkInfo(PROTOCOL_UDP, isServer ? NULL : "128.83.120.177", 51215);
 	}
 
 	if(isServer) {

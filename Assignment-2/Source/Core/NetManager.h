@@ -72,6 +72,9 @@ struct ClientData {
   char input[128];                    //!< Target for automatic data pulls.
 };
 
+struct packet {
+  char data[128];
+};
 
 static const std::string STR_DENY("TG_SERVER_DENY");
 static const std::string STR_OPEN("TG_SERVER_OPEN");
