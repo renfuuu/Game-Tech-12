@@ -98,4 +98,5 @@ public:
 	bool Quit(const CEGUI::EventArgs &e);
 
 	bool setupNetwork(bool);
+	bool error();
 };

@@ -73,7 +73,7 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 
 	if ( handleGUI(evt) )
 		return true;
-	else if ( !updateServer(evt) ) /* Always returns true for now */
+	else if ( server && !updateServer(evt) ) /* Always returns true for now */
 		return false;
 	else if ( !updateClient(evt) )
 		return false;
@@ -116,10 +116,14 @@ bool Application::update(const FrameEvent &evt) {
 	Ogre::Vector3 paddleAttract = (_thePaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).normalisedCopy();
 	_theBall->applyForce(paddleAttract.x * pull, paddleAttract.y * pull, paddleAttract.z * pull);
 
-	std::string t = "my string";
-	// const char buf[512] = "Frank is a slut";
-	if ( !server )
+	std::string t = "Test";
+	if ( !server ) {
+		if(t.length() - 1 > NetManager::MESSAGE_LENGTH) {
+			std::cout << "Message was too large." << std::endl;
+			return error();
+		}
 		netManager->messageServer(PROTOCOL_UDP, t.c_str(), t.length() + 1);
+	}
 
 	return true;
 }
@@ -523,14 +527,12 @@ bool Application::StartServer(const CEGUI::EventArgs& e) {
 	begin = true;
 	server = true;
 
-	hostServerButton->hide();
-	joinServerButton->hide();
-
 	if(!setupNetwork(server)) {
-		mRunning = false;
-		return false;
+		return error();
 	}
 	else {
+		hostServerButton->hide();
+		joinServerButton->hide();
 		return true;
 	}
 }
@@ -541,10 +543,11 @@ bool Application::JoinServer(const CEGUI::EventArgs& e) {
 	server = false;
 
 	if(!setupNetwork(server)) {
-		mRunning = false;
-		return false;
+		return error();
 	}
 	else {
+		hostServerButton->hide();
+		joinServerButton->hide();
 		return true;
 	}
 }
@@ -584,4 +587,8 @@ bool Application::setupNetwork(bool isServer) {
 	}
 
 }
- 
+
+bool Application::error() {
+	mRunning = false;
+	return false;
+}

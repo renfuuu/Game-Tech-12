@@ -68,12 +68,8 @@ struct ConnectionInfo {
 struct ClientData {
   Uint32 host;                        //!< To differentiate bin owners.
   bool updated;                       //!< Indicates new network output.
-  char output[128];                   //!< Received network data.
-  char input[128];                    //!< Target for automatic data pulls.
-};
-
-struct packet {
-  char data[128];
+  char output[512];                   //!< Received network data.
+  char input[512];                    //!< Target for automatic data pulls.
 };
 
 static const std::string STR_DENY("TG_SERVER_DENY");
@@ -186,7 +182,7 @@ public:
   std::vector<ClientData *> udpClientData;
 
 
-private:
+
   /* ***************************************************
    * Private
    */
@@ -214,11 +210,12 @@ private:
     SOCKET_ALL_MAX      = SOCKET_TCP_MAX + SOCKET_UDP_MAX,
     SOCKET_SELF         = SOCKET_ALL_MAX + 1,
     MESSAGE_COUNT       = 10,
-    MESSAGE_LENGTH      = 256,
+    MESSAGE_LENGTH      = 512,
     MASK_DEPTH          = 24
     ///@}
   };
-
+  
+private:
   /** @name Direct SDL Call Wrappers                                *////@{
   bool openServer(Protocol protocol, Uint16 port);
   bool openClient(Protocol protocol, std::string addr, Uint16 port);
