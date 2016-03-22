@@ -104,8 +104,12 @@ bool Application::update(const FrameEvent &evt) {
 		// close window when ESC is pressed
 		mRunning = false;
 	}
-		
-	ballCam->lookAt(_theBall->getNode()->getPosition());
+
+	if ( !(_soundScoreManager->isGameOver()) ) {
+		_simulator->stepSimulation(evt.timeSinceLastFrame, 1, 1.0 / fps);
+	}
+	_thePaddle->movePaddle(_oisManager, height, width);
+	
 
 	// Small pull toward paddle to make it easier for the player to hit the ball
 	int pull = 500;
@@ -145,9 +149,8 @@ bool Application::updateClient(const FrameEvent &evt) {
 	{
 		return false;
 	}
-		try {
-			_oisManager->capture();
-			_thePaddle->movePaddle(_oisManager, height, width);
+	try {
+		_oisManager->capture();
 	}
 	catch (Exception e) {
 
@@ -163,10 +166,7 @@ bool Application::updateClient(const FrameEvent &evt) {
 		dTime = temp;
 	}
 
-	if ( !(_soundScoreManager->isGameOver()) ) {
-		_simulator->stepSimulation(evt.timeSinceLastFrame, 1, 1.0 / fps);
-	}
-	else {
+	if(_soundScoreManager->isGameOver()) {
 		if(gameOverTime > 2000) {
 			_soundScoreManager->resetGameOver();
 			_soundScoreManager->hideGameOver();
@@ -182,6 +182,8 @@ bool Application::updateClient(const FrameEvent &evt) {
         velocity *= maxSpeed/speed;
         _theBall->getBody()->setLinearVelocity(velocity);
     }
+
+	ballCam->lookAt(_theBall->getNode()->getPosition());
 
     return true;
 }
@@ -395,7 +397,7 @@ void Application::setupCEGUI(void) {
 	sheet->addChild(quitButton);
 
 	hostServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartServer, this));
-	//joinServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartServer, this));
+	joinServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::JoinServer, this));
 	quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Quit, this));
 }
 
@@ -515,7 +517,18 @@ bool Application::StartServer(const CEGUI::EventArgs& e) {
 	hostServerButton->hide();
 	joinServerButton->hide();
 
-	if(!setupNetwork()) {
+	if(!setupNetwork(true)) {
+		mRunning = false;
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+bool Application::JoinServer(const CEGUI::EventArgs& e) {
+
+	if(!setupNetwork(false)) {
 		mRunning = false;
 		return false;
 	}
@@ -531,7 +544,7 @@ bool Application::Quit(const CEGUI::EventArgs& e) {
     return true;
 }
 
-bool Application::setupNetwork() {
+bool Application::setupNetwork(bool isServer) {
 
 	netManager = new NetManager();
 
@@ -541,13 +554,23 @@ bool Application::setupNetwork() {
 	}
 	else {
 		// Opens a connection on port 51215
-		netManager->addNetworkInfo(PROTOCOL_UDP, NULL, 51215);
+		netManager->addNetworkInfo(PROTOCOL_UDP, isServer ? NULL : "128.83.144.177", 51215);
 	}
 
-	if(!netManager->startServer()) {
-		std::cout << "Failed to start the server!" << std::endl;
-		return false;
+	if(isServer) {
+		if(!netManager->startServer()) {
+			std::cout << "Failed to start the server!" << std::endl;
+			return false;
+		}
+		return true;
 	}
-	return true;
+	else {
+		if(!netManager->startClient()) {
+			std::cout << "Failed to start the client!" << std::endl;
+			return false;
+		}
+		return true;
+	}
+
 }
  

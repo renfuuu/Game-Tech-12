@@ -25,7 +25,7 @@ void Ball::updateTransform() {
 
 void Ball::update() {
 
-	static int MAX_DT = 7;
+	static int MAX_DT = 15;
 
 	startScore();
 

@@ -92,7 +92,8 @@ public:
 	void setupLighting(void);
 	void createObjects(void);
 	bool StartServer(const CEGUI::EventArgs &e);
+	bool JoinServer(const CEGUI::EventArgs &e);
 	bool Quit(const CEGUI::EventArgs &e);
 
-	bool setupNetwork();
+	bool setupNetwork(bool);
 };

@@ -15,7 +15,7 @@ Wall::~Wall(){
 
 void Wall::update() {
 
-	static int MAX_DT = 4;
+	static int MAX_DT = 10;
 
 	if (context->hit) {
 		Ogre::Real dt = soundScoreManager->getTime() - lastHitTime;
