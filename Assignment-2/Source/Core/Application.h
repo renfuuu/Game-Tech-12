@@ -93,4 +93,6 @@ public:
 	void createObjects(void);
 	bool StartServer(const CEGUI::EventArgs &e);
 	bool Quit(const CEGUI::EventArgs &e);
+
+	bool setupNetwork();
 };

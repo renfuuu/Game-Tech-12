@@ -167,7 +167,6 @@ bool Application::updateClient(const FrameEvent &evt) {
 		_simulator->stepSimulation(evt.timeSinceLastFrame, 1, 1.0 / fps);
 	}
 	else {
-		// _soundScoreManager->showGameOver();
 		if(gameOverTime > 2000) {
 			_soundScoreManager->resetGameOver();
 			_soundScoreManager->hideGameOver();
@@ -352,7 +351,7 @@ void Application::setupResources(void) {
 
 
 void Application::setupOIS(void) {
-	// Setup OISManager
+
     _oisManager = OISManager::getSingletonPtr();
     _oisManager->initialise( mRenderWindow );
     _oisManager->addKeyListener( (OIS::KeyListener*)_oisManager, "keyboardListener" );
@@ -452,7 +451,6 @@ void Application::loadResources(void) {
 #ifdef __linux__
 		std::string relative = "/lusr/opt/ogre-1.9/share/OGRE/Media";
 #endif
-
 	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/models", "FileSystem");
 	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials", "FileSystem");
 	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/textures", "FileSystem");
@@ -467,7 +465,6 @@ void Application::loadResources(void) {
 
 void Application::setupLighting(void) {
 
-	// Add some light
 	mSceneManager->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 	mSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
@@ -512,17 +509,45 @@ void Application::createObjects(void) {
 *CEGUI Button Callbacks 
 */
 bool Application::StartServer(const CEGUI::EventArgs& e) {
+
 	begin = true;
 
 	hostServerButton->hide();
 	joinServerButton->hide();
 
-	return true;
+	if(!setupNetwork()) {
+		mRunning = false;
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 bool Application::Quit(const CEGUI::EventArgs& e) {
+
 	begin = true;
 	mRunning = false;
     return true;
+}
+
+bool Application::setupNetwork() {
+
+	netManager = new NetManager();
+
+	if(!netManager->initNetManager()) {
+		std::cout << "Failed to init the server!" << std::endl;
+		return false;
+	}
+	else {
+		// Opens a connection on port 51215
+		netManager->addNetworkInfo(PROTOCOL_UDP, NULL, 51215);
+	}
+
+	if(!netManager->startServer()) {
+		std::cout << "Failed to start the server!" << std::endl;
+		return false;
+	}
+	return true;
 }
  
