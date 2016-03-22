@@ -136,6 +136,9 @@ bool Application::handleGUI(const FrameEvent &evt) {
 }
 
 bool Application::updateServer(const FrameEvent &evt) {
+	if ( netManager->pollForActivity(1) ) {
+		printf("Output index 0: %s\n", netManager->udpServerData[0].output);
+	}
 	return true;
 }
 
