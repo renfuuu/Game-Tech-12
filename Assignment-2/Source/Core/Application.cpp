@@ -30,25 +30,25 @@ void Application::init()
 	// This is really just a debugging try-catch block for catching and printing exceptions
 	try {
 
-	t1 = new Timer();
+		t1 = new Timer();
 
-	_simulator = new Simulator();
+		_simulator = new Simulator();
 
-	setupWindowRendererSystem();
+		setupWindowRendererSystem();
 
-	setupOIS();
+		setupOIS();
 
-	setupCEGUI();
+		setupCEGUI();
 
-	setupCameras();
+		setupCameras();
 
-	setupSSM();
+		setupSSM();
 
-	loadResources();
+		loadResources();
 
-	setupLighting();
+		setupLighting();
 
-	createObjects();
+		createObjects();
 
 	}
 	catch (Exception e) {
@@ -313,7 +313,7 @@ void Application::setupWindowRendererSystem(void) {
 
 	// Create scene manager, render window, and camera
 	mSceneManager = mRoot->createSceneManager(ST_GENERIC);
-	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, width = 800, height = 600, false, &params);
+	mRenderWindow = mRoot->createRenderWindow(PROJECT_NAME, width = 1200, height = 900, false, &params);
 }
 
 void Application::setupResources(void) {
