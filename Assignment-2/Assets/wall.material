@@ -1,6 +1,6 @@
 // wall genrated by blender2ogre 0.6.0
 
-material wall 
+material wall
 {
 
     technique
@@ -12,6 +12,22 @@ material wall
 
 	    colour_write off
 	    scene_blend src_alpha dest_alpha
+        }
+    }
+}
+
+material wall2
+{
+
+    technique
+    {
+        pass wall2
+        {
+
+            diffuse 1.0 1.0 1.0 .3
+
+	    scene_blend src_alpha dest_alpha
+
         }
     }
 }

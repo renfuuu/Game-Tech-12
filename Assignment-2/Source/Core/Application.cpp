@@ -208,12 +208,13 @@ bool Application::updateServer(const FrameEvent &evt) {
 
 			Ogre::Quaternion qt(w,x,y,z);
 			_otherPaddle->setOrientation(qt);
-			_otherPaddle->setPosition(-paddleX, paddleY, -(paddleZ + paddleDistance));
+			_otherPaddle->setPosition(-paddleX, paddleY, -paddleZ);
 			_otherPaddle->reflect();
+
+			std::string ballCoords = _theBall->getCoordinates() + "\n" + _thePaddle->getCoordinates();
+			netManager->messageClients(PROTOCOL_UDP, ballCoords.c_str(), ballCoords.length() + 1);
 		}
 
-		std::string ballCoords = _theBall->getCoordinates() + "\n" + _thePaddle->getCoordinates();
-		netManager->messageClients(PROTOCOL_UDP, ballCoords.c_str(), ballCoords.length() + 1);
 	}
 	return true;
 }
@@ -239,7 +240,7 @@ bool Application::updateClient(const FrameEvent &evt) {
 			float vy = atof(pairs["BVY"]);
 			float vz = atof(pairs["BVZ"]);
 
-			_theBall->setPosition(-x, y ,-(z + paddleDistance));
+			_theBall->setPosition(-x, y ,-(z + 0));
 			_theBall->setVelocity(-vx, vy, -vz);
 
 			float w = atof(pairs["PDW"]);
@@ -252,7 +253,7 @@ bool Application::updateClient(const FrameEvent &evt) {
 
 			Ogre::Quaternion qt(w,x,y,z);
 			_otherPaddle->setOrientation(qt);
-			_otherPaddle->setPosition(-paddleX, paddleY, -paddleZ - 1000);
+			_otherPaddle->setPosition(-paddleX, paddleY, -paddleZ);
 			_otherPaddle->reflect();
 		}
 	}
@@ -289,7 +290,7 @@ Ball* Application::createBall(Ogre::String nme, GameObject::objectType tp, Ogre:
 	const btTransform pos;
 	OgreMotionState* ms = new OgreMotionState(pos, sn);
 	sn->setScale(scale,scale,scale);
-	ent->setMaterialName("blue");
+	ent->setMaterialName("ball");
 
 	Ball* obj = new Ball(nme, tp, mSceneManager, ssm, sn, ent, ms, mySim, mss, rest, frict, scale, kinematic);
 	obj->addToSimulator();
@@ -482,8 +483,7 @@ void Application::setupCameras(void) {
 	mRenderWindow->addViewport(mCamera);
 
 	mCamera->setAutoAspectRatio(true);
-	mCamera->setPosition(0, 120, 1050);
-	mCamera->pitch(Ogre::Degree(10));
+	mCamera->setPosition(0, 120, 1800);
 
 	cam2->setAutoAspectRatio(true);
 	cam2->setPosition(1350, 0, -400);
@@ -491,7 +491,7 @@ void Application::setupCameras(void) {
 	cam2->pitch(Ogre::Degree(15));
 
 	ballCam->setAutoAspectRatio(true);
-	ballCam->setPosition(0, 120, 1050);
+	ballCam->setPosition(0, 120, 1800);
 
 	cameras = std::vector<Ogre::Camera*>();
 	cameras.push_back(mCamera);
@@ -555,17 +555,17 @@ void Application::createObjects(void) {
 	
 	mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
-	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, 0, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
-	_otherPaddle = createPaddle("other_paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, -paddleDistance, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
-	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "sphere.mesh", 5, 300, 0, .35, mSceneManager, _soundScoreManager, 1.0f, 1.0f, 0.8f, false, _simulator);
+	// This paddle gets a negative Z coordinate that becomes positive in the function on movepaddle
+	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, -850, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
+	_otherPaddle = createPaddle("other_paddle", GameObject::objectType::PADDLE_OBJECT, "paddle-blue.mesh", 0, 0, -paddleDistance, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
+	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "sphere.mesh", 5, 300, 800, .35, mSceneManager, _soundScoreManager, 1.0f, 1.0f, 0.8f, false, _simulator);
 
-	createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
-	createWall("ceiling", GameObject::objectType::WALL_OBJECT, "ceiling.mesh", 0, 600, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.5f, 0.8f, false, _simulator);
-	createWall("backwall", GameObject::objectType::BACK_WALL_OBJECT, "backwall.mesh", 0, 300, -1350, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.8f, 0.8f, false, _simulator);
-	createWall("leftwall", GameObject::objectType::WALL_OBJECT, "leftwall.mesh", 600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
-	createWall("rightwall", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
-	createWall("ceiling?", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
-	createWall("frontwall?", GameObject::objectType::FRONT_WALL_OBJECT, "backwall.mesh", 0, 300, 500, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, _soundScoreManager, 0.0f, 0.9f, 0.8f, false, _simulator);
+	createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, 0, Ogre::Vector3(120, 240, 240), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("ceiling", GameObject::objectType::WALL_OBJECT, "ceiling.mesh", 0, 500, 0, Ogre::Vector3(120, 240, 240), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.5f, 0.8f, false, _simulator);
+	createWall("backwall", GameObject::objectType::BACK_WALL_OBJECT, "backwall.mesh", 0, 300, -1200, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.8f, 0.8f, false, _simulator);
+	createWall("leftwall", GameObject::objectType::WALL_OBJECT, "leftwall.mesh", 600, 0, -430, Ogre::Vector3(120, 120, 400), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("rightwall", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 400), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("frontwall", GameObject::objectType::FRONT_WALL_OBJECT, "backwall.mesh", 0, 300, 1200, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, _soundScoreManager, 0.0f, 0.9f, 0.8f, false, _simulator);
 
 	createRootEntity("stadium", "stadium2.mesh", 0, -592, 0);
 	mSceneManager->getSceneNode("stadium")->setScale(100,100,100);
@@ -631,7 +631,7 @@ bool Application::setupNetwork(bool isServer) {
 	}
 	else {
 		// Opens a connection on port 51215
-		netManager->addNetworkInfo(PROTOCOL_UDP, isServer ? NULL : "128.83.130.143", 51215);
+		netManager->addNetworkInfo(PROTOCOL_UDP, isServer ? NULL : "128.83.130.142", 51215);
 	}
 
 	if(isServer) {
