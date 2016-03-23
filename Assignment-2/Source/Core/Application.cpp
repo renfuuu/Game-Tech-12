@@ -116,7 +116,7 @@ bool Application::update(const FrameEvent &evt) {
 	Ogre::Vector3 paddleAttract = (_thePaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).normalisedCopy();
 	_theBall->applyForce(paddleAttract.x * pull, paddleAttract.y * pull, paddleAttract.z * pull);
 
-	std::string t = "Test";
+	std::string t = _thePaddle->getCoordinates();
 	if ( !server ) {
 		if(t.length() - 1 > NetManager::MESSAGE_LENGTH) {
 			std::cout << "Message was too large." << std::endl;

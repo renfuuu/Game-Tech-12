@@ -68,3 +68,18 @@ void Paddle::movePaddle(OISManager* _oisManager, int height, int width) {
 
 	updateTransform();
 }
+
+std::string Paddle::getCoordinates() {
+	Ogre::Quaternion orient(rootNode->getOrientation());
+	std::string ow = std::to_string(orient.w);
+	std::string ox = std::to_string(orient.x);
+	std::string oy = std::to_string(orient.y);
+	std::string oz = std::to_string(orient.z);
+	std::string px = std::to_string(rootNode->getPosition().x);
+	std::string py = std::to_string(rootNode->getPosition().y);
+	std::string pz = std::to_string(rootNode->getPosition().z);
+
+	std::string str = "PDW " + ow + "\nPDX " + ox + "\nPDY " + oy + "\nPDZ " + oz + "\nPPX " + px + "\nPPY " + py + "\nPPZ " + pz;
+	
+	return str;
+}

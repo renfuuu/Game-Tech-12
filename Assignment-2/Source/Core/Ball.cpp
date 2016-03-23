@@ -63,3 +63,8 @@ void Ball::update() {
 	}
 	previousHit = context->getTheObject();
 }
+
+std::string Ball::getCoordinates() {
+	std::string str = "BPX 1\nBPY 2\nBPZ 3\nBVX 4\nBVY 5\n BVZ 6";
+	return str;
+}
