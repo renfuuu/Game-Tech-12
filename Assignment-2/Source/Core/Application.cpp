@@ -109,7 +109,6 @@ bool Application::update(const FrameEvent &evt) {
 		_simulator->stepSimulation(evt.timeSinceLastFrame, 1, 1.0 / fps);
 	}
 	_thePaddle->movePaddle(_oisManager, height, width);
-	
 
 	// Small pull toward paddle to make it easier for the player to hit the ball
 	int pull = 500;
@@ -146,7 +145,24 @@ bool Application::handleGUI(const FrameEvent &evt) {
 
 bool Application::updateServer(const FrameEvent &evt) {
 	if ( netManager->pollForActivity(1) ) {
-		printf("Output index 0: %s\n", netManager->udpServerData[0].output);
+		std::unordered_map<std::string, char*> pairs = dataParser(netManager->udpServerData[0].output);
+
+		// for(auto& var : pairs) {
+		// 	std::cout << var.first << " : " << var.second << std::endl;
+		// }
+
+		float w = atof(pairs["PDW"]);
+		float x = atof(pairs["PDX"]);
+		float y = atof(pairs["PDY"]);
+		float z = atof(pairs["PDZ"]);
+		float paddleX = atof(pairs["PPX"]);
+		float paddleY = atof(pairs["PPY"]);
+		float paddleZ = atof(pairs["PPZ"]);
+
+		Ogre::Quaternion qt(w,x,y,z);
+		_otherPaddle->setOrientation(qt);
+		_otherPaddle->setPosition(paddleX, paddleY, paddleZ - 1000);
+		_otherPaddle->roll(Ogre::Degree(180));
 	}
 	return true;
 }
@@ -497,6 +513,7 @@ void Application::createObjects(void) {
 	mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
 	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, 0, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
+	_otherPaddle = createPaddle("other_paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, -1000, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
 	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "sphere.mesh", 5, 300, 0, .35, mSceneManager, _soundScoreManager, 1.0f, 1.0f, 0.8f, false, _simulator);
 
 	createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
@@ -562,6 +579,10 @@ bool Application::setupNetwork(bool isServer) {
 
 	netManager = new NetManager();
 
+	// char buf[512] = "t1 2312\nt2 23.342\nt3 hello";
+	// dataParser(buf);
+	// error();
+
 	if(!netManager->initNetManager()) {
 		std::cout << "Failed to init the server!" << std::endl;
 		return false;
@@ -591,4 +612,30 @@ bool Application::setupNetwork(bool isServer) {
 bool Application::error() {
 	mRunning = false;
 	return false;
+}
+
+std::unordered_map<std::string, char*> Application::dataParser(char* buf) {
+	std::unordered_map<std::string, char*> kvpairs;
+    char *end_str;
+    char *token = strtok_r(buf, "\n", &end_str);
+
+    while (token != NULL)
+    {
+        char *end_token;
+        char *token2 = strtok_r(token, " ", &end_token);
+        std::vector<char*> info;
+        while (token2 != NULL)
+        {
+    		info.push_back(token2);
+            token2 = strtok_r(NULL, " ", &end_token);
+        }
+
+        char* key = info[0];
+        char* value = info[1];
+        kvpairs[std::string(key)] = value;
+
+        token = strtok_r(NULL, "\n", &end_str);
+    }
+
+    return kvpairs;
 }

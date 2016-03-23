@@ -51,6 +51,16 @@ void GameObject::setPosition(float x, float y, float z) {
 	}
 }
 
+void GameObject::setOrientation(Ogre::Quaternion qt) {
+	rootNode->setOrientation(qt);
+	updateTransform();
+}
+
+void GameObject::roll(Ogre::Degree deg) {
+	rootNode->roll(deg);
+	updateTransform();
+}
+
 void GameObject::setPosition(const Ogre::Vector3& pos) {
 	setPosition(pos.x, pos.y, pos.z);
 }
