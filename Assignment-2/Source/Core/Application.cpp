@@ -191,6 +191,12 @@ bool Application::updateClient(const FrameEvent &evt) {
 
 	}
 
+	if ( netManager->pollForActivity(1) ) {
+		std::unordered_map<std::string, char*> pairs = dataParser(netManager->udpServerData[0].output);
+
+		std::cout << std::string(pairs["hey"]) << std::endl;
+	}
+
 	// Code per frame in fixed FPS
 	float temp = t1->getMilliseconds();
 	if ((temp - dTime) >= (1.0 / fps)*1000.0) {
@@ -595,7 +601,7 @@ bool Application::setupNetwork(bool isServer) {
 	}
 	else {
 		// Opens a connection on port 51215
-		netManager->addNetworkInfo(PROTOCOL_UDP, isServer ? NULL : "128.83.120.177", 51215);
+		netManager->addNetworkInfo(PROTOCOL_UDP, isServer ? NULL : "128.83.130.143", 51215);
 	}
 
 	if(isServer) {
