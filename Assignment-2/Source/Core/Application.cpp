@@ -212,7 +212,7 @@ bool Application::updateServer(const FrameEvent &evt) {
 			_otherPaddle->reflect();
 		}
 
-		std::string ballCoords = _theBall->getCoordinates();
+		std::string ballCoords = _theBall->getCoordinates() + "\n" + _thePaddle->getCoordinates();
 		netManager->messageClients(PROTOCOL_UDP, ballCoords.c_str(), ballCoords.length() + 1);
 	}
 	return true;
@@ -226,7 +226,9 @@ bool Application::updateClient(const FrameEvent &evt) {
 
 		if(pairs["BPX"] == NULL || pairs["BPY"] == NULL || 
 			pairs["BPZ"] == NULL || pairs["BVX"] == NULL || pairs["BVY"] == NULL || 
-			pairs["BVZ"] == NULL) {
+			pairs["BVZ"] == NULL || pairs["PDW"] == NULL || pairs["PDX"] == NULL || pairs["PDY"] == NULL || 
+		   pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
+		   pairs["PPZ"] == NULL) {
 		   	std::cout << "Ball data integrity was not guaranteed." << std::endl;
 		}
 		else {
@@ -239,6 +241,19 @@ bool Application::updateClient(const FrameEvent &evt) {
 
 			_theBall->setPosition(-x, y ,-(z+1000));
 			_theBall->setVelocity(-vx, vy, -vz);
+
+			float w = atof(pairs["PDW"]);
+			x = atof(pairs["PDX"]);
+			y = atof(pairs["PDY"]);
+			z = atof(pairs["PDZ"]);
+			float paddleX = atof(pairs["PPX"]);
+			float paddleY = atof(pairs["PPY"]);
+			float paddleZ = atof(pairs["PPZ"]);
+
+			Ogre::Quaternion qt(w,x,y,z);
+			_otherPaddle->setOrientation(qt);
+			_otherPaddle->setPosition(-paddleX, paddleY, -paddleZ - 1000);
+			_otherPaddle->reflect();
 		}
 	}
     return true;
