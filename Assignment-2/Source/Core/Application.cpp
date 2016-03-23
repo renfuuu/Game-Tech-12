@@ -195,7 +195,7 @@ bool Application::updateServer(const FrameEvent &evt) {
 		if(pairs["PDW"] == NULL || pairs["PDX"] == NULL || pairs["PDY"] == NULL || 
 		   pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
 		   pairs["PPZ"] == NULL) {
-	   		std::cout << "Data integrity was not guaranteed." << std::endl;
+	   		std::cout << "Paddle data integrity was not guaranteed." << std::endl;
 		}
 		else {
 			float w = atof(pairs["PDW"]);
@@ -224,9 +224,23 @@ bool Application::updateClient(const FrameEvent &evt) {
 	if ( netManager->pollForActivity(1)) {
 		std::unordered_map<std::string, char*> pairs = dataParser(netManager->udpServerData[0].output);
 
-		std::cout << std::string(pairs["hey"]) << std::endl;
-	}
+		if(pairs["BPX"] == NULL || pairs["BPY"] == NULL || 
+			pairs["BPZ"] == NULL || pairs["BVX"] == NULL || pairs["BVY"] == NULL || 
+			pairs["BVZ"] == NULL) {
+		   	std::cout << "Ball data integrity was not guaranteed." << std::endl;
+		}
+		else {
+			float x = atof(pairs["BPX"]);
+			float y = atof(pairs["BPY"]);
+			float z = atof(pairs["BPZ"]);
+			float vx = atof(pairs["BVX"]);
+			float vy = atof(pairs["BVY"]);
+			float vz = atof(pairs["BVZ"]);
 
+			_theBall->setPosition(-x, y ,-(z+1000));
+			_theBall->setVelocity(-vx, vy, -vz);
+		}
+	}
     return true;
 }
 /* 

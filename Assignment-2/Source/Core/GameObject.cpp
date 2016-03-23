@@ -51,6 +51,12 @@ void GameObject::setPosition(float x, float y, float z) {
 	}
 }
 
+
+void GameObject::setVelocity(float x, float y, float z) {
+	body->setLinearVelocity(btVector3(x, y, z));
+	updateTransform();
+}
+
 void GameObject::setOrientation(Ogre::Quaternion qt) {
 	rootNode->setOrientation(qt);
 	updateTransform();
