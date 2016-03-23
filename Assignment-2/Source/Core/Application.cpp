@@ -66,6 +66,17 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 	static float dTime = t1->getMilliseconds();
 	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 
+	if (!mRunning)
+	{
+		return false;
+	}
+	try {
+		_oisManager->capture();
+	}
+	catch (Exception e) {
+
+	}
+
 	/* Begun split this into three areas, Setup & GUI, server, client */
 	/* This line has been left here for the sake of closing the window. Maybe we'll move it later. */
 	if (mRenderWindow->isClosed())
@@ -75,12 +86,13 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 
 	if ( handleGUI(evt) )
 		return true;
-	else if ( server && !updateServer(evt) ) /* Always returns true for now */
-		return false;
-	else if ( !server && !updateClient(evt) )
-		return false;
 
-		// Code per frame in fixed FPS
+	if (server) 
+		updateServer(evt);
+	else
+		updateClient(evt);
+
+	// Code per frame in fixed FPS
 	float temp = t1->getMilliseconds();
 	if ((temp - dTime) >= (1.0 / fps)*1000.0) {
 		if( _soundScoreManager->isGameOver() ) {
@@ -168,9 +180,11 @@ bool Application::handleGUI(const FrameEvent &evt) {
 		if(lastKey == OIS::KC_ESCAPE) {
 			// close window when ESC is pressed
 			mRunning = false;
-			return false;
 		}
 		return true;
+	}
+	else {
+		return false;
 	}
 }
 
@@ -198,7 +212,6 @@ bool Application::updateServer(const FrameEvent &evt) {
 			_otherPaddle->reflect();
 		}
 
-
 		std::string ballCoords = _theBall->getCoordinates();
 		netManager->messageClients(PROTOCOL_UDP, ballCoords.c_str(), ballCoords.length() + 1);
 	}
@@ -207,17 +220,6 @@ bool Application::updateServer(const FrameEvent &evt) {
 
 /* All logic is now in update client. Update server will be implemented soon. */
 bool Application::updateClient(const FrameEvent &evt) {
-	
-	if (!mRunning)
-	{
-		return false;
-	}
-	try {
-		_oisManager->capture();
-	}
-	catch (Exception e) {
-
-	}
 
 	if ( netManager->pollForActivity(1)) {
 		std::unordered_map<std::string, char*> pairs = dataParser(netManager->udpServerData[0].output);
