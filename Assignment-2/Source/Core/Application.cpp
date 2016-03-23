@@ -191,7 +191,7 @@ bool Application::updateClient(const FrameEvent &evt) {
 
 	}
 
-	if ( netManager->pollForActivity(1) ) {
+	if ( netManager->pollForActivity(1) && !server) {
 		std::unordered_map<std::string, char*> pairs = dataParser(netManager->udpServerData[0].output);
 
 		std::cout << std::string(pairs["hey"]) << std::endl;
