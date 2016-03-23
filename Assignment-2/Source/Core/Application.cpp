@@ -145,24 +145,31 @@ bool Application::handleGUI(const FrameEvent &evt) {
 
 bool Application::updateServer(const FrameEvent &evt) {
 	if ( netManager->pollForActivity(1) ) {
-		std::unordered_map<std::string, char*> pairs = dataParser(netManager->udpServerData[0].output);
+		std::unordered_map<std::string, char*> pairs = dataParser(netManager->udpClientData[0]->output);
 
-		// for(auto& var : pairs) {
-		// 	std::cout << var.first << " : " << var.second << std::endl;
-		// }
+		if(pairs["PDW"] == NULL || pairs["PDX"] == NULL || pairs["PDY"] == NULL || 
+		   pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
+		   pairs["PPZ"] == NULL) {
+	   		std::cout << "Data integrity was not guaranteed." << std::endl;
+		}
+		else {
+			float w = atof(pairs["PDW"]);
+			float x = atof(pairs["PDX"]);
+			float y = atof(pairs["PDY"]);
+			float z = atof(pairs["PDZ"]);
+			float paddleX = atof(pairs["PPX"]);
+			float paddleY = atof(pairs["PPY"]);
+			float paddleZ = atof(pairs["PPZ"]);
 
-		float w = atof(pairs["PDW"]);
-		float x = atof(pairs["PDX"]);
-		float y = atof(pairs["PDY"]);
-		float z = atof(pairs["PDZ"]);
-		float paddleX = atof(pairs["PPX"]);
-		float paddleY = atof(pairs["PPY"]);
-		float paddleZ = atof(pairs["PPZ"]);
+			Ogre::Quaternion qt(w,x,y,z);
+			_otherPaddle->setOrientation(qt);
+			_otherPaddle->setPosition(-paddleX, paddleY, -paddleZ - 1000);
+			_otherPaddle->reflect();
+		}
 
-		Ogre::Quaternion qt(w,x,y,z);
-		_otherPaddle->setOrientation(qt);
-		_otherPaddle->setPosition(-paddleX, paddleY, -paddleZ - 1000);
-		_otherPaddle->reflect();
+
+		std::string msg = "hey frankie";
+		netManager->messageClients(PROTOCOL_UDP, msg.c_str(), msg.length() + 1);
 	}
 	return true;
 }
@@ -550,6 +557,9 @@ bool Application::StartServer(const CEGUI::EventArgs& e) {
 	else {
 		hostServerButton->hide();
 		joinServerButton->hide();
+
+		// Server will not bind connecting UDP clients without this method
+		netManager->acceptConnections();
 		return true;
 	}
 }
@@ -579,10 +589,6 @@ bool Application::setupNetwork(bool isServer) {
 
 	netManager = new NetManager();
 
-	// char buf[512] = "t1 2312\nt2 23.342\nt3 hello";
-	// dataParser(buf);
-	// error();
-
 	if(!netManager->initNetManager()) {
 		std::cout << "Failed to init the server!" << std::endl;
 		return false;
@@ -610,11 +616,18 @@ bool Application::setupNetwork(bool isServer) {
 }
 
 bool Application::error() {
+
 	mRunning = false;
 	return false;
 }
 
 std::unordered_map<std::string, char*> Application::dataParser(char* buf) {
+
+	if(buf == NULL) {
+		std::cout << "Buffer is empty!" << std::endl;
+		return std::unordered_map<std::string, char*>();
+	}
+
 	std::unordered_map<std::string, char*> kvpairs;
     char *end_str;
     char *token = strtok_r(buf, "\n", &end_str);
