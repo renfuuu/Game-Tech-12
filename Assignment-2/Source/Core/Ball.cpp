@@ -65,13 +65,13 @@ void Ball::update() {
 }
 
 std::string Ball::getCoordinates() {
-	btVector3 velocity = _theBall->getBody()->getLinearVelocity();
+	btVector3 velocity = getBody()->getLinearVelocity();
 	std::string px = std::to_string(rootNode->getPosition().x);
 	std::string py = std::to_string(rootNode->getPosition().y);
 	std::string pz = std::to_string(rootNode->getPosition().z);
-	sdt::string vx = std::to_string(velocity.x());
-	sdt::string vy = std::to_string(velocity.y());
-	sdt::string vz = std::to_string(velocity.z());
+	std::string vx = std::to_string(velocity.x());
+	std::string vy = std::to_string(velocity.y());
+	std::string vz = std::to_string(velocity.z());
 
 	std::string str = "BPX " + px + "\nBPY " + py + "\nBPZ " + pz + "\nBVX " + vx + "\nBVY " + vy + "\n BVZ " + vz;
 	return str;
