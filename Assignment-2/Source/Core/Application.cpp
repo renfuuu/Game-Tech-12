@@ -199,8 +199,8 @@ bool Application::updateServer(const FrameEvent &evt) {
 		}
 
 
-		std::string msg = "hey frankie";
-		netManager->messageClients(PROTOCOL_UDP, msg.c_str(), msg.length() + 1);
+		std::string ballCoords = _theBall->getCoordinates();
+		netManager->messageClients(PROTOCOL_UDP, ballCoords.c_str(), ballCoords.length() + 1);
 	}
 	return true;
 }
