@@ -62,6 +62,8 @@ void Application::init()
 */
 bool Application::frameRenderingQueued(const FrameEvent &evt)
 {
+	static float gameOverTime = 0.0f;
+	static float dTime = t1->getMilliseconds();
 	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 
 	/* Begun split this into three areas, Setup & GUI, server, client */
@@ -75,8 +77,37 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		return true;
 	else if ( server && !updateServer(evt) ) /* Always returns true for now */
 		return false;
-	else if ( !updateClient(evt) )
+	else if ( !server && !updateClient(evt) )
 		return false;
+
+		// Code per frame in fixed FPS
+	float temp = t1->getMilliseconds();
+	if ((temp - dTime) >= (1.0 / fps)*1000.0) {
+		if( _soundScoreManager->isGameOver() ) {
+			gameOverTime += (temp - dTime);
+		}
+		update(evt);
+		dTime = temp;
+	}
+
+	if(_soundScoreManager->isGameOver()) {
+		if(gameOverTime > 2000) {
+			_soundScoreManager->resetGameOver();
+			_soundScoreManager->hideGameOver();
+			gameOverTime = 0.0f;
+		}
+	}
+
+	// Constrains the ball's speed
+	static int maxSpeed = 4000;
+	btVector3 velocity = _theBall->getBody()->getLinearVelocity();
+    btScalar speed = velocity.length();
+    if(speed > maxSpeed) {
+        velocity *= maxSpeed/speed;
+        _theBall->getBody()->setLinearVelocity(velocity);
+    }
+
+	ballCam->lookAt(_theBall->getNode()->getPosition());
 
 	return true;
 }
@@ -176,9 +207,6 @@ bool Application::updateServer(const FrameEvent &evt) {
 
 /* All logic is now in update client. Update server will be implemented soon. */
 bool Application::updateClient(const FrameEvent &evt) {
-
-	static float gameOverTime = 0.0f;
-	static float dTime = t1->getMilliseconds();
 	
 	if (!mRunning)
 	{
@@ -191,40 +219,11 @@ bool Application::updateClient(const FrameEvent &evt) {
 
 	}
 
-	if ( netManager->pollForActivity(1) && !server) {
+	if ( netManager->pollForActivity(1)) {
 		std::unordered_map<std::string, char*> pairs = dataParser(netManager->udpServerData[0].output);
 
 		std::cout << std::string(pairs["hey"]) << std::endl;
 	}
-
-	// Code per frame in fixed FPS
-	float temp = t1->getMilliseconds();
-	if ((temp - dTime) >= (1.0 / fps)*1000.0) {
-		if( _soundScoreManager->isGameOver() ) {
-			gameOverTime += (temp - dTime);
-		}
-		update(evt);
-		dTime = temp;
-	}
-
-	if(_soundScoreManager->isGameOver()) {
-		if(gameOverTime > 2000) {
-			_soundScoreManager->resetGameOver();
-			_soundScoreManager->hideGameOver();
-			gameOverTime = 0.0f;
-		}
-	}
-
-	// Constrains the ball's speed
-	static int maxSpeed = 4000;
-	btVector3 velocity = _theBall->getBody()->getLinearVelocity();
-    btScalar speed = velocity.length();
-    if(speed > maxSpeed) {
-        velocity *= maxSpeed/speed;
-        _theBall->getBody()->setLinearVelocity(velocity);
-    }
-
-	ballCam->lookAt(_theBall->getNode()->getPosition());
 
     return true;
 }
