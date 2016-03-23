@@ -113,6 +113,11 @@ Ogre::String GameObject::getName(){
 	return name;
 }
 
+std::string GameObject::getCoordinates() {
+	//Overwritten in specific game objects.
+	return "NULL\n";
+}
+
 GameObject::objectType GameObject::getType(){
 	return type;
 }
