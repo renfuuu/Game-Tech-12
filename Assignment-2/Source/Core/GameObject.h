@@ -73,7 +73,7 @@ public:
 	void setPosition(float x, float y, float z);
 	void setPosition(const Ogre::Vector3& pos);
 	void setOrientation(Ogre::Quaternion qt);
-	void roll(Ogre::Degree deg);
+	void reflect();
 	Ogre::SceneNode* getNode();
 	
 	void reset();

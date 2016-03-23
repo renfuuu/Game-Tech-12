@@ -161,8 +161,8 @@ bool Application::updateServer(const FrameEvent &evt) {
 
 		Ogre::Quaternion qt(w,x,y,z);
 		_otherPaddle->setOrientation(qt);
-		_otherPaddle->setPosition(paddleX, paddleY, paddleZ - 1000);
-		_otherPaddle->roll(Ogre::Degree(180));
+		_otherPaddle->setPosition(-paddleX, paddleY, -paddleZ - 1000);
+		_otherPaddle->reflect();
 	}
 	return true;
 }

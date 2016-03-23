@@ -56,8 +56,8 @@ void GameObject::setOrientation(Ogre::Quaternion qt) {
 	updateTransform();
 }
 
-void GameObject::roll(Ogre::Degree deg) {
-	rootNode->roll(deg);
+void GameObject::reflect() {
+	rootNode->yaw(Ogre::Degree(180), Ogre::Node::TransformSpace::TS_WORLD);
 	updateTransform();
 }
 
