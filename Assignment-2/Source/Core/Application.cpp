@@ -208,7 +208,7 @@ bool Application::updateServer(const FrameEvent &evt) {
 
 			Ogre::Quaternion qt(w,x,y,z);
 			_otherPaddle->setOrientation(qt);
-			_otherPaddle->setPosition(-paddleX, paddleY, -paddleZ - 1000);
+			_otherPaddle->setPosition(-paddleX, paddleY, -(paddleZ + paddleDistance));
 			_otherPaddle->reflect();
 		}
 
@@ -239,7 +239,7 @@ bool Application::updateClient(const FrameEvent &evt) {
 			float vy = atof(pairs["BVY"]);
 			float vz = atof(pairs["BVZ"]);
 
-			_theBall->setPosition(-x, y ,-(z+1000));
+			_theBall->setPosition(-x, y ,-(z + paddleDistance));
 			_theBall->setVelocity(-vx, vy, -vz);
 
 			float w = atof(pairs["PDW"]);
@@ -556,7 +556,7 @@ void Application::createObjects(void) {
 	mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
 	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, 0, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
-	_otherPaddle = createPaddle("other_paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, -1000, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
+	_otherPaddle = createPaddle("other_paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, -paddleDistance, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
 	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "sphere.mesh", 5, 300, 0, .35, mSceneManager, _soundScoreManager, 1.0f, 1.0f, 0.8f, false, _simulator);
 
 	createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, -430, Ogre::Vector3(120, 120, 200), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
