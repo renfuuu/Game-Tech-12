@@ -502,7 +502,8 @@ void Application::setupCameras(void) {
 	ballCam->setPosition(0, 120, 1800);
 
 	camMan->setAutoAspectRatio(true);
-	camMan->setPosition(0,100,0);
+	camMan->setPosition(0,120,400);
+	camMan->lookAt(0,120,1800);
 
 	cameras = std::vector<Ogre::Camera*>();
 	cameras.push_back(mCamera);
