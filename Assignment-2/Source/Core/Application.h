@@ -67,7 +67,6 @@ public:
 	int points;
 	int width;
 	int height;
-	int paddleDistance = 150;
 
 	double fps = 300.0;
 

@@ -98,6 +98,7 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		if( _soundScoreManager->isGameOver() ) {
 			gameOverTime += (temp - dTime);
 		}
+		// This update method gets called once per frame and is called whether or not we are a server or a client
 		update(evt);
 		dTime = temp;
 	}
@@ -153,9 +154,11 @@ bool Application::update(const FrameEvent &evt) {
 	}
 	_thePaddle->movePaddle(_oisManager, height, width);
 
-	// Small pull toward paddle to make it easier for the player to hit the ball
+	// Small pull toward the closest paddle to make it easier for the player to hit the ball
+	GameObject* pullPaddle = (_thePaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).length() <= (_otherPaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).length() ? _thePaddle : _otherPaddle;
+
 	int pull = 500;
-	Ogre::Vector3 paddleAttract = (_thePaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).normalisedCopy();
+	Ogre::Vector3 paddleAttract = (pullPaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).normalisedCopy();
 	_theBall->applyForce(paddleAttract.x * pull, paddleAttract.y * pull, paddleAttract.z * pull);
 
 	std::string t = _thePaddle->getCoordinates();
@@ -195,7 +198,8 @@ bool Application::updateServer(const FrameEvent &evt) {
 		if(pairs["PDW"] == NULL || pairs["PDX"] == NULL || pairs["PDY"] == NULL || 
 		   pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
 		   pairs["PPZ"] == NULL) {
-	   		std::cout << "Paddle data integrity was not guaranteed." << std::endl;
+		   		std::cout << "Paddle data integrity was not guaranteed." << std::endl;
+		   		return error();
 		}
 		else {
 			float w = atof(pairs["PDW"]);
@@ -228,9 +232,10 @@ bool Application::updateClient(const FrameEvent &evt) {
 		if(pairs["BPX"] == NULL || pairs["BPY"] == NULL || 
 			pairs["BPZ"] == NULL || pairs["BVX"] == NULL || pairs["BVY"] == NULL || 
 			pairs["BVZ"] == NULL || pairs["PDW"] == NULL || pairs["PDX"] == NULL || pairs["PDY"] == NULL || 
-		   pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
-		   pairs["PPZ"] == NULL) {
-		   	std::cout << "Ball data integrity was not guaranteed." << std::endl;
+		   	pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
+		   	pairs["PPZ"] == NULL) {
+			   	std::cout << "Ball data integrity was not guaranteed." << std::endl;
+			   	return error();
 		}
 		else {
 			float x = atof(pairs["BPX"]);
@@ -556,8 +561,8 @@ void Application::createObjects(void) {
 	mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
 	// This paddle gets a negative Z coordinate that becomes positive in the function on movepaddle
-	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, -850, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
-	_otherPaddle = createPaddle("other_paddle", GameObject::objectType::PADDLE_OBJECT, "paddle-blue.mesh", 0, 0, -paddleDistance, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
+	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, -825, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
+	_otherPaddle = createPaddle("other_paddle", GameObject::objectType::PADDLE_OBJECT, "paddle-blue.mesh", 0, 0, 0, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
 	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "sphere.mesh", 5, 300, 800, .35, mSceneManager, _soundScoreManager, 1.0f, 1.0f, 0.8f, false, _simulator);
 
 	createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, 0, Ogre::Vector3(120, 240, 240), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
@@ -631,7 +636,7 @@ bool Application::setupNetwork(bool isServer) {
 	}
 	else {
 		// Opens a connection on port 51215
-		netManager->addNetworkInfo(PROTOCOL_UDP, isServer ? NULL : "128.83.130.142", 51215);
+		netManager->addNetworkInfo(PROTOCOL_UDP, isServer ? NULL : "128.83.144.116", 51215);
 	}
 
 	if(isServer) {

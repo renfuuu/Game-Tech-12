@@ -68,8 +68,8 @@ void ScoreManager::nonFloorHit(void) {
 bool ScoreManager::floorHit(void) {
 	floorHitCount++;
 	if ( floorHitCount >= 2 ) {
-		gameOver();
-		return false;
+		// gameOver();
+		// return false;
 	}
 	return true;
 }
