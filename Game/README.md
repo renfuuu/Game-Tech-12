@@ -1,6 +1,6 @@
 ## Milestone 3.2
 
-Instead of a player object we created a packet struct that contains a string message with the client-player's paddle orientation and position, and a message for the ball position. We need to optimize our connection: not allowing the game to start until the client joins the host game, not allowing multiple clients to connect, changing who gets to serve the ball. Our graphics have been changed as stated in Milestone 3.1. We plan to change our scoring system to display both scores and the first one two 21 points wins. We need to change mechanic from the player getting points from hitting the ball to hitting the invisible wall behind the player. Currently our CEGUI allows us to join or host a game. 
+Instead of a player object we construct a message that contains a string with the client-player's paddle orientation and position, and a message for the ball position that we later parse. We need to optimize our connection: not allowing the game to start until the client joins the host game, not allowing multiple clients to connect, changing who gets to serve the ball. Our graphics have been changed as stated in Milestone 3.1. We plan to change our scoring system to display both scores and the first one two 21 points wins. We need to change mechanic from the player getting points from hitting the ball to hitting the invisible wall behind the player. Currently our CEGUI allows us to join or host a game. 
 
 ## Milestone 3.1
 Architecture Upgrade:
