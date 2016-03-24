@@ -466,14 +466,25 @@ void Application::setupCEGUI(void) {
 								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.4f, 0 ) ) ) );
 	hostServerButton->setText( "Host Game" );
 
-	joinServerButton = wmgr.createWindow("AlfiskoSkin/Button", "JoinButton");
-	joinServerButton->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.4f, 0 ) ),
+	ipText = wmgr.createWindow("AlfiskoSkin/Label", "Ip Label");
+	ipText->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.525f, 0 ), CEGUI::UDim( 0.4f, 0 ) ),
+								 CEGUI::UVector2( CEGUI::UDim( 0.725f, 0 ), CEGUI::UDim( 0.45f, 0 ) ) ) );
+	ipText->setText("Enter IP Address");
+
+	ipBox = wmgr.createWindow("AlfiskoSkin/Editbox", "Ip Box");
+	ipBox->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.4f, 0 ) ),
 								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.45f, 0 ) ) ) );
+
+	joinServerButton = wmgr.createWindow("AlfiskoSkin/Button", "JoinButton");
+	joinServerButton->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.45f, 0 ) ),
+								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.5f, 0 ) ) ) );
 	joinServerButton->setText( "Join Game" );
 
 	sheet->addChild(hostServerButton);
 	sheet->addChild(joinServerButton);
 	sheet->addChild(quitButton);
+	sheet->addChild(ipBox);
+	sheet->addChild(ipText);
 
 	hostServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartServer, this));
 	joinServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::JoinServer, this));
@@ -607,8 +618,7 @@ bool Application::StartServer(const CEGUI::EventArgs& e) {
 		return error();
 	}
 	else {
-		hostServerButton->hide();
-		joinServerButton->hide();
+		hideGui();
 
 		// Server will not bind connecting UDP clients without this method
 		netManager->acceptConnections();
@@ -625,8 +635,7 @@ bool Application::JoinServer(const CEGUI::EventArgs& e) {
 		return error();
 	}
 	else {
-		hostServerButton->hide();
-		joinServerButton->hide();
+		hideGui();
 		return true;
 	}
 }
@@ -647,7 +656,7 @@ bool Application::setupNetwork(bool isServer) {
 	}
 	else {
 		// Opens a connection on port 51215
-		netManager->addNetworkInfo(PROTOCOL_UDP, isServer ? NULL : "128.83.144.116", 51215);
+		netManager->addNetworkInfo(PROTOCOL_UDP, isServer ? NULL : ipBox->getText().c_str(), 51215);
 	}
 
 	if(isServer) {
@@ -703,4 +712,11 @@ std::unordered_map<std::string, char*> Application::dataParser(char* buf) {
     }
 
     return kvpairs;
+}
+
+void Application::hideGui() {
+	hostServerButton->hide();
+	joinServerButton->hide();
+	ipBox->hide();
+	ipText->hide();
 }

@@ -63,8 +63,11 @@ public:
 	GameObject* _otherPaddle;
 
     CEGUI::OgreRenderer* mRenderer;
+
     CEGUI::Window* hostServerButton;
     CEGUI::Window* joinServerButton;
+    CEGUI::Window* ipBox;
+    CEGUI::Window* ipText;
 	
 	std::vector<Ogre::Camera*> cameras;
 
@@ -106,4 +109,5 @@ public:
 	bool setupNetwork(bool);
 	bool error();
 	std::unordered_map<std::string, char*> dataParser(char*);
+	void hideGui();
 };
