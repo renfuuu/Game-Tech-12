@@ -37,9 +37,11 @@ public:
  
     OIS::Mouse*    getMouse( void );
     OIS::Keyboard* getKeyboard( void );
+    
+    OgreBites::SdkCameraMan * cameraMan;
  
     static OISManager* getSingletonPtr( void );
-    OgreBites::SdkCameraMan * cameraMan;
+    
 
 
     int getMouseXAxis();

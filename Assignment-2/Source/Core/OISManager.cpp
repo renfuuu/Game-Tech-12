@@ -6,6 +6,7 @@
 OISManager *OISManager::mOISManager;
  
 OISManager::OISManager( void ) :
+    cameraMan( 0 ),
     mMouse( 0 ),
     mKeyboard( 0 ),
     mInputSystem( 0 ) {
@@ -75,7 +76,10 @@ void OISManager::initialise( Ogre::RenderWindow *renderWindow ) {
 }
 
 void OISManager::setupCameraMan(OgreBites::SdkCameraMan * camMan){
-    if(cameraMan == NULL) cameraMan = camMan;   
+    if(!cameraMan){
+        for(int i = 0; i < 1000; i++) std::cout << "work bish" << std::endl;
+        cameraMan = camMan;
+    }
 }
  
 void OISManager::capture( void ) {

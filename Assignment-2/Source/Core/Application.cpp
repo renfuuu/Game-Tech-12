@@ -122,6 +122,8 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 
 	ballCam->lookAt(_theBall->getNode()->getPosition());
 
+	cameraMan->frameRenderingQueued(evt);
+
 	return true;
 }
 
@@ -137,7 +139,7 @@ bool Application::update(const FrameEvent &evt) {
 	else if (lastKey == OIS::KC_M) {
 		_soundScoreManager->mute();
 	}
-	else if (lastKey == OIS::KC_1 || lastKey == OIS::KC_2 || lastKey == OIS::KC_3) {
+	else if (lastKey == OIS::KC_1 || lastKey == OIS::KC_2 || lastKey == OIS::KC_3 || lastKey == OIS::KC_4) {
 		int index = lastKey - 2;
 		if (index >= 0 && index < cameras.size()) {
 			mRenderWindow->removeAllViewports();
@@ -480,7 +482,6 @@ void Application::setupCEGUI(void) {
 
 void Application::setupCameras(void) {
 
-	std::cout << "CameraMan about to init" << std::endl;
 	mCamera = mSceneManager->createCamera("Main Camera");
 	Ogre::Camera* cam2 = mSceneManager->createCamera("Cam2");
 	ballCam = mSceneManager->createCamera("Ball Cam");
