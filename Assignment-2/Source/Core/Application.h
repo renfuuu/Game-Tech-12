@@ -15,6 +15,7 @@
 #include <OISKeyboard.h>
 #include <OISInputManager.h>
 
+#include <SdkCameraMan.h>
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/RendererModules/Ogre/Renderer.h>
 
@@ -47,6 +48,8 @@ public:
 	Ogre::SceneManager * mSceneManager;
 	Ogre::Camera * mCamera;
 	Ogre::Camera * ballCam;
+	Ogre::Camera * camMan;
+	OgreBites::SdkCameraMan * cameraMan;
 	Ogre::Timer* t1;
 
 	NetManager* netManager;

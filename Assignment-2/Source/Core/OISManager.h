@@ -10,11 +10,14 @@
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/RendererModules/Ogre/Renderer.h>
 
+#include <SdkCameraMan.h>
+
 class OISManager : public OIS::KeyListener, public OIS::MouseListener {
 public:
     virtual ~OISManager( void );
  
     void initialise( Ogre::RenderWindow *renderWindow );
+    void setupCameraMan(OgreBites::SdkCameraMan * camMan);
     void capture( void );
  
     void addKeyListener( OIS::KeyListener *keyListener, const std::string& instanceName );
@@ -36,6 +39,8 @@ public:
     OIS::Keyboard* getKeyboard( void );
  
     static OISManager* getSingletonPtr( void );
+    OgreBites::SdkCameraMan * cameraMan;
+
 
     int getMouseXAxis();
     int getMouseYAxis();

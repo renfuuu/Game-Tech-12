@@ -480,9 +480,11 @@ void Application::setupCEGUI(void) {
 
 void Application::setupCameras(void) {
 
+	std::cout << "CameraMan about to init" << std::endl;
 	mCamera = mSceneManager->createCamera("Main Camera");
 	Ogre::Camera* cam2 = mSceneManager->createCamera("Cam2");
 	ballCam = mSceneManager->createCamera("Ball Cam");
+	camMan = mSceneManager->createCamera("Camera Man");
 
 	// Add viewport and cameras
 	mRenderWindow->addViewport(mCamera);
@@ -498,10 +500,17 @@ void Application::setupCameras(void) {
 	ballCam->setAutoAspectRatio(true);
 	ballCam->setPosition(0, 120, 1800);
 
+	camMan->setAutoAspectRatio(true);
+	camMan->setPosition(0,100,0);
+
 	cameras = std::vector<Ogre::Camera*>();
 	cameras.push_back(mCamera);
 	cameras.push_back(cam2);
 	cameras.push_back(ballCam);
+	cameras.push_back(camMan);
+
+	cameraMan = new OgreBites::SdkCameraMan(camMan);
+	_oisManager->setupCameraMan(cameraMan);
 
 }
 
