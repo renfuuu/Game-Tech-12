@@ -22,8 +22,9 @@
 #include <SDL_net.h>
 #endif
 
+#ifdef __linux__
 #include <SDL/SDL_net.h>
-
+#endif
 
 /* ****************************************************************************
  * Global Structures

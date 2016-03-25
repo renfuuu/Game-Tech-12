@@ -11,7 +11,6 @@
 
 #include "NetManager.h"
 
-
 #define LOCALHOST_NBO 16777343
 
 
@@ -105,7 +104,7 @@ void NetManager::addNetworkInfo(Protocol protocol, const char *host, Uint16 port
   }
 
   netProtocol = protocol;
-  netPort = port ? : PORT_DEFAULT;
+  netPort = port ? 0 : PORT_DEFAULT;
   if (host)
     netHostname = host;
 
@@ -239,7 +238,7 @@ void NetManager::messageClients(Protocol protocol, const char *buf, int len) {
   }
 
   if (buf && (0 <= len) && (len < MESSAGE_LENGTH)) {
-    length = len ? : strlen(buf);
+    length = len ? 0 : strlen(buf);
 
     for (i = 0; i < netClients.size(); i++) {
       if (protocol & (netClients[i]->protocols & PROTOCOL_TCP)) {
@@ -306,7 +305,7 @@ void NetManager::messageServer(Protocol protocol, const char *buf, int len) {
   }
 
   if (buf && (0 <= len) && (len < MESSAGE_LENGTH)) {
-    length = len ? : strlen(buf);
+    length = len ? 0 : strlen(buf);
 
     if (protocol & PROTOCOL_TCP) {
       sendTCP(tcpSockets[netServer.tcpSocketIdx], buf, length);
@@ -653,7 +652,10 @@ Uint32 NetManager::getIPnbo() {
   bool found = false;
 
   if (!netLocalHost) {
+	  // Per SDL_net doc, this function doesn't work on Windows until version 2.0
+#ifdef __linux__
     count = SDLNet_GetLocalAddresses(myIPs, 3);
+#endif
 
     for (i = 0; i < count && !found; i++) {
       host = myIPs[i].host;
@@ -1472,7 +1474,7 @@ int NetManager::checkSockets(Uint32 timeout_ms) {
         }
       }
     }
-    ret = udp ? : ret;
+    ret = udp ? 0 : ret;
   }
 
   return ret;

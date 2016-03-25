@@ -31,4 +31,13 @@ namespace MultiPlatformHelper {
 				Sleep(sleepMs);
 		#endif
 	}
+
+	inline char* strtok(char *str, const char *delim, char **saveptr) {
+		#ifdef __linux__
+			return strtok_r(str, delim, saveptr);
+		#endif
+		#ifdef _WIN32
+			return strtok_s(str, delim, saveptr);
+		#endif
+	}
 }

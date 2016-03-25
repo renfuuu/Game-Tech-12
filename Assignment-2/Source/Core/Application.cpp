@@ -14,6 +14,7 @@
 #include "OgreMotionState.h"
 #include "Simulator.h"
 #include "GameObject.h"
+#include <cstring>
 
 using namespace Ogre;
 
@@ -36,6 +37,8 @@ void Application::init()
 
 		setupWindowRendererSystem();
 
+		loadResources();
+
 		setupOIS();
 
 		setupCEGUI();
@@ -43,8 +46,6 @@ void Application::init()
 		setupCameras();
 
 		setupSSM();
-
-		loadResources();
 
 		setupLighting();
 
@@ -457,28 +458,28 @@ void Application::setupCEGUI(void) {
 	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 
 	CEGUI::Window* quitButton = wmgr.createWindow("AlfiskoSkin/Button", "QuitButton");
-	quitButton->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.0f, 0 ), CEGUI::UDim( 0.0f, 0 ) ),
-								 CEGUI::UVector2( CEGUI::UDim( 0.1f, 0 ), CEGUI::UDim( 0.05f, 0 ) ) ) );
-	quitButton->setText( "Quit" );
+	quitButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.0f, 0), CEGUI::UDim(0.0f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.1f, 0), CEGUI::UDim(0.05f, 0))));
+	quitButton->setText("Quit");
 
 	hostServerButton = wmgr.createWindow("AlfiskoSkin/Button", "HostButton");
-	hostServerButton->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.35f, 0 ) ),
-								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.4f, 0 ) ) ) );
-	hostServerButton->setText( "Host Game" );
+	hostServerButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.35f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.4f, 0))));
+	hostServerButton->setText("Host Game");
 
 	ipText = wmgr.createWindow("AlfiskoSkin/Label", "Ip Label");
-	ipText->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.525f, 0 ), CEGUI::UDim( 0.4f, 0 ) ),
-								 CEGUI::UVector2( CEGUI::UDim( 0.725f, 0 ), CEGUI::UDim( 0.45f, 0 ) ) ) );
+	ipText->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.525f, 0), CEGUI::UDim(0.4f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.725f, 0), CEGUI::UDim(0.45f, 0))));
 	ipText->setText("Enter IP Address");
 
 	ipBox = wmgr.createWindow("AlfiskoSkin/Editbox", "Ip Box");
-	ipBox->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.4f, 0 ) ),
-								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.45f, 0 ) ) ) );
+	ipBox->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.4f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.45f, 0))));
 
 	joinServerButton = wmgr.createWindow("AlfiskoSkin/Button", "JoinButton");
-	joinServerButton->setArea( CEGUI::URect( CEGUI::UVector2( CEGUI::UDim( 0.3f, 0 ), CEGUI::UDim( 0.45f, 0 ) ),
-								 CEGUI::UVector2( CEGUI::UDim( 0.7f, 0 ), CEGUI::UDim( 0.5f, 0 ) ) ) );
-	joinServerButton->setText( "Join Game" );
+	joinServerButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.45f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.5f, 0))));
+	joinServerButton->setText("Join Game");
 
 	sheet->addChild(hostServerButton);
 	sheet->addChild(joinServerButton);
@@ -489,6 +490,7 @@ void Application::setupCEGUI(void) {
 	hostServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartServer, this));
 	joinServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::JoinServer, this));
 	quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Quit, this));
+	
 }
 
 void Application::setupCameras(void) {
@@ -558,6 +560,11 @@ void Application::loadResources(void) {
 	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/scripts", "FileSystem");
 #ifdef _WIN32
 	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/particle", "FileSystem");
+	ResourceGroupManager::getSingleton().addResourceLocation("../../../cegui-0.8.4/datafiles/imagesets", "FileSystem", "Imagesets");
+	ResourceGroupManager::getSingleton().addResourceLocation("../../../cegui-0.8.4/datafiles/fonts", "FileSystem", "Fonts");
+	ResourceGroupManager::getSingleton().addResourceLocation("../../../cegui-0.8.4/datafiles/schemes", "FileSystem", "Schemes");
+	ResourceGroupManager::getSingleton().addResourceLocation("../../../cegui-0.8.4/datafiles/looknfeel", "FileSystem", "LookNFeel");
+	ResourceGroupManager::getSingleton().addResourceLocation("../../../cegui-0.8.4/datafiles/layouts", "FileSystem", "Layouts");
 #endif
 	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
@@ -614,7 +621,7 @@ bool Application::StartServer(const CEGUI::EventArgs& e) {
 	begin = true;
 	server = true;
 
-	if(!setupNetwork(server)) {
+	if (!setupNetwork(server)) {
 		return error();
 	}
 	else {
@@ -691,24 +698,26 @@ std::unordered_map<std::string, char*> Application::dataParser(char* buf) {
 
 	std::unordered_map<std::string, char*> kvpairs;
     char *end_str;
-    char *token = strtok_r(buf, "\n", &end_str);
+
+    char *token = MultiPlatformHelper::strtok(buf, "\n", &end_str);
 
     while (token != NULL)
     {
         char *end_token;
-        char *token2 = strtok_r(token, " ", &end_token);
+		char *token2 = MultiPlatformHelper::strtok(token, " ", &end_token);
+
         std::vector<char*> info;
         while (token2 != NULL)
         {
     		info.push_back(token2);
-            token2 = strtok_r(NULL, " ", &end_token);
+			token2 = MultiPlatformHelper::strtok(NULL, " ", &end_token);
         }
 
         char* key = info[0];
         char* value = info[1];
         kvpairs[std::string(key)] = value;
 
-        token = strtok_r(NULL, "\n", &end_str);
+		token = MultiPlatformHelper::strtok(NULL, "\n", &end_str);
     }
 
     return kvpairs;
