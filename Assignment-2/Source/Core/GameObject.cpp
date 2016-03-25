@@ -111,7 +111,7 @@ void GameObject::addToSimulator() {
 	simulator->addObject(this);
 }
 
-int GameObject::getPoints(){
+std::string GameObject::getPoints(){
 	return 0;
 }
 
@@ -120,6 +120,11 @@ Ogre::String GameObject::getName(){
 }
 
 std::string GameObject::getCoordinates() {
+	//Overwritten in specific game objects.
+	return "NULL\n";
+}
+
+std::string GameObject::getScore() {
 	//Overwritten in specific game objects.
 	return "NULL\n";
 }

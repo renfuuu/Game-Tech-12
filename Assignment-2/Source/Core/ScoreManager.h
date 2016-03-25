@@ -14,6 +14,7 @@ public:
  	void postScore(void);
  	void postHighScore(void);
  	void scorePoints(int);
+ 	void updateEnemyPoints(std::string points);
  	void nonFloorHit(void);
  	bool floorHit(void);
  	void resetScore(void);
@@ -32,6 +33,7 @@ protected:
 
 	// Score Data
  	int gameScore;
+ 	int enemyScore;
  	int highScore;
  	int floorHitCount;
  	bool gameOverB;

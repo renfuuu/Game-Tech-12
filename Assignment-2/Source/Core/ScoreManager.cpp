@@ -1,6 +1,6 @@
 #include "ScoreManager.h"
 
-ScoreManager::ScoreManager(void) : gameScore(0), highScoreFile(), highScore(0), gameOverB(false), floorHitCount(0), scoreLabel("SCORE_"), scoreText("Score: "), highScoreLabel("HIGH_SCORE_"), highScoreText("High Score: "), gameOverLabel("GAME_OVER_"), gameOverText("Game Over!") {
+ScoreManager::ScoreManager(void) : gameScore(0), enemyScore(0), highScoreFile(), highScore(0), gameOverB(false), floorHitCount(0), scoreLabel("SCORE_"), scoreText("Score: "), highScoreLabel("HIGH_SCORE_"), highScoreText("High Score: "), gameOverLabel("GAME_OVER_"), gameOverText("Game Over!") {
 	/* The global timer */
 	timer = new Ogre::Timer();
 	dt = timer->getMilliseconds();
@@ -44,7 +44,7 @@ Ogre::Real ScoreManager::getTime() {
 
 void ScoreManager::postScore(void) {
 	// scoreOverlay->showOverlay();
-	scoreOverlay->setText(scoreText + std::to_string(gameScore));
+	scoreOverlay->setText(scoreText + std::to_string(gameScore) + " | " + std::to_string(enemyScore));
 }
 
 void ScoreManager::postHighScore(void) {
@@ -59,6 +59,10 @@ void ScoreManager::scorePoints(int points) {
 	postScore();
 }
 
+void ScoreManager::updateEnemyPoints(std::string points) {
+	//Networking received here
+	postScore();
+}
 
 void ScoreManager::nonFloorHit(void) {
 	floorHitCount = 0;

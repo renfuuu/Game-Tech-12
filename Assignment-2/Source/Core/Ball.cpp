@@ -34,31 +34,9 @@ void Ball::update() {
 		if ( dt > MAX_DT )
 			lastHitTime = soundScoreManager->getTime();
 
-		// Check for paddle collision but not twice in a row
-		if( context->getTheObject()->getType() == GameObject::PADDLE_OBJECT && context->getTheObject() != previousHit ) {
-			soundScoreManager->playSound(SoundScoreManager::PADDLE_BOUNCE);
-			soundScoreManager->nonFloorHit();
+		//Score only when you hit behind your opponent.
+		if( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT ) {
 			soundScoreManager->scorePoints(1);
-		}
-
-		// Check for floor collision
-		if ( context->getTheObject()->getType() == GameObject::FLOOR_OBJECT ) {
-			if ( dt > MAX_DT ) {
-				if ( !(soundScoreManager->floorHit()) ) {
-					this->resetScore();
-					return;
-				}
-			}
-		}
-		else {
-			soundScoreManager->nonFloorHit();
-		}
-
-		// Headshot
-		if( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT && previousHit->getType() == GameObject::PADDLE_OBJECT ) {
-			soundScoreManager->playSound(SoundScoreManager::HEADSHOT);
-			soundScoreManager->scorePoints(1);
-			soundScoreManager->nonFloorHit();
 		}
 	}
 	previousHit = context->getTheObject();
@@ -74,5 +52,10 @@ std::string Ball::getCoordinates() {
 	std::string vz = std::to_string(velocity.z());
 
 	std::string str = "BPX " + px + "\nBPY " + py + "\nBPZ " + pz + "\nBVX " + vx + "\nBVY " + vy + "\n BVZ " + vz;
+	return str;
+}
+
+std::string Ball::getScore() {
+	std::string str;
 	return str;
 }
