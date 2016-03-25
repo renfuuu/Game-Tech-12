@@ -36,8 +36,9 @@ void Application::init()
 		_simulator = new Simulator();
 
 		setupWindowRendererSystem();
-
-		loadResources();
+		#ifdef _WIN32
+			loadResources();
+		#endif
 
 		setupOIS();
 
@@ -46,6 +47,10 @@ void Application::init()
 		setupCameras();
 
 		setupSSM();
+
+		#ifdef __linux__
+			loadResources();
+		#endif
 
 		setupLighting();
 

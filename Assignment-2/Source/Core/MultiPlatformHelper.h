@@ -4,6 +4,7 @@
 #include <iostream>
 #ifdef __linux__
 #include <unistd.h>
+#include <cstring>
 #endif
 #ifdef _WIN32
 #include <windows.h>
