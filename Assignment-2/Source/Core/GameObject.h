@@ -85,7 +85,6 @@ public:
 	virtual void update() = 0;
 	virtual std::string getPoints();
 	virtual std::string getCoordinates();
-	virtual std::string getScore();
 	virtual GameObject::objectType getType();
 	virtual void movePaddle(OISManager* _oisManager, int height, int width);
 	virtual Ogre::String getName(void);

@@ -10,6 +10,6 @@ public:
 	virtual void update();
 	virtual void updateTransform();
 	virtual std::string getCoordinates();
-	virtual std::string getScore();
+	virtual std::string getPoints();
 };
 

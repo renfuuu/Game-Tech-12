@@ -163,7 +163,7 @@ bool Application::update(const FrameEvent &evt) {
 	Ogre::Vector3 paddleAttract = (pullPaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).normalisedCopy();
 	_theBall->applyForce(paddleAttract.x * pull, paddleAttract.y * pull, paddleAttract.z * pull);
 
-	std::string t = _thePaddle->getCoordinates();
+	std::string t = _thePaddle->getCoordinates() + "\n" + _theBall->getPoints();
 	if ( !server ) {
 		if(t.length() - 1 > NetManager::MESSAGE_LENGTH) {
 			std::cout << "Message was too large." << std::endl;
@@ -199,7 +199,7 @@ bool Application::updateServer(const FrameEvent &evt) {
 
 		if(pairs["PDW"] == NULL || pairs["PDX"] == NULL || pairs["PDY"] == NULL || 
 		   pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
-		   pairs["PPZ"] == NULL) {
+		   pairs["PPZ"] == NULL || pairs["SCR"] == NULL) {
 		   		std::cout << "Paddle data integrity was not guaranteed." << std::endl;
 		   		return error();
 		}
@@ -217,7 +217,10 @@ bool Application::updateServer(const FrameEvent &evt) {
 			_otherPaddle->setPosition(-paddleX, paddleY, -paddleZ);
 			_otherPaddle->reflect();
 
-			std::string ballCoords = _theBall->getCoordinates() + "\n" + _thePaddle->getCoordinates();
+			float scr = atof(pairs["SCR"]);
+			_soundScoreManager->setEnemyScore(scr);
+
+			std::string ballCoords = _theBall->getCoordinates() + "\n" + _thePaddle->getCoordinates() + "\n" + _theBall->getPoints();
 			netManager->messageClients(PROTOCOL_UDP, ballCoords.c_str(), ballCoords.length() + 1);
 		}
 
@@ -235,7 +238,7 @@ bool Application::updateClient(const FrameEvent &evt) {
 			pairs["BPZ"] == NULL || pairs["BVX"] == NULL || pairs["BVY"] == NULL || 
 			pairs["BVZ"] == NULL || pairs["PDW"] == NULL || pairs["PDX"] == NULL || pairs["PDY"] == NULL || 
 		   	pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
-		   	pairs["PPZ"] == NULL) {
+		   	pairs["PPZ"] == NULL || pairs["SCR"] == NULL) {
 			   	std::cout << "Ball data integrity was not guaranteed." << std::endl;
 			   	return error();
 		}
@@ -262,6 +265,9 @@ bool Application::updateClient(const FrameEvent &evt) {
 			_otherPaddle->setOrientation(qt);
 			_otherPaddle->setPosition(-paddleX, paddleY, -paddleZ);
 			_otherPaddle->reflect();
+
+			float scr = atof(pairs["SCR"]);
+			_soundScoreManager->setEnemyScore(scr);
 		}
 	}
     return true;

@@ -34,6 +34,12 @@ void Ball::update() {
 		if ( dt > MAX_DT )
 			lastHitTime = soundScoreManager->getTime();
 
+		// Check for paddle collision but not twice in a row
+		if( context->getTheObject()->getType() == GameObject::PADDLE_OBJECT && context->getTheObject() != previousHit ) {
+			soundScoreManager->playSound(SoundScoreManager::PADDLE_BOUNCE);
+			soundScoreManager->nonFloorHit();
+		}		
+
 		//Score only when you hit behind your opponent.
 		if( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT ) {
 			soundScoreManager->scorePoints(1);
@@ -55,7 +61,7 @@ std::string Ball::getCoordinates() {
 	return str;
 }
 
-std::string Ball::getScore() {
-	std::string str;
+std::string Ball::getPoints() {
+	std::string str = "SCR " + std::to_string(soundScoreManager->getGameScore());
 	return str;
 }
