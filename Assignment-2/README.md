@@ -1,6 +1,49 @@
 ## Milestone 3.2
 
-Instead of a player object we construct a message that contains a string with the client-player's paddle orientation and position, and a message for the ball position that we later parse. We need to optimize our connection: not allowing the game to start until the client joins the host game, not allowing multiple clients to connect, changing who gets to serve the ball. Our graphics have been changed as stated in Milestone 3.1. We plan to change our scoring system to display both scores and the first one two 21 points wins. We need to change mechanic from the player getting points from hitting the ball to hitting the invisible wall behind the player. Currently our CEGUI allows us to join or host a game. We also need to add a Single-Player option to the game.
+### Implemented
+* Core game from Assignment-2
+* Added giant stadium in the background
+* Working server-client connection of a UDP protocol
+* CEGUI buttons to host a game or join a game with a text box to enter the host's IP Address
+* We send key-value pairs as a string over the network and it gets parsed and setup into a hashtable locally, the data sent is ball position and velocity as well as the paddle's orientations.
+* The server is the ultimate authority as far as the bullet simulation and the client (opponent player) gets updated in real time of the ball's true position.
+
+### TODO
+* Single Player mode + AI
+* Prevent game start until all palyers joined
+* Detect client disconnect
+* Changing scoring rules / who gets to server
+* Prevent crash if the player enters an incorrect ip address
+* Remove highscore
+* Replace OGRE Overlay with CEGUI Text
+
+### ISSUES
+* Overlay Manager causes weird gray texture artifacting (can be cleared by restarting the assignment or by clearing the overlay window)
+* Ball sometimes leaves the playable area
+
+### How to play
+* Choose to Host a game or join a game (requires two computers)
+* To join a game, one computer must be hosting and you must enter the public ip address of the machine that is hosting and press join game
+* Move the mouse up/down and left/right on the game window to control the paddle
+* Strike the ball with the paddle to propel it through the room and attempt to bypass your opponent's paddle
+* Space bar resets score and the ball back to its inital position (for the host)
+* M mutes the sounds
+* Keys 1,2,3, and 4 change the camera angle (front, side,ball chase view, and free camera)
+* Free camera works as a camera man (WSAD or Arrow keys to move) hold shift to speed up
+* Escape key to quit or click the quit button
+
+### Code and Outside resources used
+* Paddle model downloaded from: http://www.blendswap.com/blends/view/49333 credit: Bruno Matheus
+* Started with some of the bullet example code from the lecture slides
+* Sound files from the public domain
+* Background Music - http://www.orangefreesounds.com/music-loop-120-bpm/
+* Dameron font downloaded from http://www.dafont.com/dameron.font
+* Wall image downloaded from http://4.bp.blogspot.com/-5xNMmxVjWKg/UA5bNp_0jaI/AAAAAAAAB4s/QXcwBUUPPKw/s1600/Seamless+wall+white+paint+stucco+plaster+texture.jpg
+* Court image downloaded from http://www.ghpayouth.com/images/basketball-floor-texture.jpg
+* Headshot sound downloaded from http://gs.bel-net.ru/cs/download/sound/misc/headshot.wav
+* Stadium mesh downloaded from http://www.blendswap.com/blends/view/52154 credit: MrChimp2313
+* NetManager.h and NetManager.cpp taken from Wade Burch, supplied by Sarah
+* OGRE Basic tutorial 7 for CEGUI
 
 ## Milestone 3.1
 Architecture Upgrade:
