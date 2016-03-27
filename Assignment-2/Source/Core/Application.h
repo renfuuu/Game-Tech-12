@@ -99,7 +99,6 @@ public:
 	void setupCEGUI(void);
 	void setupCameras(void);
 	void setupSSM(void);
-	void loadResources(void);
 	void setupLighting(void);
 	void createObjects(void);
 	bool StartServer(const CEGUI::EventArgs &e);

@@ -36,9 +36,6 @@ void Application::init()
 		_simulator = new Simulator();
 
 		setupWindowRendererSystem();
-		#ifdef _WIN32
-			loadResources();
-		#endif
 
 		setupOIS();
 
@@ -48,9 +45,7 @@ void Application::init()
 
 		setupSSM();
 
-		#ifdef __linux__
-			loadResources();
-		#endif
+		ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 		setupLighting();
 
@@ -61,7 +56,6 @@ void Application::init()
 		std::cout << "Exception Caught: " << e.what() << std::endl;
 	}
 }
-
 
 /* 
 * Update Methods 
@@ -359,18 +353,14 @@ Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre:
 */
 void Application::setupWindowRendererSystem(void) {
 
-#ifdef __linux__
 	mResourcesCfg = "resources.cfg";
 	mPluginsCfg = "plugins.cfg";
-#endif
 
 	NameValuePairList params;
 	// Initialization
 	mRoot = new Root(mPluginsCfg);
 
-#ifdef __linux__
 	setupResources();
-#endif
 
 	// load plugins
 #ifdef _WIN32
@@ -427,14 +417,6 @@ void Application::setupResources(void) {
         {
             typeName = i->first;
             archName = i->second;
-
-	#if OGRE_PLATFORM == OGRE_PLATFORM_APPLE
-            // OS X does not set the working directory relative to the app.
-            // In order to make things portable on OS X we need to provide
-            // the loading with it's own bundle path location.
-            if (!Ogre::StringUtil::startsWith(archName, "/", false)) // only adjust relative directories
-                archName = Ogre::String(Ogre::macBundlePath() + "/" + archName);
-	#endif
 
             Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
                 archName, typeName, secName);
@@ -552,32 +534,6 @@ void Application::setupSSM(void) {
 
 	_soundScoreManager = new SoundScoreManager();
 	_soundScoreManager->startMusic();
-
-}
-
-void Application::loadResources(void) {
-
-#ifdef _WIN32
-		std::string relative = "../../../ogre/build/sdk/media";
-		ResourceGroupManager::getSingleton().addResourceLocation("../../../Game-Tech-12/Assignment-2/Assets", "FileSystem");
-#endif
-#ifdef __linux__
-		std::string relative = "/lusr/opt/ogre-1.9/share/OGRE/Media";
-#endif
-	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/models", "FileSystem");
-	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials", "FileSystem");
-	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/textures", "FileSystem");
-	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/programs/GLSL", "FileSystem");
-	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/materials/scripts", "FileSystem");
-#ifdef _WIN32
-	ResourceGroupManager::getSingleton().addResourceLocation(relative + "/particle", "FileSystem");
-	ResourceGroupManager::getSingleton().addResourceLocation("../../../cegui-0.8.4/datafiles/imagesets", "FileSystem", "Imagesets");
-	ResourceGroupManager::getSingleton().addResourceLocation("../../../cegui-0.8.4/datafiles/fonts", "FileSystem", "Fonts");
-	ResourceGroupManager::getSingleton().addResourceLocation("../../../cegui-0.8.4/datafiles/schemes", "FileSystem", "Schemes");
-	ResourceGroupManager::getSingleton().addResourceLocation("../../../cegui-0.8.4/datafiles/looknfeel", "FileSystem", "LookNFeel");
-	ResourceGroupManager::getSingleton().addResourceLocation("../../../cegui-0.8.4/datafiles/layouts", "FileSystem", "Layouts");
-#endif
-	ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 }
 

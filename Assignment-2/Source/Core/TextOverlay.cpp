@@ -27,10 +27,7 @@ void TextOverlay::setText(Ogre::String str) {
 	textArea->setCaption(str);
 	textArea->setDimensions(1.0f, 1.0f);
 	textArea->setMetricsMode(Ogre::GMM_RELATIVE);
-	// Dameron font won't load on Windows machine for some reason
-#ifdef __linux__
 	textArea->setFontName("dameron");
-#endif
 	textArea->setCharHeight(charHeight);
 }
 
