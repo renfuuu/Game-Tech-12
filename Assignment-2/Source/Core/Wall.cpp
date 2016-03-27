@@ -15,18 +15,19 @@ Wall::~Wall(){
 
 void Wall::update() {
 
-	static int MAX_DT = 10;
+	static int MAX_DT = 20;
 
 	if (context->hit) {
 		Ogre::Real dt = soundScoreManager->getTime() - lastHitTime;
 		if ( dt > MAX_DT && context->getTheObject()->getType() == GameObject::BALL_OBJECT ) {
-			lastHitTime = soundScoreManager->getTime();
 			soundScoreManager->playSound(SoundScoreManager::WALL_BOUNCE);
 		}
 
 		if ( type != GameObject::FLOOR_OBJECT ) {
 			soundScoreManager->nonFloorHit();
 		}
+
+		lastHitTime = soundScoreManager->getTime();
 	}
 
 }

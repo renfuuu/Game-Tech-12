@@ -25,14 +25,9 @@ void Ball::updateTransform() {
 
 void Ball::update() {
 
-	static int MAX_DT = 15;
-
 	startScore();
 
 	if (context->hit) {
-		Ogre::Real dt = soundScoreManager->getTime() - lastHitTime;
-		if ( dt > MAX_DT )
-			lastHitTime = soundScoreManager->getTime();
 
 		// Check for paddle collision but not twice in a row
 		if( context->getTheObject()->getType() == GameObject::PADDLE_OBJECT && context->getTheObject() != previousHit ) {
@@ -44,8 +39,8 @@ void Ball::update() {
 		if( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT ) {
 			soundScoreManager->scorePoints(1);
 		}
+		previousHit = context->getTheObject();
 	}
-	previousHit = context->getTheObject();
 }
 
 std::string Ball::getCoordinates() {

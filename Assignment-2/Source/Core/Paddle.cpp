@@ -19,12 +19,8 @@ Paddle::~Paddle() {
 
 void Paddle::update() {
 
-	static int MAX_DT = 5;
-
 	if (context->hit) {
-		Ogre::Real dt = soundScoreManager->getTime() - lastHitTime;
-		if ( dt > MAX_DT )
-			lastHitTime = soundScoreManager->getTime();
+
 	}
 }
 
