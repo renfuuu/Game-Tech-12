@@ -38,27 +38,11 @@ void Ball::update() {
 		if( context->getTheObject()->getType() == GameObject::PADDLE_OBJECT && context->getTheObject() != previousHit ) {
 			soundScoreManager->playSound(SoundScoreManager::PADDLE_BOUNCE);
 			soundScoreManager->nonFloorHit();
-			soundScoreManager->scorePoints(1);
-		}
+		}		
 
-		// Check for floor collision
-		if ( context->getTheObject()->getType() == GameObject::FLOOR_OBJECT ) {
-			if ( dt > MAX_DT ) {
-				if ( !(soundScoreManager->floorHit()) ) {
-					this->resetScore();
-					return;
-				}
-			}
-		}
-		else {
-			soundScoreManager->nonFloorHit();
-		}
-
-		// Headshot
-		if( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT && previousHit->getType() == GameObject::PADDLE_OBJECT ) {
-			soundScoreManager->playSound(SoundScoreManager::HEADSHOT);
+		//Score only when you hit behind your opponent.
+		if( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT ) {
 			soundScoreManager->scorePoints(1);
-			soundScoreManager->nonFloorHit();
 		}
 	}
 	previousHit = context->getTheObject();
@@ -74,5 +58,10 @@ std::string Ball::getCoordinates() {
 	std::string vz = std::to_string(velocity.z());
 
 	std::string str = "BPX " + px + "\nBPY " + py + "\nBPZ " + pz + "\nBVX " + vx + "\nBVY " + vy + "\n BVZ " + vz;
+	return str;
+}
+
+std::string Ball::getPoints() {
+	std::string str = "SCR " + std::to_string(soundScoreManager->getGameScore());
 	return str;
 }

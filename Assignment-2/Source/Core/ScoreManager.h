@@ -14,6 +14,9 @@ public:
  	void postScore(void);
  	void postHighScore(void);
  	void scorePoints(int);
+ 	int getGameScore();
+ 	void setEnemyScore(int points);
+ 	void updateEnemyPoints(std::string points);
  	void nonFloorHit(void);
  	bool floorHit(void);
  	void resetScore(void);
@@ -32,6 +35,7 @@ protected:
 
 	// Score Data
  	int gameScore;
+ 	int enemyScore;
  	int highScore;
  	int floorHitCount;
  	bool gameOverB;
@@ -40,6 +44,7 @@ protected:
  	TextOverlay* highScoreOverlay;
  	TextOverlay* gameOverOverlay;
 	std::string scoreText;
+	std::string enemyScoreText;
 	Ogre::String scoreLabel;
 	std::string highScoreText;
 	Ogre::String highScoreLabel;

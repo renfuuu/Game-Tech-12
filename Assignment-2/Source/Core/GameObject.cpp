@@ -111,8 +111,9 @@ void GameObject::addToSimulator() {
 	simulator->addObject(this);
 }
 
-int GameObject::getPoints(){
-	return 0;
+std::string GameObject::getPoints(){
+	//Overwritten in specific game objects.
+	return "NULL\n";
 }
 
 Ogre::String GameObject::getName(){

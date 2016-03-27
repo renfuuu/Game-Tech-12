@@ -83,7 +83,7 @@ public:
 	void showColliderBox();
 
 	virtual void update() = 0;
-	virtual int getPoints();
+	virtual std::string getPoints();
 	virtual std::string getCoordinates();
 	virtual GameObject::objectType getType();
 	virtual void movePaddle(OISManager* _oisManager, int height, int width);
