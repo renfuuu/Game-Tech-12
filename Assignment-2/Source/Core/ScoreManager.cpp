@@ -107,18 +107,16 @@ bool ScoreManager::floorHit(void) {
 }
 
 void ScoreManager::resetScore(void) {
-	if ( gameScore > highScore ) {
-		highScore = gameScore;
-		writeScore();
-		postHighScore();
-	}
 	floorHitCount = 0;
 	gameScore = 0;
+	enemyScore = 0;
 	postScore();
 }
 
 bool ScoreManager::isGameOver() {
-	return gameOverB;
+	// If a player has more than 20 points && wins by more than one point return true;
+	return ( gameScore > 20 || enemyScore > 20 ) && ( gameScore != enemyScore && Ogre::Math::Abs(gameScore - enemyScore) > 1 );
+	//return gameOverB;
 }
 
 void ScoreManager::resetGameOver() {

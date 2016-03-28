@@ -146,10 +146,10 @@ bool Application::update(const FrameEvent &evt) {
 		// close window when ESC is pressed
 		mRunning = false;
 	}
-
 	if ( !(_soundScoreManager->isGameOver()) ) {
 		_simulator->stepSimulation(evt.timeSinceLastFrame, 1, 1.0 / fps);
 	}
+
 	_thePaddle->movePaddle(_oisManager, height, width);
 
 	// Small pull toward the closest paddle to make it easier for the player to hit the ball
