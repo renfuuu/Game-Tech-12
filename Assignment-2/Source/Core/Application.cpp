@@ -104,6 +104,12 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 	}
 
 	if(_soundScoreManager->isGameOver()) {
+		if (server) {
+			updateServer(evt);
+		}
+		else {
+			updateClient(evt);
+		}
 		if(gameOverTime > 2000) {
 			_soundScoreManager->resetGameOver();
 			_soundScoreManager->hideGameOver();
