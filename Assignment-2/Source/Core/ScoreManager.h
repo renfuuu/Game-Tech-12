@@ -2,6 +2,9 @@
 
 #include <OgreRoot.h>
 
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
+
 #include "TextOverlay.h"
 #include "MultiPlatformHelper.h"
 
@@ -46,7 +49,7 @@ protected:
  	bool gameOverB;
  	bool server;
 
- 	CEGUI::OgreRenderer* mRenderer
+ 	CEGUI::OgreRenderer* mRenderer;
 
  	Ogre::OverlayContainer* overlayContainer;
  	TextOverlay* scoreOverlay;
