@@ -104,12 +104,6 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 	}
 
 	if(_soundScoreManager->isGameOver()) {
-		if (server) {
-			updateServer(evt);
-		}
-		else {
-			updateClient(evt);
-		}
 		if(gameOverTime > 2000) {
 			_soundScoreManager->resetGameOver();
 			_soundScoreManager->hideGameOver();
@@ -269,6 +263,7 @@ bool Application::updateClient(const FrameEvent &evt) {
 			float scc = atof(pairs["SCC"]); //Client Score
 			_soundScoreManager->setScore(scc);
 			_soundScoreManager->setEnemyScore(scs);
+			_soundScoreManager->postScore();
 			
 		}
 	}
