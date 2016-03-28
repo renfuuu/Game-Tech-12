@@ -25,9 +25,9 @@ void Ball::updateTransform() {
 
 void Ball::update() {
 
-	startScore();
-
 	if (context->hit) {
+
+		startScore();
 
 		// Check for paddle collision but not twice in a row
 		if( context->getTheObject()->getType() == GameObject::PADDLE_OBJECT && context->getTheObject() != previousHit ) {

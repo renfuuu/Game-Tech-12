@@ -25,11 +25,12 @@ void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, co
 	for (auto& outer : objList) {
 		// Clear the all previous hits
 		outer->cCallBack->ctxt.hit = false;
-		// Compare if a contact is happening between these two gameobjects
-		dynamicsWorld->contactTest(outer->getBody(),*(outer->cCallBack));
-	}
-
-	for (auto& obj : objList) {
-		obj->update();
+		for (auto& inner : objList) {
+			if (outer == inner) continue;
+			// Compare if a contact is happening between these two gameobjects
+			dynamicsWorld->contactPairTest(outer->getBody(), inner->getBody(), *(outer->cCallBack));
+			outer->update();
+			outer->cCallBack->ctxt.hit = false;
+		}
 	}
 }

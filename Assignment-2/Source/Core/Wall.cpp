@@ -18,16 +18,20 @@ void Wall::update() {
 	static int MAX_DT = 20;
 
 	if (context->hit) {
+
+		auto* obj = context->getTheObject();
+
 		Ogre::Real dt = soundScoreManager->getTime() - lastHitTime;
-		if ( dt > MAX_DT && context->getTheObject()->getType() == GameObject::BALL_OBJECT ) {
+		if ( dt > MAX_DT && obj->getType() == GameObject::BALL_OBJECT ) {
 			soundScoreManager->playSound(SoundScoreManager::WALL_BOUNCE);
 		}
 
 		if ( type != GameObject::FLOOR_OBJECT ) {
 			soundScoreManager->nonFloorHit();
 		}
-
-		lastHitTime = soundScoreManager->getTime();
+		// The paddle can drag on the ground, don't let that reset our sound timer
+		if (obj->getType() != GameObject::PADDLE_OBJECT)
+			lastHitTime = soundScoreManager->getTime();
 	}
 
 }
