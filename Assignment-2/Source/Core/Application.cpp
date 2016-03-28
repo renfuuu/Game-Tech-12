@@ -132,11 +132,7 @@ bool Application::update(const FrameEvent &evt) {
 
 	OIS::KeyCode lastKey = _oisManager->lastKeyPressed();
 
-	if(lastKey == OIS::KC_SPACE) {
-		_theBall->resetScore();
-
-	}
-	else if (lastKey == OIS::KC_M) {
+	if (lastKey == OIS::KC_M) {
 		_soundScoreManager->mute();
 	}
 	else if (lastKey == OIS::KC_1 || lastKey == OIS::KC_2 || lastKey == OIS::KC_3 || lastKey == OIS::KC_4) {
@@ -199,7 +195,7 @@ bool Application::updateServer(const FrameEvent &evt) {
 
 		if(pairs["PDW"] == NULL || pairs["PDX"] == NULL || pairs["PDY"] == NULL || 
 		   pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
-		   pairs["PPZ"] == NULL || pairs["SCR"] == NULL) {
+		   pairs["PPZ"] == NULL ) {
 		   		std::cout << "Paddle data integrity was not guaranteed." << std::endl;
 		   		return error();
 		}
@@ -216,9 +212,6 @@ bool Application::updateServer(const FrameEvent &evt) {
 			_otherPaddle->setOrientation(qt);
 			_otherPaddle->setPosition(-paddleX, paddleY, -paddleZ);
 			_otherPaddle->reflect();
-
-			float scr = atof(pairs["SCR"]);
-			_soundScoreManager->setEnemyScore(scr);
 
 			std::string ballCoords = _theBall->getCoordinates() + "\n" + _thePaddle->getCoordinates() + "\n" + _theBall->getPoints();
 			netManager->messageClients(PROTOCOL_UDP, ballCoords.c_str(), ballCoords.length() + 1);
@@ -238,7 +231,7 @@ bool Application::updateClient(const FrameEvent &evt) {
 			pairs["BPZ"] == NULL || pairs["BVX"] == NULL || pairs["BVY"] == NULL || 
 			pairs["BVZ"] == NULL || pairs["PDW"] == NULL || pairs["PDX"] == NULL || pairs["PDY"] == NULL || 
 		   	pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
-		   	pairs["PPZ"] == NULL || pairs["SCR"] == NULL) {
+		   	pairs["PPZ"] == NULL || pairs["SCS"] == NULL || pairs["SCC"] == NULL ) {
 			   	std::cout << "Ball data integrity was not guaranteed." << std::endl;
 			   	return error();
 		}
@@ -266,8 +259,11 @@ bool Application::updateClient(const FrameEvent &evt) {
 			_otherPaddle->setPosition(-paddleX, paddleY, -paddleZ);
 			_otherPaddle->reflect();
 
-			float scr = atof(pairs["SCR"]);
-			_soundScoreManager->setEnemyScore(scr);
+			float scs = atof(pairs["SCS"]); //Server Score
+			float scc = atof(pairs["SCC"]); //Client Score
+			_soundScoreManager->setScore(scc);
+			_soundScoreManager->setEnemyScore(scs);
+			
 		}
 	}
     return true;
@@ -587,6 +583,7 @@ bool Application::StartServer(const CEGUI::EventArgs& e) {
 
 	begin = true;
 	server = true;
+	_soundScoreManager->setServer(server);
 
 	if (!setupNetwork(server)) {
 		return error();
@@ -604,6 +601,7 @@ bool Application::JoinServer(const CEGUI::EventArgs& e) {
 
 	begin = true;
 	server = false;
+	_soundScoreManager->setServer(server);
 
 	if(!setupNetwork(server)) {
 		return error();

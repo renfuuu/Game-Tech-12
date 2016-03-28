@@ -35,9 +35,17 @@ void Ball::update() {
 			soundScoreManager->nonFloorHit();
 		}		
 
-		//Score only when you hit behind your opponent.
-		if( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT ) {
-			soundScoreManager->scorePoints(1);
+		if ( soundScoreManager->isServer() ) {
+			//Score only when you hit behind your opponent.
+			if ( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT ) {
+				soundScoreManager->scorePoints(1);
+				reset(startPos);
+			}
+			else if ( context->getTheObject()->getType() == GameObject::FRONT_WALL_OBJECT ) {
+				Ogre::Vector3 vec(-startPos.x, startPos.y, -startPos.z);
+				soundScoreManager->scoreOpponentPoints(1);
+				reset(vec);
+			}
 		}
 		previousHit = context->getTheObject();
 	}
@@ -52,11 +60,11 @@ std::string Ball::getCoordinates() {
 	std::string vy = std::to_string(velocity.y());
 	std::string vz = std::to_string(velocity.z());
 
-	std::string str = "BPX " + px + "\nBPY " + py + "\nBPZ " + pz + "\nBVX " + vx + "\nBVY " + vy + "\n BVZ " + vz;
+	std::string str = "BPX " + px + "\nBPY " + py + "\nBPZ " + pz + "\nBVX " + vx + "\nBVY " + vy + "\nBVZ " + vz;
 	return str;
 }
 
 std::string Ball::getPoints() {
-	std::string str = "SCR " + std::to_string(soundScoreManager->getGameScore());
+	std::string str = "SCS " + std::to_string(soundScoreManager->getGameScore()) + "\nSCC " + std::to_string(soundScoreManager->getEnemyScore());
 	return str;
 }

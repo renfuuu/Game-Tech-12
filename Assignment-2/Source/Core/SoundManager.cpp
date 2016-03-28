@@ -28,7 +28,7 @@ SoundManager::SoundManager(void) {
 	/* Load music & sound effects */
 
 #ifdef __linux__
-	music = Mix_LoadMUS( "../Assets/music_loop.wav" ); 
+	music = Mix_LoadMUS( "../Assets/selfie.wav" ); 
 	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../Assets/ball.wav");
 	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../Assets/wall.wav");
 	gameSounds[HEADSHOT] = Mix_LoadWAV("../Assets/headshot.wav");

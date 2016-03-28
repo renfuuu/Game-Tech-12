@@ -11,10 +11,15 @@ public:
 	~ScoreManager(void);
 
  	Ogre::Real getTime();
+ 	void setServer(bool);
+ 	bool isServer();
  	void postScore(void);
  	void postHighScore(void);
  	void scorePoints(int);
+ 	void scoreOpponentPoints(int);
  	int getGameScore();
+ 	int getEnemyScore();
+ 	void setScore(int points);
  	void setEnemyScore(int points);
  	void updateEnemyPoints(std::string points);
  	void nonFloorHit(void);
@@ -39,6 +44,10 @@ protected:
  	int highScore;
  	int floorHitCount;
  	bool gameOverB;
+ 	bool server;
+
+ 	CEGUI::OgreRenderer* mRenderer
+
  	Ogre::OverlayContainer* overlayContainer;
  	TextOverlay* scoreOverlay;
  	TextOverlay* highScoreOverlay;

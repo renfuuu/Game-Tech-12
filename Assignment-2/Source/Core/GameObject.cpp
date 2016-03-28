@@ -76,8 +76,13 @@ Ogre::SceneNode* GameObject::getNode() {
 }
 
 void GameObject::reset() {
-	setPosition(startPos);
+	reset(startPos);
+}
+
+void GameObject::reset(Ogre::Vector3 vec) {
+	setPosition(vec);
 	body->setLinearVelocity(btVector3(0,0,0));
+	body->setAngularVelocity(btVector3(0,0,0));
 	previousHit = nullptr;
 }
 

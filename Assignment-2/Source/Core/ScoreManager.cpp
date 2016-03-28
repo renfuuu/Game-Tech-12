@@ -31,8 +31,6 @@ ScoreManager::ScoreManager(void) : gameScore(0), enemyScore(0), highScoreFile(),
 	gameOverOverlay->setCol(1.0f, 0.1f, 0.1f, 1.0f);
 }
 
-/* Sound Functions */
-
 ScoreManager::~ScoreManager(void) {
 }
 
@@ -41,6 +39,14 @@ Ogre::Real ScoreManager::getTime() {
 }
 
 /* Score Functions */
+
+void ScoreManager::setServer(bool s) {
+	server = s;
+}
+
+bool ScoreManager::isServer() {
+	return server;
+}
 
 void ScoreManager::postScore(void) {
 	// scoreOverlay->showOverlay();
@@ -59,8 +65,22 @@ void ScoreManager::scorePoints(int points) {
 	postScore();
 }
 
+void ScoreManager::scoreOpponentPoints(int points) {
+	enemyScore += points;
+	nonFloorHit();
+	postScore();
+}
+
 int ScoreManager::getGameScore() {
 	return gameScore;
+}
+
+int ScoreManager::getEnemyScore() {
+	return enemyScore;
+}
+
+void ScoreManager::setScore(int points) {
+	gameScore = points;
 }
 
 void ScoreManager::setEnemyScore(int points) {

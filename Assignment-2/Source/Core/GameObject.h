@@ -78,6 +78,7 @@ public:
 	Ogre::SceneNode* getNode();
 	
 	void reset();
+	void reset(Ogre::Vector3 vec);
 	void resetScore();
 	void startScore();
 	void showColliderBox();
