@@ -39,6 +39,7 @@ void Ball::update() {
 			//Score only when you hit behind your opponent.
 			if ( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT ) {
 				soundScoreManager->scorePoints(1);
+				soundScoreManager->playSound(SoundScoreManager::SELFIE);
 				reset(startPos);
 			}
 			else if ( context->getTheObject()->getType() == GameObject::FRONT_WALL_OBJECT ) {
