@@ -43,7 +43,7 @@ void Application::init()
 
 		setupCameras();
 
-		setupSSM();
+		setupGM();
 
 		ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
@@ -95,7 +95,7 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 	// Code per frame in fixed FPS
 	float temp = t1->getMilliseconds();
 	if ((temp - dTime) >= (1.0 / fps)*1000.0) {
-		if( _soundScoreManager->isGameOver() ) {
+		if( gameManager->isGameOver() ) {
 			gameOverTime += (temp - dTime);
 		}
 		// This update method gets called once per frame and is called whether or not we are a server or a client
@@ -103,10 +103,10 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		dTime = temp;
 	}
 
-	if(_soundScoreManager->isGameOver()) {
+	if(gameManager->isGameOver()) {
 		if(gameOverTime > 2000) {
-			_soundScoreManager->resetGameOver();
-			_soundScoreManager->hideGameOver();
+			gameManager->resetGameOver();
+			gameManager->hideGameOver();
 			gameOverTime = 0.0f;
 		}
 	}
@@ -133,7 +133,7 @@ bool Application::update(const FrameEvent &evt) {
 	OIS::KeyCode lastKey = _oisManager->lastKeyPressed();
 
 	if (lastKey == OIS::KC_M) {
-		_soundScoreManager->mute();
+		gameManager->mute();
 	}
 	else if (lastKey == OIS::KC_1 || lastKey == OIS::KC_2 || lastKey == OIS::KC_3 || lastKey == OIS::KC_4) {
 		int index = lastKey - 2;
@@ -146,7 +146,7 @@ bool Application::update(const FrameEvent &evt) {
 		// close window when ESC is pressed
 		mRunning = false;
 	}
-	if ( !(_soundScoreManager->isGameOver()) ) {
+	if ( !(gameManager->isGameOver()) ) {
 		_simulator->stepSimulation(evt.timeSinceLastFrame, 1, 1.0 / fps);
 	}
 
@@ -261,9 +261,9 @@ bool Application::updateClient(const FrameEvent &evt) {
 
 			float scs = atof(pairs["SCS"]); //Server Score
 			float scc = atof(pairs["SCC"]); //Client Score
-			_soundScoreManager->setScore(scc);
-			_soundScoreManager->setEnemyScore(scs);
-			_soundScoreManager->postScore();
+			gameManager->setScore(scc);
+			gameManager->setEnemyScore(scs);
+			gameManager->postScore();
 			
 		}
 	}
@@ -293,7 +293,7 @@ void Application::createChildEntity(std::string name, std::string mesh, Ogre::Sc
 	ogreNode->setPosition(x, y, z);
 }
 
-Ball* Application::createBall(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
+Ball* Application::createBall(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, GameManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
@@ -308,7 +308,7 @@ Ball* Application::createBall(Ogre::String nme, GameObject::objectType tp, Ogre:
 	return obj;
 }
 
-Paddle* Application::createPaddle(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
+Paddle* Application::createPaddle(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, GameManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
@@ -323,7 +323,7 @@ Paddle* Application::createPaddle(Ogre::String nme, GameObject::objectType tp, O
 	return obj;
 }
 
-Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Vector3 scale, Ogre::Degree pitch, Ogre::Degree yaw, Ogre::Degree roll, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
+Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Vector3 scale, Ogre::Degree pitch, Ogre::Degree yaw, Ogre::Degree roll, Ogre::SceneManager* scnMgr, GameManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
@@ -519,8 +519,8 @@ void Application::setupCameras(void) {
 
 }
 
-/* Setup SoundScoreManager */
-void Application::setupSSM(void) {
+/* Setup GameManager */
+void Application::setupGM(void) {
 
 	Ogre::OverlaySystem* pOverlaySystem = new Ogre::OverlaySystem();
 	mSceneManager->addRenderQueueListener(pOverlaySystem);
@@ -529,8 +529,9 @@ void Application::setupSSM(void) {
 	WindowEventUtilities::addWindowEventListener(mRenderWindow, this);
 	mRenderWindow->addListener(this);
 
-	_soundScoreManager = new SoundScoreManager();
-	_soundScoreManager->startMusic();
+	gameManager = new GameManager();
+	gameManager->addRenderer(mRenderer);
+	gameManager->startMusic();
 
 }
 
@@ -554,16 +555,16 @@ void Application::createObjects(void) {
 	mSceneManager->setSkyDome(true, "Examples/CloudySky", 5, 8);
 
 	// This paddle gets a negative Z coordinate that becomes positive in the function on movepaddle
-	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, -825, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
-	_otherPaddle = createPaddle("other_paddle", GameObject::objectType::PADDLE_OBJECT, "paddle-blue.mesh", 0, 0, 0, 100, mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, true, _simulator);
-	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "sphere.mesh", 5, 300, 800, .35, mSceneManager, _soundScoreManager, 1.0f, 1.0f, 0.8f, false, _simulator);
+	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, -825, 100, mSceneManager, gameManager, 0.0f, 1.0f, 0.8f, true, _simulator);
+	_otherPaddle = createPaddle("other_paddle", GameObject::objectType::PADDLE_OBJECT, "paddle-blue.mesh", 0, 0, 0, 100, mSceneManager, gameManager, 0.0f, 1.0f, 0.8f, true, _simulator);
+	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "sphere.mesh", 5, 300, 800, .35, mSceneManager, gameManager, 1.0f, 1.0f, 0.8f, false, _simulator);
 
-	createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, 0, Ogre::Vector3(120, 240, 240), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
-	createWall("ceiling", GameObject::objectType::WALL_OBJECT, "ceiling.mesh", 0, 500, 0, Ogre::Vector3(120, 240, 240), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.5f, 0.8f, false, _simulator);
-	createWall("backwall", GameObject::objectType::BACK_WALL_OBJECT, "backwall.mesh", 0, 300, -1200, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, _soundScoreManager, 0.0f, 0.8f, 0.8f, false, _simulator);
-	createWall("leftwall", GameObject::objectType::WALL_OBJECT, "leftwall.mesh", 600, 0, -430, Ogre::Vector3(120, 120, 400), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
-	createWall("rightwall", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 400), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, _soundScoreManager, 0.0f, 1.0f, 0.8f, false, _simulator);
-	createWall("frontwall", GameObject::objectType::FRONT_WALL_OBJECT, "backwall.mesh", 0, 300, 1200, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, _soundScoreManager, 0.0f, 0.9f, 0.8f, false, _simulator);
+	createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, 0, Ogre::Vector3(120, 240, 240), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, gameManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("ceiling", GameObject::objectType::WALL_OBJECT, "ceiling.mesh", 0, 500, 0, Ogre::Vector3(120, 240, 240), Ogre::Degree(180), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, gameManager, 0.0f, 0.5f, 0.8f, false, _simulator);
+	createWall("backwall", GameObject::objectType::BACK_WALL_OBJECT, "backwall.mesh", 0, 300, -1200, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, gameManager, 0.0f, 0.8f, 0.8f, false, _simulator);
+	createWall("leftwall", GameObject::objectType::WALL_OBJECT, "leftwall.mesh", 600, 0, -430, Ogre::Vector3(120, 120, 400), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(90), mSceneManager, gameManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("rightwall", GameObject::objectType::WALL_OBJECT, "rightwall.mesh", -600, 0, -430, Ogre::Vector3(120, 120, 400), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(-90), mSceneManager, gameManager, 0.0f, 1.0f, 0.8f, false, _simulator);
+	createWall("frontwall", GameObject::objectType::FRONT_WALL_OBJECT, "backwall.mesh", 0, 300, 1200, Ogre::Vector3(120, 120, 120), Ogre::Degree(90), Ogre::Degree(0), Ogre::Degree(180), mSceneManager, gameManager, 0.0f, 0.9f, 0.8f, false, _simulator);
 
 	createRootEntity("stadium", "stadium2.mesh", 0, -592, 0);
 	mSceneManager->getSceneNode("stadium")->setScale(100,100,100);
@@ -584,7 +585,7 @@ bool Application::StartServer(const CEGUI::EventArgs& e) {
 
 	begin = true;
 	server = true;
-	_soundScoreManager->setServer(server);
+	gameManager->setServer(server);
 
 	if (!setupNetwork(server)) {
 		return error();
@@ -602,7 +603,7 @@ bool Application::JoinServer(const CEGUI::EventArgs& e) {
 
 	begin = true;
 	server = false;
-	_soundScoreManager->setServer(server);
+	gameManager->setServer(server);
 
 	if(!setupNetwork(server)) {
 		return error();

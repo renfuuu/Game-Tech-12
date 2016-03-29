@@ -1,7 +1,7 @@
 #include "Ball.h"
 #include "MultiPlatformHelper.h"
 
-Ball::Ball(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, SoundScoreManager* ssm, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin) : 
+Ball::Ball(Ogre::String nme, GameObject::objectType tp, Ogre::SceneManager* scnMgr, GameManager* ssm, Ogre::SceneNode* node, Ogre::Entity* ent, OgreMotionState* ms, Simulator* sim, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, Ogre::Real scal, bool kin) : 
 GameObject(nme, tp, scnMgr, ssm, node, ent, ms, sim, mss, rest, frict, scal, kin) {
 	// Gets the radius of the Ogre::Entity sphere
 	shape = new btSphereShape((ent->getBoundingBox().getHalfSize().x)*scale);
@@ -31,20 +31,20 @@ void Ball::update() {
 
 		// Check for paddle collision but not twice in a row
 		if( context->getTheObject()->getType() == GameObject::PADDLE_OBJECT && context->getTheObject() != previousHit ) {
-			soundScoreManager->playSound(SoundScoreManager::PADDLE_BOUNCE);
-			soundScoreManager->nonFloorHit();
+			gameManager->playSound(GameManager::PADDLE_BOUNCE);
+			gameManager->nonFloorHit();
 		}		
 
-		if ( soundScoreManager->isServer() ) {
+		if ( gameManager->isServer() ) {
 			//Score only when you hit behind your opponent.
 			if ( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT ) {
-				soundScoreManager->scorePoints(1);
-				soundScoreManager->playSound(SoundScoreManager::SELFIE);
+				gameManager->scorePoints(1);
+				gameManager->playSound(GameManager::SELFIE);
 				reset(startPos);
 			}
 			else if ( context->getTheObject()->getType() == GameObject::FRONT_WALL_OBJECT ) {
 				Ogre::Vector3 vec(-startPos.x, startPos.y, -startPos.z);
-				soundScoreManager->scoreOpponentPoints(1);
+				gameManager->scoreOpponentPoints(1);
 				reset(vec);
 			}
 		}
@@ -66,6 +66,6 @@ std::string Ball::getCoordinates() {
 }
 
 std::string Ball::getPoints() {
-	std::string str = "SCS " + std::to_string(soundScoreManager->getGameScore()) + "\nSCC " + std::to_string(soundScoreManager->getEnemyScore());
+	std::string str = "SCS " + std::to_string(gameManager->getGameScore()) + "\nSCC " + std::to_string(gameManager->getEnemyScore());
 	return str;
 }

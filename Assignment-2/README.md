@@ -116,7 +116,7 @@ We feel that this game is fun and intuitive. It has been textured, lit and polis
 * Wall - Child of GameObject, adds a cube collider shape around a plane mesh
 * OISManager - Event driven user input detection class
 * TextOverlay - Allows us to put 2D gui and text elements onto the screen
-* SoundScoreManager - A combination of SoundManager & ScoreManager.
+* GameManager - A combination of SoundManager & ScoreManager.
 * SoundManager - Stores sounds and plays them into the ogre scene
 * ScoreManager - Manages and updates the score of the player
 * SceneHelper - Allows us to get information faster from scennodes to entities

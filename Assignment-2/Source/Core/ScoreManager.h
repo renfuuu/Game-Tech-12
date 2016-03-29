@@ -14,6 +14,7 @@ public:
 	~ScoreManager(void);
 
  	Ogre::Real getTime();
+ 	void addRenderer(CEGUI::OgreRenderer*);
  	void setServer(bool);
  	bool isServer();
  	void postScore(void);
@@ -48,13 +49,7 @@ protected:
  	int floorHitCount;
  	bool gameOverB;
  	bool server;
-
- 	CEGUI::OgreRenderer* mRenderer;
-
- 	Ogre::OverlayContainer* overlayContainer;
- 	TextOverlay* scoreOverlay;
- 	TextOverlay* highScoreOverlay;
- 	TextOverlay* gameOverOverlay;
+ 	
 	std::string scoreText;
 	std::string enemyScoreText;
 	Ogre::String scoreLabel;
@@ -63,4 +58,8 @@ protected:
 	Ogre::String gameOverText;
 	Ogre::String gameOverLabel;
 	std::fstream highScoreFile;
+
+ 	CEGUI::OgreRenderer* mRenderer;
+	CEGUI::Window* gameScoreboard;
+    CEGUI::Window* opponentScoreboard;
 };
