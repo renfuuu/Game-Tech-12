@@ -24,7 +24,6 @@ public:
  	int getEnemyScore();
  	void setScore(int points);
  	void setEnemyScore(int points);
- 	void updateEnemyPoints(std::string points);
  	void resetScore(void);
  	void gameOver(void);
  	void writeScore();

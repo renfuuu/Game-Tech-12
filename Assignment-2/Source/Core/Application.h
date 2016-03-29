@@ -74,6 +74,7 @@ public:
     CEGUI::Window* joinServerButton;
     CEGUI::Window* ipBox;
     CEGUI::Window* ipText;
+    CEGUI::Window* ipWindow;
     CEGUI::Window* singlePlayerButton;
     CEGUI::Window* homeButton;
     CEGUI::Window* replayButton;

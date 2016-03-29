@@ -84,11 +84,6 @@ void ScoreManager::setEnemyScore(int points) {
 	postScore();
 }
 
-void ScoreManager::updateEnemyPoints(std::string points) {
-	//Networking received here
-	postScore();
-}
-
 void ScoreManager::resetScore(void) {
 	gameScore = 0;
 	enemyScore = 0;
@@ -97,7 +92,7 @@ void ScoreManager::resetScore(void) {
 
 bool ScoreManager::isGameOver() {
 	// If a player has more than 20 points && wins by more than one point return true;
-	return ( gameScore > 2 || enemyScore > 2 ) && ( gameScore != enemyScore && Ogre::Math::Abs(gameScore - enemyScore) > 0 );
+	return ( gameScore > 4 || enemyScore > 4 ) && ( gameScore != enemyScore && Ogre::Math::Abs(gameScore - enemyScore) > 1 );
 }
 
 void ScoreManager::resetGameOver() {
