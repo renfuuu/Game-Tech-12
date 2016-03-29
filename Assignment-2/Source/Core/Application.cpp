@@ -139,6 +139,9 @@ bool Application::update(const FrameEvent &evt) {
 			break;
 		case SERVER:
 			updateServer(evt);
+			if(netManager->getClients() == 0) {
+				return true;
+			}
 			break;
 		case CLIENT:
 			updateClient(evt);
