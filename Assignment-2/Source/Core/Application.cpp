@@ -84,14 +84,6 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		return false;
 	}
 
-	if ( handleGUI(evt) )
-		return true;
-
-	if (server && !singlePlayer) 
-		updateServer(evt);
-	if(!server && !singlePlayer)
-		updateClient(evt);
-
 	// Code per frame in fixed FPS
 	float temp = t1->getMilliseconds();
 	if ((temp - dTime) >= (1.0 / fps)*1000.0) {
@@ -130,6 +122,27 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 // Called once per predefined frame
 bool Application::update(const FrameEvent &evt) {
 
+	// All logic is now controlled by a state machine
+	switch(gameState) {
+		case HOME:
+			handleGUI(evt);
+			showGui();
+			return true;
+			break;
+		case SERVER:
+			updateServer(evt);
+			hideGui();
+			break;
+		case CLIENT:
+			updateClient(evt);
+			hideGui();
+			break;
+		case SINGLE:
+			handleAi();
+			hideGui();
+			break;
+	}
+
 	OIS::KeyCode lastKey = _oisManager->lastKeyPressed();
 
 	if (lastKey == OIS::KC_M) {
@@ -149,6 +162,11 @@ bool Application::update(const FrameEvent &evt) {
 	if ( !(gameManager->isGameOver()) ) {
 		_simulator->stepSimulation(evt.timeSinceLastFrame, 1, 1.0 / fps);
 	}
+	else {
+		// Make sure the state of the entire game is reset before doing this. Ie all scores set to 0 and all network connections closed.
+		gameManager->resetScore();
+		gameState = HOME; // We may want to go to a seperate end game menu
+	}
 
 	_thePaddle->movePaddle(_oisManager, height, width);
 
@@ -163,21 +181,6 @@ bool Application::update(const FrameEvent &evt) {
 	if(_theBall->getNode()->getPosition().length() > 4000) {
 		std::cout << "Ball left the scene" << std::endl;
 		_theBall->reset();
-	}
-
-	if ( !server ) {
-		if(!singlePlayer) {
-			std::string t = _thePaddle->getCoordinates() + "\n" + _theBall->getPoints();
-			if(t.length() - 1 > NetManager::MESSAGE_LENGTH) {
-				std::cout << "Message was too large." << std::endl;
-				return error();
-			}
-			netManager->messageServer(PROTOCOL_UDP, t.c_str(), t.length() + 1);
-		}
-		// Single Player Game AI
-		else {
-			handleAi();
-		}
 	}
 
 	return true;
@@ -289,6 +292,16 @@ bool Application::updateClient(const FrameEvent &evt) {
 			
 		}
 	}
+
+	std::string t = _thePaddle->getCoordinates() + "\n" + _theBall->getPoints();
+
+		if(t.length() - 1 > NetManager::MESSAGE_LENGTH) {
+			std::cout << "Message was too large." << std::endl;
+			return error();
+		}
+
+	netManager->messageServer(PROTOCOL_UDP, t.c_str(), t.length() + 1);
+
     return true;
 }
 /* 
@@ -335,7 +348,6 @@ Paddle* Application::createPaddle(Ogre::String nme, GameObject::objectType tp, O
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
 	sn->setScale(scale,scale,scale);
-	// sn->showBoundingBox(true);
 	const btTransform pos;
 	OgreMotionState* ms = new OgreMotionState(pos, sn);
 
@@ -612,26 +624,24 @@ void Application::createObjects(void) {
 */
 
 bool Application::StartSinglePlayer(const CEGUI::EventArgs &e) {
-	begin = true;
-	server = false;
-	singlePlayer = true;
 
-	hideGui();
+	begin = true;
+	gameState = SINGLE;
+
 	return true;
 }
 
 bool Application::StartServer(const CEGUI::EventArgs& e) {
 
 	begin = true;
-	server = true;
-	gameManager->setServer(server);
+	gameState = SERVER;
 
-	if (!setupNetwork(server)) {
+	gameManager->setServer(gameState == SERVER);
+
+	if (!setupNetwork(gameState == SERVER)) {
 		return error();
 	}
 	else {
-		hideGui();
-
 		// Server will not bind connecting UDP clients without this method
 		netManager->acceptConnections();
 		return true;
@@ -641,14 +651,14 @@ bool Application::StartServer(const CEGUI::EventArgs& e) {
 bool Application::JoinServer(const CEGUI::EventArgs& e) {
 
 	begin = true;
-	server = false;
-	gameManager->setServer(server);
+	gameState = CLIENT;
 
-	if(!setupNetwork(server)) {
+	gameManager->setServer(gameState == SERVER);
+
+	if(!setupNetwork(gameState == SERVER)) {
 		return error();
 	}
 	else {
-		hideGui();
 		return true;
 	}
 }
@@ -671,8 +681,8 @@ bool Application::setupNetwork(bool isServer) {
 		// Opens a connection on port 51215
 		netManager->addNetworkInfo(PROTOCOL_UDP, isServer ? NULL : ipBox->getText().c_str(), 51215);
 	}
-
-	if(isServer) {
+if
+	(isServer) {
 		if(!netManager->startServer()) {
 			std::cout << "Failed to start the server!" << std::endl;
 			return false;
@@ -730,9 +740,22 @@ std::unordered_map<std::string, char*> Application::dataParser(char* buf) {
 }
 
 void Application::hideGui() {
-	singlePlayerButton->hide();
-	hostServerButton->hide();
-	joinServerButton->hide();
-	ipBox->hide();
-	ipText->hide();
+	// Optimization, checks only one of the GUI elements if they are visible, because we assume is this one is hidden they all are.
+	if(singlePlayerButton->isVisible()) {	
+		singlePlayerButton->hide();
+		hostServerButton->hide();
+		joinServerButton->hide();
+		ipBox->hide();
+		ipText->hide();
+	}
+}
+
+void Application::showGui() {
+	if(!singlePlayerButton->isVisible()) {
+		singlePlayerButton->show();
+		hostServerButton->show();
+		joinServerButton->show();
+		ipBox->show();
+		ipText->show();
+	}
 }

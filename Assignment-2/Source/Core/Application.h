@@ -42,6 +42,9 @@ public:
 
 	virtual void init();
 
+	enum State{ HOME, SINGLE, SERVER, CLIENT };
+	State gameState = HOME;
+
 	Ogre::Root * mRoot;
 	Ogre::String mResourcesCfg;
 	Ogre::String mPluginsCfg;
@@ -81,9 +84,6 @@ public:
 	bool begin = false;
 	bool mRunning = true;
 
-	bool server = false;
-	bool singlePlayer = false;
-
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent &evt) override;
 	void createRootEntity(std::string name, std::string mesh, int x, int y, int z);
 	void createChildEntity(std::string name, std::string mesh, Ogre::SceneNode* sceneNode, int x, int y, int z);
@@ -113,4 +113,5 @@ public:
 	bool error();
 	std::unordered_map<std::string, char*> dataParser(char*);
 	void hideGui();
+	void showGui();
 };
