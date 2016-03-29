@@ -77,7 +77,6 @@ void OISManager::initialise( Ogre::RenderWindow *renderWindow ) {
 
 void OISManager::setupCameraMan(OgreBites::SdkCameraMan * camMan){
     if(!cameraMan){
-        for(int i = 0; i < 1000; i++) std::cout << "work bish" << std::endl;
         cameraMan = camMan;
     }
 }

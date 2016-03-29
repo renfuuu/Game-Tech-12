@@ -17,7 +17,7 @@
 
 using namespace Ogre;
 
-Application::Application()
+Application::Application() : states()
 {
 }
 
@@ -94,13 +94,13 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		dTime = temp;
 	}
 
-	if(gameManager->isGameOver()) {
-		if(gameOverTime > 2000) {
-			gameManager->resetGameOver();
-			gameManager->hideGameOver();
-			gameOverTime = 0.0f;
-		}
-	}
+	// if(gameManager->isGameOver()) {
+	// 	if(gameOverTime > 2000) {
+	// 		gameManager->resetGameOver();
+	// 		gameManager->hideGameOver();
+	// 		gameOverTime = 0.0f;
+	// 	}
+	// }
 
 	// Constrains the ball's speed
 	static int maxSpeed = 4000;
@@ -140,11 +140,21 @@ bool Application::update(const FrameEvent &evt) {
 			return true;
 			break;
 		case REPLAY:
+			replayData();
 			break;
 	}
 
 	if(gameState == SERVER || gameState == CLIENT || gameState == SINGLE)
 		_thePaddle->movePaddle(_oisManager, height, width);
+
+	Ogre::Quaternion qt1 = _thePaddle->getNode()->getOrientation();
+	Ogre::Quaternion qt2 = _otherPaddle->getNode()->getOrientation();
+	Ogre::Vector3 pPos = _thePaddle->getNode()->getPosition();
+	Ogre::Vector3 oPos = _otherPaddle->getNode()->getPosition();
+	Ogre::Vector3 pos = _theBall->getNode()->getPosition();
+	btVector3 vel = _theBall->getBody()->getLinearVelocity();
+
+	states.push_back(GameState(qt1,qt2,pPos,oPos,pos,vel));
 
 	OIS::KeyCode lastKey = _oisManager->lastKeyPressed();
 
@@ -689,10 +699,12 @@ bool Application::Quit(const CEGUI::EventArgs& e) {
 
 bool Application::Replay(const CEGUI::EventArgs &e) {
 	setState(REPLAY);
+	return true;
 }
 
 bool Application::Home(const CEGUI::EventArgs &e) {
 	setState(HOME);
+	return true;
 }
 
 bool Application::setupNetwork(bool isServer) {
@@ -792,9 +804,11 @@ void Application::showEndGui() {
 void Application::setState(State state) {
 	switch(state) {
 		case HOME:
+			states.clear();
 			hideGui();
 			showGui();
 			gameManager->resetScore();
+			_theBall->reset();
 			gameState = HOME;
 			break;
 		case SERVER:
@@ -822,4 +836,17 @@ void Application::setState(State state) {
 			gameState = REPLAY;
 			break;
 	}
+}
+
+void Application::replayData() {
+	GameState& s = states.front();
+	_thePaddle->setOrientation(s._thePaddle);
+	_otherPaddle->setOrientation(s._otherPaddle);
+	_thePaddle->setPosition(s._thePaddlePos);
+	_otherPaddle->setPosition(s._otherPaddlePos);
+	_theBall->setPosition(s._ballPos);
+	_theBall->setVelocity(s._velocity.x(), s._velocity.y(), s._velocity.z());
+
+	if(!states.empty())
+		states.pop_front();
 }

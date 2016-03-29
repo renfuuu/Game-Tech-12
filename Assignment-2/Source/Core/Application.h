@@ -21,6 +21,7 @@
 #include <CEGUI/RendererModules/Ogre/Renderer.h>
 
 #include <unordered_map>
+#include <list>
 #include <string>
 #include <cstring>
 #include <cstdlib>
@@ -33,6 +34,8 @@
 #include "Ball.h"
 #include "Paddle.h"
 #include "Wall.h"
+
+#include "GameState.h"
 
 class Application : public Ogre::FrameListener, public Ogre::WindowEventListener, public Ogre::RenderTargetListener
 {
@@ -76,6 +79,7 @@ public:
     CEGUI::Window* replayButton;
 	
 	std::vector<Ogre::Camera*> cameras;
+	std::list<GameState> states;
 
 	int points;
 	int width;
@@ -120,4 +124,5 @@ public:
 	void showGui();
 	void showEndGui();
 	void setState(State state);
+	void replayData();
 };

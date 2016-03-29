@@ -36,12 +36,12 @@ void Ball::update() {
 
 		if ( gameManager->isServer() ) {
 			//Score only when you hit behind your opponent.
-			if ( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT ) {
+			if ( context->getTheObject()->getType() == GameObject::BACK_WALL_OBJECT && previousHit->getType() != GameObject::BACK_WALL_OBJECT) {
 				gameManager->scorePoints(1);
 				gameManager->playSound(GameManager::SELFIE);
 				reset(startPos);
 			}
-			else if ( context->getTheObject()->getType() == GameObject::FRONT_WALL_OBJECT ) {
+			else if ( context->getTheObject()->getType() == GameObject::FRONT_WALL_OBJECT && previousHit->getType() != GameObject::FRONT_WALL_OBJECT) {
 				Ogre::Vector3 vec(-startPos.x, startPos.y, -startPos.z);
 				gameManager->scoreOpponentPoints(1);
 				reset(vec);
