@@ -38,7 +38,6 @@ void Application::init()
 
 		setupOIS();
 
-		netManager = new NetManager();
 		setupCEGUI();
 
 		setupCameras();
@@ -121,7 +120,7 @@ bool Application::update(const FrameEvent &evt) {
 	}
 	else if (lastKey == OIS::KC_1 || lastKey == OIS::KC_2 || lastKey == OIS::KC_3 || lastKey == OIS::KC_4) {
 		int index = lastKey - 2;
-		if (index >= 0 && index < cameras.size()) {
+		if (gameState != HOME && index >= 0 && index < cameras.size()) {
 			mRenderWindow->removeAllViewports();
 			mRenderWindow->addViewport(cameras[index]);
 		}
@@ -153,6 +152,7 @@ bool Application::update(const FrameEvent &evt) {
 			replayData();
 			break;
 	}
+
 
 	if(gameState == SERVER || gameState == CLIENT || gameState == SINGLE)
 		_thePaddle->movePaddle(_oisManager, height, width);
@@ -496,11 +496,6 @@ void Application::setupCEGUI(void) {
 		CEGUI::UVector2(CEGUI::UDim(0.1f, 0), CEGUI::UDim(0.05f, 0))));
 	quitButton->setText("Quit");
 
-	ipWindow = wmgr.createWindow("AlfiskoSkin/Label", "ipWindow");
-	ipWindow->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.92f, 0)),
-		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(1, 0))));
-	ipWindow->setText(netManager->getIPstring());
-
 	singlePlayerButton = wmgr.createWindow("AlfiskoSkin/Button", "SinglePlayerButton");
 	singlePlayerButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.35f, 0)),
 		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.4f, 0))));
@@ -541,7 +536,6 @@ void Application::setupCEGUI(void) {
 	sheet->addChild(quitButton);
 	sheet->addChild(ipBox);
 	sheet->addChild(ipText);
-	sheet->addChild(ipWindow);
 	sheet->addChild(homeButton);
 	sheet->addChild(replayButton);
 
@@ -716,6 +710,8 @@ bool Application::setupNetwork(bool isServer) {
 
 	netManager = new NetManager();
 	
+	std::cout << netManager->getIPstring() << std::endl;
+
 	if(!netManager->initNetManager()) {
 		std::cout << "Failed to init the server!" << std::endl;
 		return false;
@@ -787,7 +783,6 @@ void Application::hideGui() {
 	joinServerButton->hide();
 	ipBox->hide();
 	ipText->hide();
-	ipWindow->hide();
 	homeButton->hide();
 	replayButton->hide();
 }
@@ -798,7 +793,6 @@ void Application::showGui() {
 	joinServerButton->show();
 	ipBox->show();
 	ipText->show();
-	ipWindow->show();
 }
 
 void Application::showEndGui() {
@@ -814,6 +808,8 @@ void Application::setState(State state) {
 			hideGui();
 			showGui();
 			gameManager->resetScore();
+			mRenderWindow->removeAllViewports();
+			mRenderWindow->addViewport(cameras[0]);
 			_theBall->reset();
 			gameState = HOME;
 			break;
