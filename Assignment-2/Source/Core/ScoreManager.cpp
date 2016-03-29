@@ -127,7 +127,7 @@ void ScoreManager::resetScore(void) {
 
 bool ScoreManager::isGameOver() {
 	// If a player has more than 20 points && wins by more than one point return true;
-	return ( gameScore > 1 || enemyScore > 1 ) && ( gameScore != enemyScore && Ogre::Math::Abs(gameScore - enemyScore) > 1 );
+	return ( gameScore > 0 || enemyScore > 0 ) && ( gameScore != enemyScore && Ogre::Math::Abs(gameScore - enemyScore) > 0 );
 }
 
 void ScoreManager::resetGameOver() {

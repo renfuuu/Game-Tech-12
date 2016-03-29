@@ -448,7 +448,8 @@ void NetManager::stopServer(Protocol protocol) {
   }
 
   if (netServer.protocols & PROTOCOL_UDP & protocol) {
-    for (i = udpSockets.size() - 1; i > 0; i--) {
+    // Fixed a bug with this for loop that wasn't closing the first open UDP port at index 0
+    for (i = udpSockets.size() - 1; i >= 0; i--) {
       unwatchSocket(udpSockets[i]);
       closeUDP(udpSockets[i]);
       udpSockets.pop_back();

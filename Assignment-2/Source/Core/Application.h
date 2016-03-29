@@ -42,7 +42,7 @@ public:
 
 	virtual void init();
 
-	enum State{ HOME, SINGLE, SERVER, CLIENT };
+	enum State{ HOME, SINGLE, SERVER, CLIENT, ENDGAME, REPLAY };
 	State gameState = HOME;
 
 	Ogre::Root * mRoot;
@@ -56,7 +56,7 @@ public:
 	OgreBites::SdkCameraMan * cameraMan;
 	Ogre::Timer* t1;
 
-	NetManager* netManager;
+	NetManager* netManager = nullptr;
 
 	GameManager* gameManager;
 	OISManager* _oisManager;
@@ -72,6 +72,8 @@ public:
     CEGUI::Window* ipBox;
     CEGUI::Window* ipText;
     CEGUI::Window* singlePlayerButton;
+    CEGUI::Window* homeButton;
+    CEGUI::Window* replayButton;
 	
 	std::vector<Ogre::Camera*> cameras;
 
@@ -108,10 +110,14 @@ public:
 	bool JoinServer(const CEGUI::EventArgs &e);
 	bool Quit(const CEGUI::EventArgs &e);
 	bool StartSinglePlayer(const CEGUI::EventArgs &e);
+	bool Replay(const CEGUI::EventArgs &e);
+	bool Home(const CEGUI::EventArgs &e);
 
 	bool setupNetwork(bool);
 	bool error();
 	std::unordered_map<std::string, char*> dataParser(char*);
 	void hideGui();
 	void showGui();
+	void showEndGui();
+	void setState(State state);
 };

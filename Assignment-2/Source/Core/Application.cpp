@@ -2,7 +2,6 @@
 #include "CoreConfig.h"
 #include "MultiPlatformHelper.h"
 #include "SceneHelper.h"
-#include <Overlay/OgreOverlaySystem.h>
 
 #include <OISMouse.h>
 #include <OISKeyboard.h>
@@ -126,22 +125,26 @@ bool Application::update(const FrameEvent &evt) {
 	switch(gameState) {
 		case HOME:
 			handleGUI(evt);
-			showGui();
 			return true;
 			break;
 		case SERVER:
 			updateServer(evt);
-			hideGui();
 			break;
 		case CLIENT:
 			updateClient(evt);
-			hideGui();
 			break;
 		case SINGLE:
 			handleAi();
-			hideGui();
+			break;
+		case ENDGAME:
+			return true;
+			break;
+		case REPLAY:
 			break;
 	}
+
+	if(gameState == SERVER || gameState == CLIENT || gameState == SINGLE)
+		_thePaddle->movePaddle(_oisManager, height, width);
 
 	OIS::KeyCode lastKey = _oisManager->lastKeyPressed();
 
@@ -164,11 +167,8 @@ bool Application::update(const FrameEvent &evt) {
 	}
 	else {
 		// Make sure the state of the entire game is reset before doing this. Ie all scores set to 0 and all network connections closed.
-		gameManager->resetScore();
-		gameState = HOME; // We may want to go to a seperate end game menu
+		setState(ENDGAME); // We may want to change this to an end game menu
 	}
-
-	_thePaddle->movePaddle(_oisManager, height, width);
 
 	// Small pull toward the closest paddle to make it easier for the player to hit the ball
 	GameObject* pullPaddle = (_thePaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).length() <= (_otherPaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).length() ? _thePaddle : _otherPaddle;
@@ -215,6 +215,7 @@ void Application::handleAi() {
 }
 
 bool Application::updateServer(const FrameEvent &evt) {
+
 	if ( netManager->pollForActivity(1) ) {
 		std::unordered_map<std::string, char*> pairs = dataParser(netManager->udpClientData[0]->output);
 
@@ -510,17 +511,34 @@ void Application::setupCEGUI(void) {
 		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.55f, 0))));
 	joinServerButton->setText("Join Game");
 
+	homeButton = wmgr.createWindow("AlfiskoSkin/Button", "HomeButton");
+	homeButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.35f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.4f, 0))));
+	homeButton->setText("Home");
+
+	replayButton = wmgr.createWindow("AlfiskoSkin/Button", "ReplayButton");
+	replayButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.4f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.45f, 0))));
+	replayButton->setText("Watch Replay");
+
 	sheet->addChild(singlePlayerButton);
 	sheet->addChild(hostServerButton);
 	sheet->addChild(joinServerButton);
 	sheet->addChild(quitButton);
 	sheet->addChild(ipBox);
 	sheet->addChild(ipText);
+	sheet->addChild(homeButton);
+	sheet->addChild(replayButton);
+
+	homeButton->hide();
+	replayButton->hide();
 
 	singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartSinglePlayer, this));
 	hostServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartServer, this));
 	joinServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::JoinServer, this));
 	quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Quit, this));
+	homeButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Home, this));
+	replayButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Replay, this));
 	
 }
 
@@ -563,8 +581,8 @@ void Application::setupCameras(void) {
 /* Setup GameManager */
 void Application::setupGM(void) {
 
-	Ogre::OverlaySystem* pOverlaySystem = new Ogre::OverlaySystem();
-	mSceneManager->addRenderQueueListener(pOverlaySystem);
+	// Ogre::OverlaySystem* pOverlaySystem = new Ogre::OverlaySystem();
+	// mSceneManager->addRenderQueueListener(pOverlaySystem);
 
 	mRoot->addFrameListener(this);
 	WindowEventUtilities::addWindowEventListener(mRenderWindow, this);
@@ -626,7 +644,7 @@ void Application::createObjects(void) {
 bool Application::StartSinglePlayer(const CEGUI::EventArgs &e) {
 
 	begin = true;
-	gameState = SINGLE;
+	setState(SINGLE);
 
 	return true;
 }
@@ -634,7 +652,7 @@ bool Application::StartSinglePlayer(const CEGUI::EventArgs &e) {
 bool Application::StartServer(const CEGUI::EventArgs& e) {
 
 	begin = true;
-	gameState = SERVER;
+	setState(SERVER);
 
 	gameManager->setServer(gameState == SERVER);
 
@@ -651,7 +669,7 @@ bool Application::StartServer(const CEGUI::EventArgs& e) {
 bool Application::JoinServer(const CEGUI::EventArgs& e) {
 
 	begin = true;
-	gameState = CLIENT;
+	setState(CLIENT);
 
 	gameManager->setServer(gameState == SERVER);
 
@@ -667,6 +685,14 @@ bool Application::Quit(const CEGUI::EventArgs& e) {
 
 	mRunning = false;
     return true;
+}
+
+bool Application::Replay(const CEGUI::EventArgs &e) {
+	setState(REPLAY);
+}
+
+bool Application::Home(const CEGUI::EventArgs &e) {
+	setState(HOME);
 }
 
 bool Application::setupNetwork(bool isServer) {
@@ -740,22 +766,60 @@ std::unordered_map<std::string, char*> Application::dataParser(char* buf) {
 }
 
 void Application::hideGui() {
-	// Optimization, checks only one of the GUI elements if they are visible, because we assume is this one is hidden they all are.
-	if(singlePlayerButton->isVisible()) {	
-		singlePlayerButton->hide();
-		hostServerButton->hide();
-		joinServerButton->hide();
-		ipBox->hide();
-		ipText->hide();
-	}
+	singlePlayerButton->hide();
+	hostServerButton->hide();
+	joinServerButton->hide();
+	ipBox->hide();
+	ipText->hide();
+	homeButton->hide();
+	replayButton->hide();
 }
 
 void Application::showGui() {
-	if(!singlePlayerButton->isVisible()) {
-		singlePlayerButton->show();
-		hostServerButton->show();
-		joinServerButton->show();
-		ipBox->show();
-		ipText->show();
+	singlePlayerButton->show();
+	hostServerButton->show();
+	joinServerButton->show();
+	ipBox->show();
+	ipText->show();
+}
+
+void Application::showEndGui() {
+	homeButton->show();
+	replayButton->show();
+}
+
+// This method is to ensure that the entire state is correct before transitioning to that new state
+void Application::setState(State state) {
+	switch(state) {
+		case HOME:
+			hideGui();
+			showGui();
+			gameManager->resetScore();
+			gameState = HOME;
+			break;
+		case SERVER:
+			if(netManager) delete netManager;
+			hideGui();
+			gameState = SERVER;
+			break;
+		case CLIENT:
+			if(netManager) delete netManager;
+			hideGui();
+			gameState = CLIENT;
+			break;
+		case SINGLE:
+			hideGui();
+			gameState = SINGLE;
+			break;
+		case ENDGAME:
+			hideGui();
+			showEndGui();
+			gameState = ENDGAME;
+			break;
+		case REPLAY:
+			gameManager->resetScore();
+			hideGui();
+			gameState = REPLAY;
+			break;
 	}
 }
