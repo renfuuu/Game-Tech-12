@@ -225,8 +225,12 @@ void Application::handleAi() {
 }
 
 bool Application::updateServer(const FrameEvent &evt) {
+	
+	static float previousTime = t1->getMilliseconds();
+
 
 	if ( netManager->pollForActivity(1) ) {
+		previousTime = t1->getMilliseconds();
 		std::unordered_map<std::string, char*> pairs = dataParser(netManager->udpClientData[0]->output);
 
 		if(pairs["PDW"] == NULL || pairs["PDX"] == NULL || pairs["PDY"] == NULL || 
@@ -253,6 +257,12 @@ bool Application::updateServer(const FrameEvent &evt) {
 			netManager->messageClients(PROTOCOL_UDP, ballCoords.c_str(), ballCoords.length() + 1);
 		}
 
+	}
+	else {
+		float dt = t1->getMilliseconds() - previousTime;
+		if(dt >= 3000 && netManager && netManager->getClients() > 0){
+			setState(HOME);
+		}
 	}
 	return true;
 }
@@ -813,6 +823,7 @@ void Application::showEndGui() {
 void Application::setState(State state) {
 	switch(state) {
 		case HOME:
+			if(netManager) delete netManager;
 			states.clear();
 			hideGui();
 			showGui();
