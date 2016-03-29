@@ -68,6 +68,7 @@ public:
     CEGUI::Window* joinServerButton;
     CEGUI::Window* ipBox;
     CEGUI::Window* ipText;
+    CEGUI::Window* singlePlayerButton;
 	
 	std::vector<Ogre::Camera*> cameras;
 
@@ -81,12 +82,14 @@ public:
 	bool mRunning = true;
 
 	bool server = false;
+	bool singlePlayer = false;
 
 	virtual bool frameRenderingQueued(const Ogre::FrameEvent &evt) override;
 	void createRootEntity(std::string name, std::string mesh, int x, int y, int z);
 	void createChildEntity(std::string name, std::string mesh, Ogre::SceneNode* sceneNode, int x, int y, int z);
 	bool update(const Ogre::FrameEvent &evt);
 	bool handleGUI(const Ogre::FrameEvent &evt);
+	void handleAi();
 	bool updateServer(const Ogre::FrameEvent &evt);
 	bool updateClient(const Ogre::FrameEvent &evt);
 
@@ -104,6 +107,7 @@ public:
 	bool StartServer(const CEGUI::EventArgs &e);
 	bool JoinServer(const CEGUI::EventArgs &e);
 	bool Quit(const CEGUI::EventArgs &e);
+	bool StartSinglePlayer(const CEGUI::EventArgs &e);
 
 	bool setupNetwork(bool);
 	bool error();

@@ -87,9 +87,9 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 	if ( handleGUI(evt) )
 		return true;
 
-	if (server) 
+	if (server && !singlePlayer) 
 		updateServer(evt);
-	else
+	if(!server && !singlePlayer)
 		updateClient(evt);
 
 	// Code per frame in fixed FPS
@@ -159,13 +159,25 @@ bool Application::update(const FrameEvent &evt) {
 	Ogre::Vector3 paddleAttract = (pullPaddle->getNode()->getPosition() - _theBall->getNode()->getPosition()).normalisedCopy();
 	_theBall->applyForce(paddleAttract.x * pull, paddleAttract.y * pull, paddleAttract.z * pull);
 
-	std::string t = _thePaddle->getCoordinates() + "\n" + _theBall->getPoints();
+	// Check if the ball has been ejected from the scene
+	if(_theBall->getNode()->getPosition().length() > 4000) {
+		std::cout << "Ball left the scene" << std::endl;
+		_theBall->reset();
+	}
+
 	if ( !server ) {
-		if(t.length() - 1 > NetManager::MESSAGE_LENGTH) {
-			std::cout << "Message was too large." << std::endl;
-			return error();
+		if(!singlePlayer) {
+			std::string t = _thePaddle->getCoordinates() + "\n" + _theBall->getPoints();
+			if(t.length() - 1 > NetManager::MESSAGE_LENGTH) {
+				std::cout << "Message was too large." << std::endl;
+				return error();
+			}
+			netManager->messageServer(PROTOCOL_UDP, t.c_str(), t.length() + 1);
 		}
-		netManager->messageServer(PROTOCOL_UDP, t.c_str(), t.length() + 1);
+		// Single Player Game AI
+		else {
+			handleAi();
+		}
 	}
 
 	return true;
@@ -187,6 +199,16 @@ bool Application::handleGUI(const FrameEvent &evt) {
 	else {
 		return false;
 	}
+}
+
+void Application::handleAi() {
+	// For now AI just mirrors the player's paddle
+	Ogre::Vector3 pos = _thePaddle->getNode()->getPosition();
+	Ogre::Quaternion qt = _thePaddle->getNode()->getOrientation();
+
+	_otherPaddle->setPosition(-pos.x, pos.y, -pos.z);
+	_otherPaddle->setOrientation(qt);
+	_otherPaddle->reflect();
 }
 
 bool Application::updateServer(const FrameEvent &evt) {
@@ -452,31 +474,38 @@ void Application::setupCEGUI(void) {
 		CEGUI::UVector2(CEGUI::UDim(0.1f, 0), CEGUI::UDim(0.05f, 0))));
 	quitButton->setText("Quit");
 
-	hostServerButton = wmgr.createWindow("AlfiskoSkin/Button", "HostButton");
-	hostServerButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.35f, 0)),
+	singlePlayerButton = wmgr.createWindow("AlfiskoSkin/Button", "SinglePlayerButton");
+	singlePlayerButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.35f, 0)),
 		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.4f, 0))));
+	singlePlayerButton->setText("Single Player");
+
+	hostServerButton = wmgr.createWindow("AlfiskoSkin/Button", "HostButton");
+	hostServerButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.4f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.45f, 0))));
 	hostServerButton->setText("Host Game");
 
 	ipText = wmgr.createWindow("AlfiskoSkin/Label", "Ip Label");
-	ipText->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.525f, 0), CEGUI::UDim(0.4f, 0)),
-		CEGUI::UVector2(CEGUI::UDim(0.725f, 0), CEGUI::UDim(0.45f, 0))));
+	ipText->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.525f, 0), CEGUI::UDim(0.45f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.725f, 0), CEGUI::UDim(0.5f, 0))));
 	ipText->setText("Enter IP Address");
 
 	ipBox = wmgr.createWindow("AlfiskoSkin/Editbox", "Ip Box");
-	ipBox->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.4f, 0)),
-		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.45f, 0))));
+	ipBox->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.45f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.5f, 0))));
 
 	joinServerButton = wmgr.createWindow("AlfiskoSkin/Button", "JoinButton");
-	joinServerButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.45f, 0)),
-		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.5f, 0))));
+	joinServerButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.5f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.55f, 0))));
 	joinServerButton->setText("Join Game");
 
+	sheet->addChild(singlePlayerButton);
 	sheet->addChild(hostServerButton);
 	sheet->addChild(joinServerButton);
 	sheet->addChild(quitButton);
 	sheet->addChild(ipBox);
 	sheet->addChild(ipText);
 
+	singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartSinglePlayer, this));
 	hostServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartServer, this));
 	joinServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::JoinServer, this));
 	quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Quit, this));
@@ -581,6 +610,16 @@ void Application::createObjects(void) {
 /* 
 *CEGUI Button Callbacks 
 */
+
+bool Application::StartSinglePlayer(const CEGUI::EventArgs &e) {
+	begin = true;
+	server = false;
+	singlePlayer = true;
+
+	hideGui();
+	return true;
+}
+
 bool Application::StartServer(const CEGUI::EventArgs& e) {
 
 	begin = true;
@@ -691,6 +730,7 @@ std::unordered_map<std::string, char*> Application::dataParser(char* buf) {
 }
 
 void Application::hideGui() {
+	singlePlayerButton->hide();
 	hostServerButton->hide();
 	joinServerButton->hide();
 	ipBox->hide();
