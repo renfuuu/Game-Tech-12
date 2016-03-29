@@ -38,6 +38,7 @@ void Application::init()
 
 		setupOIS();
 
+		netManager = new NetManager();
 		setupCEGUI();
 
 		setupCameras();
@@ -496,6 +497,11 @@ void Application::setupCEGUI(void) {
 		CEGUI::UVector2(CEGUI::UDim(0.1f, 0), CEGUI::UDim(0.05f, 0))));
 	quitButton->setText("Quit");
 
+	ipWindow = wmgr.createWindow("AlfiskoSkin/Label", "ipWindow");
+	ipWindow->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.92f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(1, 0))));
+	ipWindow->setText(netManager->getIPstring());
+
 	singlePlayerButton = wmgr.createWindow("AlfiskoSkin/Button", "SinglePlayerButton");
 	singlePlayerButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.35f, 0)),
 		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.4f, 0))));
@@ -521,8 +527,8 @@ void Application::setupCEGUI(void) {
 	joinServerButton->setText("Join Game");
 
 	homeButton = wmgr.createWindow("AlfiskoSkin/Button", "HomeButton");
-	homeButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.35f, 0)),
-		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.4f, 0))));
+	homeButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.1f, 0), CEGUI::UDim(0.0f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.2f, 0), CEGUI::UDim(0.05f, 0))));
 	homeButton->setText("Home");
 
 	replayButton = wmgr.createWindow("AlfiskoSkin/Button", "ReplayButton");
@@ -536,10 +542,10 @@ void Application::setupCEGUI(void) {
 	sheet->addChild(quitButton);
 	sheet->addChild(ipBox);
 	sheet->addChild(ipText);
+	sheet->addChild(ipWindow);
 	sheet->addChild(homeButton);
 	sheet->addChild(replayButton);
 
-	homeButton->hide();
 	replayButton->hide();
 
 	singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartSinglePlayer, this));
@@ -783,7 +789,7 @@ void Application::hideGui() {
 	joinServerButton->hide();
 	ipBox->hide();
 	ipText->hide();
-	homeButton->hide();
+	ipWindow->hide();
 	replayButton->hide();
 }
 
@@ -793,10 +799,10 @@ void Application::showGui() {
 	joinServerButton->show();
 	ipBox->show();
 	ipText->show();
+	ipWindow->show();
 }
 
 void Application::showEndGui() {
-	homeButton->show();
 	replayButton->show();
 }
 
