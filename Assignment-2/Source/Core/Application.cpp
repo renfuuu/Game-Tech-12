@@ -478,6 +478,9 @@ void Application::setupCEGUI(void) {
 	CEGUI::SchemeManager::getSingleton().createFromFile("AlfiskoSkin.scheme");
 	CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("AlfiskoSkin/MouseArrow");
 
+	CEGUI::FontManager &fmg = CEGUI::FontManager::getSingleton();
+	CEGUI::Font &font = fmg.createFreeTypeFont("arial", 20, true, "arial.ttf");
+	
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
 	CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "_MasterRoot");
 	CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
@@ -500,7 +503,7 @@ void Application::setupCEGUI(void) {
 	ipText = wmgr.createWindow("AlfiskoSkin/Label", "Ip Label");
 	ipText->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.525f, 0), CEGUI::UDim(0.45f, 0)),
 		CEGUI::UVector2(CEGUI::UDim(0.725f, 0), CEGUI::UDim(0.5f, 0))));
-	ipText->setText("Enter IP Address");
+	ipText->setText("IP Address");
 
 	ipBox = wmgr.createWindow("AlfiskoSkin/Editbox", "Ip Box");
 	ipBox->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.45f, 0)),
@@ -698,6 +701,8 @@ bool Application::Home(const CEGUI::EventArgs &e) {
 bool Application::setupNetwork(bool isServer) {
 
 	netManager = new NetManager();
+	
+	std::cout << netManager->getIPstring() << std::endl;
 
 	if(!netManager->initNetManager()) {
 		std::cout << "Failed to init the server!" << std::endl;
@@ -707,8 +712,7 @@ bool Application::setupNetwork(bool isServer) {
 		// Opens a connection on port 51215
 		netManager->addNetworkInfo(PROTOCOL_UDP, isServer ? NULL : ipBox->getText().c_str(), 51215);
 	}
-if
-	(isServer) {
+	if (isServer) {
 		if(!netManager->startServer()) {
 			std::cout << "Failed to start the server!" << std::endl;
 			return false;

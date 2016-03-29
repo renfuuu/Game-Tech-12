@@ -3,6 +3,7 @@
 #include <OgreRoot.h>
 
 #include <CEGUI/CEGUI.h>
+#include <CEGUI/FontManager.h>
 #include <CEGUI/RendererModules/Ogre/Renderer.h>
 
 #include "MultiPlatformHelper.h"

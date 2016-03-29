@@ -6,7 +6,7 @@ ScoreManager::ScoreManager(void) : gameScore(0), enemyScore(0), gameOverB(false)
 	dt = timer->getMilliseconds();
 
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-	CEGUI::Window *sheet = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+	CEGUI::Window *sheet = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow(); 
 
 	gameScoreboard = wmgr.createWindow("AlfiskoSkin/Label", "Red");
 	gameScoreboard->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.0f, 0), CEGUI::UDim(0.92f, 0)),
