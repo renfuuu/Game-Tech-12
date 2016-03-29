@@ -646,7 +646,7 @@ bool Application::StartSinglePlayer(const CEGUI::EventArgs &e) {
 	begin = true;
 	setState(SINGLE);
 
-	return true;
+	gameManager->setServer(true);
 }
 
 bool Application::StartServer(const CEGUI::EventArgs& e) {

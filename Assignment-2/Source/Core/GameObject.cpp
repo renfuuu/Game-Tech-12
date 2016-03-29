@@ -146,7 +146,6 @@ void GameObject::resetScore() {
 
 void GameObject::startScore() {
 	gameManager->postScore();
-	gameManager->postHighScore();
 }
 
 void GameObject::showColliderBox() {

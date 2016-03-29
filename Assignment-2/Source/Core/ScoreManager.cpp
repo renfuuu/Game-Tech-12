@@ -1,25 +1,9 @@
 #include "ScoreManager.h"
 
-ScoreManager::ScoreManager(void) : gameScore(0), enemyScore(0), highScoreFile(), highScore(0), gameOverB(false), floorHitCount(0), scoreLabel("SCORE_"), scoreText("Red: "), enemyScoreText("Blue: "), highScoreLabel("HIGH_SCORE_"), highScoreText("High Score: "), gameOverLabel("GAME_OVER_"), gameOverText("Game Over!") {
+ScoreManager::ScoreManager(void) : gameScore(0), enemyScore(0), gameOverB(false), scoreLabel("SCORE_"), scoreText("Red: "), enemyScoreText("Blue: ") {
 	/* The global timer */
 	timer = new Ogre::Timer();
 	dt = timer->getMilliseconds();
-
-	/* Load Score Resources */
-
-	highScoreFile.open("highscore.txt", std::ios::in);
-
-	std::string line;
-	while(getline(highScoreFile, line)) {
-		if(line == "") {
-			highScore = 0;
-		}
-		else {
-			highScore = std::stoi(line);
-		}
-	}
-
-	highScoreFile.close();
 
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
 	CEGUI::Window *sheet = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
@@ -27,7 +11,6 @@ ScoreManager::ScoreManager(void) : gameScore(0), enemyScore(0), highScoreFile(),
 	gameScoreboard = wmgr.createWindow("AlfiskoSkin/Label", "Red");
 	gameScoreboard->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.0f, 0), CEGUI::UDim(0.92f, 0)),
 	CEGUI::UVector2(CEGUI::UDim(0.2f, 0), CEGUI::UDim(1, 0))));
-
 	gameScoreboard->setText("Red: 0");
 
 	opponentScoreboard = wmgr.createWindow("AlfiskoSkin/Label", "Blue");
@@ -35,8 +18,16 @@ ScoreManager::ScoreManager(void) : gameScore(0), enemyScore(0), highScoreFile(),
 	CEGUI::UVector2(CEGUI::UDim(1, 0), CEGUI::UDim(1, 0))));
 	opponentScoreboard->setText("Blue: 0");
 
+	/*gameOverBoard = wmgr.createWindow("AlfiskoSkin/Label", "GameOverBoard");
+	gameOverBoard->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.4f, 0)),
+	CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.45f, 0))));
+	gameOverBoard->setText("Game Ogre!");*/
+
 	sheet->addChild(gameScoreboard);
 	sheet->addChild(opponentScoreboard);
+
+	//sheet->addChild(gameOverBoard);
+	//gameOverBoard->hide();
 }
 
 ScoreManager::~ScoreManager(void) {
@@ -65,19 +56,13 @@ void ScoreManager::postScore(void) {
 	opponentScoreboard->setText(enemyScoreText + std::to_string(enemyScore));
 }
 
-void ScoreManager::postHighScore(void) {
-}
-
-
 void ScoreManager::scorePoints(int points) {
 	gameScore += points;
-	nonFloorHit();
 	postScore();
 }
 
 void ScoreManager::scoreOpponentPoints(int points) {
 	enemyScore += points;
-	nonFloorHit();
 	postScore();
 }
 
@@ -91,10 +76,12 @@ int ScoreManager::getEnemyScore() {
 
 void ScoreManager::setScore(int points) {
 	gameScore = points;
+	postScore();
 }
 
 void ScoreManager::setEnemyScore(int points) {
 	enemyScore = points;
+	postScore();
 }
 
 void ScoreManager::updateEnemyPoints(std::string points) {
@@ -102,24 +89,7 @@ void ScoreManager::updateEnemyPoints(std::string points) {
 	postScore();
 }
 
-void ScoreManager::nonFloorHit(void) {
-	floorHitCount = 0;
-}
-
-/*** REMOVE! ***/
-// Returns false if the game is over.
-bool ScoreManager::floorHit(void) {
-	floorHitCount++;
-	if ( floorHitCount >= 2 ) {
-		// gameOver();
-		// return false;
-	}
-	return true;
-}
-/***         ***/
-
 void ScoreManager::resetScore(void) {
-	floorHitCount = 0;
 	gameScore = 0;
 	enemyScore = 0;
 	postScore();
@@ -135,24 +105,12 @@ void ScoreManager::resetGameOver() {
 }
 
 void ScoreManager::showGameOver() {
-	gameScoreboard->hide();
 }
 
 void ScoreManager::hideGameOver() {
-	gameScoreboard->hide();
 }
-
 
 void ScoreManager::gameOver() {
 	gameOverB = true;
-	// gameOverOverlay->setText(gameOverText);
-	showGameOver();
 	resetScore();
-}
-
-void ScoreManager::writeScore() {
-	// Replace old highscore with new one
-	highScoreFile.open("highscore.txt", std::ios::out);
-	highScoreFile << std::to_string(highScore) + "\n";
-	highScoreFile.close();
 }

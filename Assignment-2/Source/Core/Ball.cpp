@@ -32,7 +32,6 @@ void Ball::update() {
 		// Check for paddle collision but not twice in a row
 		if( context->getTheObject()->getType() == GameObject::PADDLE_OBJECT && context->getTheObject() != previousHit ) {
 			gameManager->playSound(GameManager::PADDLE_BOUNCE);
-			gameManager->nonFloorHit();
 		}		
 
 		if ( gameManager->isServer() ) {

@@ -18,7 +18,6 @@ public:
  	void setServer(bool);
  	bool isServer();
  	void postScore(void);
- 	void postHighScore(void);
  	void scorePoints(int);
  	void scoreOpponentPoints(int);
  	int getGameScore();
@@ -26,8 +25,6 @@ public:
  	void setScore(int points);
  	void setEnemyScore(int points);
  	void updateEnemyPoints(std::string points);
- 	void nonFloorHit(void);
- 	bool floorHit(void);
  	void resetScore(void);
  	void gameOver(void);
  	void writeScore();
@@ -46,20 +43,15 @@ protected:
  	int gameScore;
  	int enemyScore;
  	int highScore;
- 	int floorHitCount;
  	bool gameOverB;
  	bool server;
  	
 	std::string scoreText;
 	std::string enemyScoreText;
 	Ogre::String scoreLabel;
-	std::string highScoreText;
-	Ogre::String highScoreLabel;
-	Ogre::String gameOverText;
-	Ogre::String gameOverLabel;
-	std::fstream highScoreFile;
 
  	CEGUI::OgreRenderer* mRenderer;
 	CEGUI::Window* gameScoreboard;
     CEGUI::Window* opponentScoreboard;
+    CEGUI::Window* gameOverBoard;
 };

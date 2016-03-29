@@ -27,7 +27,6 @@ void Wall::update() {
 		}
 
 		if ( type != GameObject::FLOOR_OBJECT ) {
-			gameManager->nonFloorHit();
 		}
 		// The paddle can drag on the ground, don't let that reset our sound timer
 		if (obj->getType() != GameObject::PADDLE_OBJECT)
