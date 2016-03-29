@@ -94,14 +94,6 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 		dTime = temp;
 	}
 
-	// if(gameManager->isGameOver()) {
-	// 	if(gameOverTime > 2000) {
-	// 		gameManager->resetGameOver();
-	// 		gameManager->hideGameOver();
-	// 		gameOverTime = 0.0f;
-	// 	}
-	// }
-
 	// Constrains the ball's speed
 	static int maxSpeed = 4000;
 	btVector3 velocity = _theBall->getBody()->getLinearVelocity();
@@ -120,6 +112,23 @@ bool Application::frameRenderingQueued(const FrameEvent &evt)
 
 // Called once per predefined frame
 bool Application::update(const FrameEvent &evt) {
+
+	OIS::KeyCode lastKey = _oisManager->lastKeyPressed();
+
+	if (lastKey == OIS::KC_M) {
+		gameManager->mute();
+	}
+	else if (lastKey == OIS::KC_1 || lastKey == OIS::KC_2 || lastKey == OIS::KC_3 || lastKey == OIS::KC_4) {
+		int index = lastKey - 2;
+		if (index >= 0 && index < cameras.size()) {
+			mRenderWindow->removeAllViewports();
+			mRenderWindow->addViewport(cameras[index]);
+		}
+	}
+	else if(lastKey == OIS::KC_ESCAPE) {
+		// close window when ESC is pressed
+		mRunning = false;
+	}
 
 	// All logic is now controlled by a state machine
 	switch(gameState) {
@@ -153,25 +162,11 @@ bool Application::update(const FrameEvent &evt) {
 	Ogre::Vector3 oPos = _otherPaddle->getNode()->getPosition();
 	Ogre::Vector3 pos = _theBall->getNode()->getPosition();
 	btVector3 vel = _theBall->getBody()->getLinearVelocity();
+	int gScore = gameManager->getGameScore();
+	int oScore = gameManager->getEnemyScore();
 
-	states.push_back(GameState(qt1,qt2,pPos,oPos,pos,vel));
+	states.push_back(GameState(qt1,qt2,pPos,oPos,pos,vel,gScore,oScore));
 
-	OIS::KeyCode lastKey = _oisManager->lastKeyPressed();
-
-	if (lastKey == OIS::KC_M) {
-		gameManager->mute();
-	}
-	else if (lastKey == OIS::KC_1 || lastKey == OIS::KC_2 || lastKey == OIS::KC_3 || lastKey == OIS::KC_4) {
-		int index = lastKey - 2;
-		if (index >= 0 && index < cameras.size()) {
-			mRenderWindow->removeAllViewports();
-			mRenderWindow->addViewport(cameras[index]);
-		}
-	}
-	else if(lastKey == OIS::KC_ESCAPE) {
-		// close window when ESC is pressed
-		mRunning = false;
-	}
 	if ( !(gameManager->isGameOver()) ) {
 		_simulator->stepSimulation(evt.timeSinceLastFrame, 1, 1.0 / fps);
 	}
@@ -850,6 +845,8 @@ void Application::replayData() {
 	_otherPaddle->setPosition(s._otherPaddlePos);
 	_theBall->setPosition(s._ballPos);
 	_theBall->setVelocity(s._velocity.x(), s._velocity.y(), s._velocity.z());
+	gameManager->setScore(s._gameScore);
+	gameManager->setEnemyScore(s._opponentScore);
 
 	if(!states.empty())
 		states.pop_front();
