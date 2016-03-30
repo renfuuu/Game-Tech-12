@@ -88,6 +88,12 @@ void GameObject::reset(Ogre::Vector3 vec) {
 
 void GameObject::applyForce(float x, float y, float z) {
 	body->applyCentralForce(btVector3(x, y, z));
+	updateTransform();
+}
+
+void GameObject::applyImpulse(const btVector3& impulse, const btVector3& rel_pos) {
+	body->applyImpulse(impulse, rel_pos);
+	updateTransform();
 }
 
 void GameObject::movePaddle(OISManager* _oisManager, int height, int width, float realX, float realY) {}

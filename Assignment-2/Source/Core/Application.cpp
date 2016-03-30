@@ -227,6 +227,18 @@ void Application::handleAi() {
 
 	// The ball is on the opponent's side of the net
 	_otherPaddle->movePaddle(_oisManager, height, width, (float)ballPos.x, (float)ballPos.z);
+
+	Ogre::Vector3 ballNormal = _theBall->getNode()->getPosition() - _otherPaddle->getNode()->getPosition();
+
+	if(ballNormal.length() <= 200) {
+		ballNormal.normalise();
+		ballNormal += Ogre::Vector3(0,0,0.5);
+		int power = 3000;
+
+		btVector3 impulse = btVector3(ballNormal.x*power, ballNormal.y*power, ballNormal.z*power);
+		btVector3 rel_pos = btVector3(0,0,0);
+		_theBall->applyImpulse(impulse, rel_pos);
+	}
 }
 
 bool Application::updateServer(const FrameEvent &evt) {
@@ -246,6 +258,7 @@ bool Application::updateServer(const FrameEvent &evt) {
 		   pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
 		   pairs["PPZ"] == NULL ) {
 		   		std::cout << "Paddle data integrity was not guaranteed." << std::endl;
+		   		setState(HOME);
 		   		return true;
 		}
 		else {
@@ -289,7 +302,8 @@ bool Application::updateClient(const FrameEvent &evt) {
 		   	pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
 		   	pairs["PPZ"] == NULL || pairs["SCS"] == NULL || pairs["SCC"] == NULL ) {
 			   	std::cout << "Ball data integrity was not guaranteed." << std::endl;
-			   	return true;
+			   	setState(HOME);
+		   		return true;
 		}
 		else {
 			float x = atof(pairs["BPX"]);
@@ -845,7 +859,7 @@ void Application::setState(State state) {
 		case HOME:
 			if(netManager){
 				delete netManager;
-				netManager = NULL;
+				netManager = new NetManager();
 			} 
 			states.clear();
 			hideGui();
@@ -859,7 +873,7 @@ void Application::setState(State state) {
 		case SERVER:
 			if(netManager){
 				delete netManager;
-				netManager = NULL;
+				netManager = new NetManager();
 			} 
 			hideGui();
 			gameState = SERVER;
@@ -867,7 +881,7 @@ void Application::setState(State state) {
 		case CLIENT:
 			if(netManager){
 				delete netManager;
-				netManager = NULL;
+				netManager = new NetManager();
 			} 
 			hideGui();
 			gameState = CLIENT;

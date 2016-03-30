@@ -49,14 +49,13 @@ protected:
 	Ogre::Real lastHitTime;
 
 	GameObject::objectType type;
+	CollisionContext* context;
 
 	btScalar mass;
 	btScalar restitution;
 	btScalar friction;
 	bool kinematic;
 	bool needsUpdates;
-
-	CollisionContext* context;
 
 	Ogre::ParticleSystem* particle;
 
@@ -70,6 +69,7 @@ public:
 	virtual void updateTransform();
 	void translate(float x, float y, float z);
 	void applyForce(float x, float y, float z);
+	void applyImpulse(const btVector3& impulse, const btVector3& rel_pos);
 	void setPosition(float x, float y, float z);
 	void setPosition(const Ogre::Vector3& pos);
 	void setVelocity(float x, float y, float z);
