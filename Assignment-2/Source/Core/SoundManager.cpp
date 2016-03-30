@@ -39,7 +39,7 @@ SoundManager::SoundManager(void) {
 	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/ball.wav");
 	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/wall.wav");
 	gameSounds[HEADSHOT] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/headshot.wav");
-	gameSounds[SELFIE] = Mix_LoadWAV("../../../Assets/let-me-take.wav");
+	gameSounds[SELFIE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/let-me-take.wav");
 #endif
 }
 

@@ -62,6 +62,7 @@ void Application::init()
 */
 bool Application::frameRenderingQueued(const FrameEvent &evt)
 {
+
 	static float gameOverTime = 0.0f;
 	static float dTime = t1->getMilliseconds();
 	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
@@ -157,9 +158,11 @@ bool Application::update(const FrameEvent &evt) {
 			break;
 	}
 
+	float realX = (float)_oisManager->getMouseXAxis();
+	float realY = (float)_oisManager->getMouseYAxis();
 
 	if(gameState == SERVER || gameState == CLIENT || gameState == SINGLE)
-		_thePaddle->movePaddle(_oisManager, height, width);
+		_thePaddle->movePaddle(_oisManager, height, width, realX, realY);
 
 	Ogre::Quaternion qt1 = _thePaddle->getNode()->getOrientation();
 	Ogre::Quaternion qt2 = _otherPaddle->getNode()->getOrientation();
@@ -215,13 +218,15 @@ bool Application::handleGUI(const FrameEvent &evt) {
 }
 
 void Application::handleAi() {
+
 	// For now AI just mirrors the player's paddle
 	Ogre::Vector3 pos = _thePaddle->getNode()->getPosition();
 	Ogre::Quaternion qt = _thePaddle->getNode()->getOrientation();
 
-	_otherPaddle->setPosition(-pos.x, pos.y, -pos.z);
-	_otherPaddle->setOrientation(qt);
-	_otherPaddle->reflect();
+	Ogre::Vector3 ballPos = _theBall->getNode()->getPosition();
+
+	// The ball is on the opponent's side of the net
+	_otherPaddle->movePaddle(_oisManager, height, width, (float)ballPos.x, (float)ballPos.z);
 }
 
 bool Application::updateServer(const FrameEvent &evt) {
@@ -339,6 +344,7 @@ bool Application::updateClient(const FrameEvent &evt) {
 * Create Object Methods 
 */
 void Application::createRootEntity(std::string name, std::string mesh, int x, int y, int z) {
+
 	Ogre::Entity* ogreEntity = mSceneManager->createEntity(name, mesh);
 	ogreEntity->setCastShadows(true);
 	Ogre::SceneNode* ogreNode = mSceneManager->getRootSceneNode()->createChildSceneNode(name);
@@ -347,6 +353,7 @@ void Application::createRootEntity(std::string name, std::string mesh, int x, in
 }
 
 void Application::createChildEntity(std::string name, std::string mesh, Ogre::SceneNode* sceneNode, int x, int y, int z) {
+
 	Ogre::Entity* ogreEntity = mSceneManager->createEntity(name, mesh);
 	ogreEntity->setCastShadows(true);
 	Ogre::SceneNode* ogreNode = sceneNode->createChildSceneNode(name);
@@ -355,6 +362,7 @@ void Application::createChildEntity(std::string name, std::string mesh, Ogre::Sc
 }
 
 Ball* Application::createBall(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, GameManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
+
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
@@ -370,6 +378,7 @@ Ball* Application::createBall(Ogre::String nme, GameObject::objectType tp, Ogre:
 }
 
 Paddle* Application::createPaddle(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Real scale, Ogre::SceneManager* scnMgr, GameManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
+
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
@@ -384,6 +393,7 @@ Paddle* Application::createPaddle(Ogre::String nme, GameObject::objectType tp, O
 }
 
 Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre::String meshName, int x, int y, int z, Ogre::Vector3 scale, Ogre::Degree pitch, Ogre::Degree yaw, Ogre::Degree roll, Ogre::SceneManager* scnMgr, GameManager* ssm, Ogre::Real mss, Ogre::Real rest, Ogre::Real frict, bool kinematic, Simulator* mySim) {
+
 	createRootEntity(nme, meshName, x, y, z);
 	Ogre::SceneNode* sn = mSceneManager->getSceneNode(nme);
 	Ogre::Entity* ent = SceneHelper::getEntity(mSceneManager, nme, 0);
@@ -457,6 +467,7 @@ void Application::setupWindowRendererSystem(void) {
 }
 
 void Application::setupResources(void) {
+
 	// Load resource paths from config file
     Ogre::ConfigFile cf;
     cf.load(mResourcesCfg);
@@ -614,9 +625,6 @@ void Application::setupCameras(void) {
 /* Setup GameManager */
 void Application::setupGM(void) {
 
-	// Ogre::OverlaySystem* pOverlaySystem = new Ogre::OverlaySystem();
-	// mSceneManager->addRenderQueueListener(pOverlaySystem);
-
 	mRoot->addFrameListener(this);
 	WindowEventUtilities::addWindowEventListener(mRenderWindow, this);
 	mRenderWindow->addListener(this);
@@ -648,7 +656,7 @@ void Application::createObjects(void) {
 
 	// This paddle gets a negative Z coordinate that becomes positive in the function on movepaddle
 	_thePaddle = createPaddle("paddle", GameObject::objectType::PADDLE_OBJECT, "paddle.mesh", 0, 0, -825, 100, mSceneManager, gameManager, 0.0f, 1.0f, 0.8f, true, _simulator);
-	_otherPaddle = createPaddle("other_paddle", GameObject::objectType::PADDLE_OBJECT, "paddle-blue.mesh", 0, 0, 0, 100, mSceneManager, gameManager, 0.0f, 1.0f, 0.8f, true, _simulator);
+	_otherPaddle = createPaddle("other_paddle", GameObject::objectType::PADDLE_OBJECT, "paddle-blue.mesh", 0, 0, 825, 100, mSceneManager, gameManager, 0.0f, 1.0f, 0.8f, true, _simulator);
 	_theBall = createBall("ball", GameObject::objectType::BALL_OBJECT, "sphere.mesh", 5, 300, 800, .35, mSceneManager, gameManager, 1.0f, 1.0f, 0.8f, false, _simulator);
 
 	createWall("floor", GameObject::objectType::FLOOR_OBJECT, "floor.mesh", 0, -100, 0, Ogre::Vector3(120, 240, 240), Ogre::Degree(0), Ogre::Degree(0), Ogre::Degree(0), mSceneManager, gameManager, 0.0f, 1.0f, 0.8f, false, _simulator);
@@ -680,6 +688,7 @@ bool Application::StartSinglePlayer(const CEGUI::EventArgs &e) {
 	setState(SINGLE);
 
 	gameManager->setServer(true);
+	return true;
 }
 
 bool Application::StartServer(const CEGUI::EventArgs& e) {
@@ -721,11 +730,13 @@ bool Application::Quit(const CEGUI::EventArgs& e) {
 }
 
 bool Application::Replay(const CEGUI::EventArgs &e) {
+
 	setState(REPLAY);
 	return true;
 }
 
 bool Application::Home(const CEGUI::EventArgs &e) {
+
 	setState(HOME);
 	return true;
 }
@@ -802,6 +813,7 @@ std::unordered_map<std::string, char*> Application::dataParser(char* buf) {
 }
 
 void Application::hideGui() {
+
 	singlePlayerButton->hide();
 	hostServerButton->hide();
 	joinServerButton->hide();
@@ -812,6 +824,7 @@ void Application::hideGui() {
 }
 
 void Application::showGui() {
+
 	singlePlayerButton->show();
 	hostServerButton->show();
 	joinServerButton->show();
@@ -821,11 +834,13 @@ void Application::showGui() {
 }
 
 void Application::showEndGui() {
+
 	replayButton->show();
 }
 
 // This method is to ensure that the entire state is correct before transitioning to that new state
 void Application::setState(State state) {
+
 	switch(state) {
 		case HOME:
 			if(netManager){
@@ -875,6 +890,7 @@ void Application::setState(State state) {
 }
 
 void Application::replayData() {
+
 	GameState& s = states.front();
 	_thePaddle->setOrientation(s._thePaddle);
 	_otherPaddle->setOrientation(s._otherPaddle);

@@ -24,17 +24,17 @@ void Paddle::update() {
 	}
 }
 
-void Paddle::movePaddle(OISManager* _oisManager, int height, int width) {
+void Paddle::movePaddle(OISManager* _oisManager, int height, int width, float realX, float realY) {
 
 	// Standardize the positions into -1.0 to 1.0 for X and Y then scale them to 800x600. This works for all resolutions now.
 	float t1 = ((float)width / 2.0f);
 	float t2 = ((float)height / 2.0f);
-	float realX = (float)_oisManager->getMouseXAxis() / t1;
-	float realY = (float)_oisManager->getMouseYAxis() / t2;
+	realX /= t1;
+	realY /= t2;
 
 	int mouseX = Ogre::Math::Clamp((int)(realX*600), -300, 300);
 	int mouseY = Ogre::Math::Clamp((int)(realY*300), -100, 200);
-	int paddleZ = (600/3)-(Ogre::Math::Sqr(mouseX)/(800*.75) + Ogre::Math::Sqr((800/600)*1.5*mouseY)/(600*.75));
+	int paddleZ = getZ(mouseX, mouseY);
 
 	Ogre::SceneNode* mNode = rootNode;
 
@@ -63,6 +63,10 @@ void Paddle::movePaddle(OISManager* _oisManager, int height, int width) {
 	mNode->roll(Ogre::Math::ATan2(sin, cosine));
 
 	updateTransform();
+}
+
+float Paddle::getZ(float x, float y) {
+	return (600 / 3) - (Ogre::Math::Sqr(x) / (800 * .75) + Ogre::Math::Sqr((800 / 600)*1.5*y) / (600 * .75));
 }
 
 std::string Paddle::getCoordinates() {

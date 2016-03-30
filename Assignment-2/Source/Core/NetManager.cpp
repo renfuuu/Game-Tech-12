@@ -650,7 +650,7 @@ std::string NetManager::getMaskedIPstring(int mask) {
 Uint32 NetManager::getIPnbo() {
   IPaddress myIPs[3];
   Uint32 host;
-  int i, count;
+  int i, count = 0;
   bool found = false;
 
   if (!netLocalHost) {
