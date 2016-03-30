@@ -138,10 +138,8 @@ bool Application::update(const FrameEvent &evt) {
 			return true;
 			break;
 		case SERVER:
-			if(!updateServer(evt)){
-				return true;
-			}
-			if(netManager->getClients() == 0) {
+			updateServer(evt);
+			if(netManager && netManager->getClients() == 0) {
 				return true;
 			}
 			break;
@@ -230,9 +228,10 @@ bool Application::updateServer(const FrameEvent &evt) {
 	
 	static float previousTime = t1->getMilliseconds();
 
-	// if(netManager == nullptr)
-	// 	return true;
-
+	if(netManager == NULL){
+		std::cout << "netManager is NULL" << std::endl;
+		return true;
+	} 
 
 	if ( netManager->pollForActivity(1) ) {
 		previousTime = t1->getMilliseconds();
