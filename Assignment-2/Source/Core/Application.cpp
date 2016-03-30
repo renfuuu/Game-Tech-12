@@ -730,7 +730,8 @@ bool Application::JoinServer(const CEGUI::EventArgs& e) {
 	gameManager->setServer(gameState == SERVER);
 
 	if(!setupNetwork(gameState == SERVER)) {
-		return error();
+		setState(HOME);
+		return true;
 	}
 	else {
 		return true;
@@ -852,15 +853,19 @@ void Application::showEndGui() {
 	replayButton->show();
 }
 
+void Application::resetNetManager() {
+	if(netManager) {
+		delete netManager;
+		netManager = new NetManager();
+	} 
+}
+
 // This method is to ensure that the entire state is correct before transitioning to that new state
 void Application::setState(State state) {
 
 	switch(state) {
 		case HOME:
-			if(netManager){
-				delete netManager;
-				netManager = new NetManager();
-			} 
+			resetNetManager();
 			states.clear();
 			hideGui();
 			showGui();
@@ -871,18 +876,12 @@ void Application::setState(State state) {
 			gameState = HOME;
 			break;
 		case SERVER:
-			if(netManager){
-				delete netManager;
-				netManager = new NetManager();
-			} 
+			resetNetManager();
 			hideGui();
 			gameState = SERVER;
 			break;
 		case CLIENT:
-			if(netManager){
-				delete netManager;
-				netManager = new NetManager();
-			} 
+			resetNetManager();
 			hideGui();
 			gameState = CLIENT;
 			break;

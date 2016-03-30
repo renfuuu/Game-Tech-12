@@ -124,6 +124,7 @@ public:
 	void hideGui();
 	void showGui();
 	void showEndGui();
+	void resetNetManager();
 	void setState(State state);
 	void replayData();
 };
