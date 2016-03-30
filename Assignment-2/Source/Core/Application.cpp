@@ -140,9 +140,8 @@ bool Application::update(const FrameEvent &evt) {
 			break;
 		case SERVER:
 			updateServer(evt);
-			if(netManager && netManager->getClients() == 0) {
+			if(netManager->getClients() == 0)
 				return true;
-			}
 			break;
 		case CLIENT:
 			updateClient(evt);
@@ -192,7 +191,6 @@ bool Application::update(const FrameEvent &evt) {
 
 	// Check if the ball has been ejected from the scene
 	if(_theBall->getNode()->getPosition().length() > 4000) {
-		std::cout << "Ball left the scene" << std::endl;
 		_theBall->reset();
 	}
 
@@ -245,13 +243,10 @@ bool Application::updateServer(const FrameEvent &evt) {
 	
 	static float previousTime = t1->getMilliseconds();
 
-	if(netManager == NULL){
-		std::cout << "netManager is NULL" << std::endl;
-		return true;
-	} 
-
 	if ( netManager->pollForActivity(1) ) {
 		previousTime = t1->getMilliseconds();
+		// Only accept one connection at a time.
+		netManager->denyConnections();
 		std::unordered_map<std::string, char*> pairs = dataParser(netManager->udpClientData[0]->output);
 
 		if(pairs["PDW"] == NULL || pairs["PDX"] == NULL || pairs["PDY"] == NULL || 
@@ -282,7 +277,7 @@ bool Application::updateServer(const FrameEvent &evt) {
 	}
 	else {
 		float dt = t1->getMilliseconds() - previousTime;
-		if(dt >= 3000 && netManager->getClients() > 0){
+		if(dt >= 2000 && netManager->getClients() > 0){
 			setState(HOME);
 			return false;
 		}
@@ -293,6 +288,8 @@ bool Application::updateServer(const FrameEvent &evt) {
 /* All logic is now in update client. Update server will be implemented soon. */
 bool Application::updateClient(const FrameEvent &evt) {
 
+	static float previousTime = t1->getMilliseconds();
+	
 	if ( netManager->pollForActivity(1)) {
 		std::unordered_map<std::string, char*> pairs = dataParser(netManager->udpServerData[0].output);
 
@@ -337,6 +334,7 @@ bool Application::updateClient(const FrameEvent &evt) {
 			
 		}
 	}
+
 
 	std::string t = _thePaddle->getCoordinates() + "\n" + _theBall->getPoints();
 
@@ -759,8 +757,6 @@ bool Application::Home(const CEGUI::EventArgs &e) {
 bool Application::setupNetwork(bool isServer) {
 
 	netManager = new NetManager();
-	
-	std::cout << netManager->getIPstring() << std::endl;
 
 	if(!netManager->initNetManager()) {
 		std::cout << "Failed to init the server!" << std::endl;
