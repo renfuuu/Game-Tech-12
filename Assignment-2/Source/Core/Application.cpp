@@ -138,7 +138,9 @@ bool Application::update(const FrameEvent &evt) {
 			return true;
 			break;
 		case SERVER:
-			updateServer(evt);
+			if(!updateServer(evt)){
+				return true;
+			}
 			if(netManager->getClients() == 0) {
 				return true;
 			}
@@ -228,6 +230,9 @@ bool Application::updateServer(const FrameEvent &evt) {
 	
 	static float previousTime = t1->getMilliseconds();
 
+	// if(netManager == nullptr)
+	// 	return true;
+
 
 	if ( netManager->pollForActivity(1) ) {
 		previousTime = t1->getMilliseconds();
@@ -260,8 +265,9 @@ bool Application::updateServer(const FrameEvent &evt) {
 	}
 	else {
 		float dt = t1->getMilliseconds() - previousTime;
-		if(dt >= 3000 && netManager && netManager->getClients() > 0){
+		if(dt >= 3000 && netManager->getClients() > 0){
 			setState(HOME);
+			return false;
 		}
 	}
 	return true;
@@ -823,7 +829,10 @@ void Application::showEndGui() {
 void Application::setState(State state) {
 	switch(state) {
 		case HOME:
-			if(netManager) delete netManager;
+			if(netManager){
+				delete netManager;
+				netManager = NULL;
+			} 
 			states.clear();
 			hideGui();
 			showGui();
@@ -834,12 +843,18 @@ void Application::setState(State state) {
 			gameState = HOME;
 			break;
 		case SERVER:
-			if(netManager) delete netManager;
+			if(netManager){
+				delete netManager;
+				netManager = NULL;
+			} 
 			hideGui();
 			gameState = SERVER;
 			break;
 		case CLIENT:
-			if(netManager) delete netManager;
+			if(netManager){
+				delete netManager;
+				netManager = NULL;
+			} 
 			hideGui();
 			gameState = CLIENT;
 			break;
