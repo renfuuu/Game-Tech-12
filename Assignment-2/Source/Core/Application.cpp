@@ -241,7 +241,7 @@ bool Application::updateServer(const FrameEvent &evt) {
 		   pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
 		   pairs["PPZ"] == NULL ) {
 		   		std::cout << "Paddle data integrity was not guaranteed." << std::endl;
-		   		return error();
+		   		return true;
 		}
 		else {
 			float w = atof(pairs["PDW"]);
@@ -284,7 +284,7 @@ bool Application::updateClient(const FrameEvent &evt) {
 		   	pairs["PDZ"] == NULL || pairs["PPX"] == NULL || pairs["PPY"] == NULL || 
 		   	pairs["PPZ"] == NULL || pairs["SCS"] == NULL || pairs["SCC"] == NULL ) {
 			   	std::cout << "Ball data integrity was not guaranteed." << std::endl;
-			   	return error();
+			   	return true;
 		}
 		else {
 			float x = atof(pairs["BPX"]);
