@@ -224,7 +224,7 @@ void Application::handleAi() {
 	Ogre::Vector3 ballPos = _theBall->getNode()->getPosition();
 
 	// The ball is on the opponent's side of the net
-	_otherPaddle->movePaddle(_oisManager, height, width, (float)ballPos.x, (float)ballPos.z);
+	_otherPaddle->movePaddle(_oisManager, height, width, (float)ballPos.x, (float)ballPos.z + 500);
 
 	Ogre::Vector3 ballNormal = _theBall->getNode()->getPosition() - _otherPaddle->getNode()->getPosition();
 

@@ -28,19 +28,21 @@ SoundManager::SoundManager(void) {
 	/* Load music & sound effects */
 
 #ifdef __linux__
-	music = Mix_LoadMUS( "../Assets/selfie.wav" ); 
+	music = Mix_LoadMUS( "../Assets/music.wav" ); 
 	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../Assets/ball.wav");
 	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../Assets/wall.wav");
 	gameSounds[HEADSHOT] = Mix_LoadWAV("../Assets/headshot.wav");
-	gameSounds[SELFIE] = Mix_LoadWAV("../Assets/let-me-take.wav");
+	gameSounds[SCORE] = Mix_LoadWAV("../Assets/score.wav");
 #endif
 #ifdef _WIN32
-	music = Mix_LoadMUS( "../../../Game-Tech-12/Assignment-2/Assets/selfie.wav" ); 
+	music = Mix_LoadMUS( "../../../Game-Tech-12/Assignment-2/Assets/music.wav" ); 
 	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/ball.wav");
 	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/wall.wav");
 	gameSounds[HEADSHOT] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/headshot.wav");
-	gameSounds[SELFIE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/let-me-take.wav");
+	gameSounds[SCORE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/score.wav");
 #endif
+
+	Mix_VolumeMusic(50);
 }
 
 /* Sound Functions */
