@@ -122,6 +122,10 @@ bool Application::update(const FrameEvent &evt) {
 	if (lastKey == OIS::KC_M) {
 		gameManager->mute();
 	}
+	else if (lastKey == OIS::KC_SPACE) {
+		Ogre::Vector3 vec = camMan->getPosition();
+		printf("X: %f\nY: %f\nZ: %f\n", vec.x, vec.y, vec.z);
+	}
 	else if (lastKey == OIS::KC_1 || lastKey == OIS::KC_2 || lastKey == OIS::KC_3 || lastKey == OIS::KC_4) {
 		int index = lastKey - 2;
 		if (gameState != HOME && index >= 0 && index < cameras.size()) {
@@ -427,6 +431,30 @@ Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre:
 
 	return obj;
 }
+
+void Application::startStadiumFlashes ( ) {
+
+	
+	Ogre::ParticleSystem* flashParticle1 = mSceneManager->createParticleSystem("StadiumFlash1", "Flash");
+	Ogre::SceneNode* particle1 = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle1");
+	particle1->_setDerivedPosition(Ogre::Vector3(4500, 200, -500));
+	particle1->attachObject(flashParticle1);
+
+	Ogre::ParticleSystem* flashParticle2 = mSceneManager->createParticleSystem("StadiumFlash2", "Flash");
+	Ogre::SceneNode* particle2 = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle2");
+	particle2->_setDerivedPosition(Ogre::Vector3(-4500, 200, -500));
+	particle2->attachObject(flashParticle2);
+
+	Ogre::ParticleSystem* flashParticle3 = mSceneManager->createParticleSystem("StadiumFlash3", "Flash");
+	Ogre::SceneNode* particle3 = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle3");
+	particle3->_setDerivedPosition(Ogre::Vector3(0, 200, -5000));
+	particle3->attachObject(flashParticle3);
+
+	Ogre::ParticleSystem* flashParticle4 = mSceneManager->createParticleSystem("StadiumFlash4", "Flash");
+	Ogre::SceneNode* particle4 = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle4");
+	particle4->_setDerivedPosition(Ogre::Vector3(0, 200, 5000));
+	particle4->attachObject(flashParticle4);
+}
 /*
 * End Create Object Methods 
 */
@@ -701,6 +729,8 @@ void Application::createObjects(void) {
 	createRootEntity("stadium", "stadium2.mesh", 0, -592, 0);
 	mSceneManager->getSceneNode("stadium")->setScale(100,100,100);
 	mSceneManager->getSceneNode("stadium")->yaw(Ogre::Degree(90));
+
+	startStadiumFlashes();
 
 	_theBall->startScore();
 
