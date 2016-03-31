@@ -155,6 +155,9 @@ bool Application::update(const FrameEvent &evt) {
 		case REPLAY:
 			replayData();
 			break;
+		case HOWTO:
+			return true;
+			break;
 	}
 
 	float realX = (float)_oisManager->getMouseXAxis();
@@ -567,6 +570,11 @@ void Application::setupCEGUI(void) {
 		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.55f, 0))));
 	joinServerButton->setText("Join Game");
 
+	howToButton = wmgr.createWindow("AlfiskoSkin/Button", "HowToButton");
+	howToButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.8f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.85f, 0))));
+	howToButton->setText("How To Play");
+
 	homeButton = wmgr.createWindow("AlfiskoSkin/Button", "HomeButton");
 	homeButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.1f, 0), CEGUI::UDim(0.0f, 0)),
 		CEGUI::UVector2(CEGUI::UDim(0.2f, 0), CEGUI::UDim(0.05f, 0))));
@@ -586,6 +594,7 @@ void Application::setupCEGUI(void) {
 	sheet->addChild(ipWindow);
 	sheet->addChild(homeButton);
 	sheet->addChild(replayButton);
+	sheet->addChild(howToButton);
 
 	replayButton->hide();
 
@@ -595,6 +604,7 @@ void Application::setupCEGUI(void) {
 	quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Quit, this));
 	homeButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Home, this));
 	replayButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Replay, this));
+	howToButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::HowTo, this));
 	
 }
 
@@ -754,6 +764,11 @@ bool Application::Home(const CEGUI::EventArgs &e) {
 	return true;
 }
 
+bool Application::HowTo(const CEGUI::EventArgs &e) {
+	setState(HOWTO);
+	return true;
+}
+
 bool Application::setupNetwork(bool isServer) {
 
 	netManager = new NetManager();
@@ -833,6 +848,7 @@ void Application::hideGui() {
 	ipWindow->hide();
 	gameManager->hideGameOver();
 	replayButton->hide();
+	howToButton->hide();
 }
 
 void Application::showGui() {
@@ -843,6 +859,7 @@ void Application::showGui() {
 	ipBox->show();
 	ipText->show();
 	ipWindow->show();
+	howToButton->show();
 }
 
 void Application::showEndGui() {
@@ -895,6 +912,10 @@ void Application::setState(State state) {
 			gameManager->resetScore();
 			hideGui();
 			gameState = REPLAY;
+			break;
+		case HOWTO:
+			hideGui();
+			gameState = HOWTO;
 			break;
 	}
 }

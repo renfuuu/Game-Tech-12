@@ -45,7 +45,7 @@ public:
 
 	virtual void init();
 
-	enum State{ HOME, SINGLE, SERVER, CLIENT, ENDGAME, REPLAY };
+	enum State{ HOME, SINGLE, SERVER, CLIENT, ENDGAME, REPLAY, HOWTO };
 	State gameState = HOME;
 
 	Ogre::Root * mRoot;
@@ -78,6 +78,7 @@ public:
     CEGUI::Window* singlePlayerButton;
     CEGUI::Window* homeButton;
     CEGUI::Window* replayButton;
+    CEGUI::Window* howToButton;
 	
 	std::vector<Ogre::Camera*> cameras;
 	std::list<GameState> states;
@@ -117,6 +118,7 @@ public:
 	bool StartSinglePlayer(const CEGUI::EventArgs &e);
 	bool Replay(const CEGUI::EventArgs &e);
 	bool Home(const CEGUI::EventArgs &e);
+	bool HowTo(const CEGUI::EventArgs &e);
 
 	bool setupNetwork(bool);
 	bool error();
