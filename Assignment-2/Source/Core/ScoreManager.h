@@ -52,5 +52,6 @@ protected:
  	CEGUI::OgreRenderer* mRenderer;
 	CEGUI::Window* gameScoreboard;
     CEGUI::Window* opponentScoreboard;
-    CEGUI::Window* gameOverBoard;
+    CEGUI::Window* youWinBoard;
+    CEGUI::Window* youLoseBoard;
 };

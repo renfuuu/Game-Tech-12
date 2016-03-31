@@ -18,16 +18,26 @@ ScoreManager::ScoreManager(void) : gameScore(0), enemyScore(0), gameOverB(false)
 	CEGUI::UVector2(CEGUI::UDim(1, 0), CEGUI::UDim(1, 0))));
 	opponentScoreboard->setText("Blue: 0");
 
-	/*gameOverBoard = wmgr.createWindow("AlfiskoSkin/Label", "GameOverBoard");
-	gameOverBoard->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.3f, 0), CEGUI::UDim(0.4f, 0)),
-	CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.45f, 0))));
-	gameOverBoard->setText("Game Ogre!");*/
+	youWinBoard = wmgr.createWindow("AlfiskoSkin/Editbox", "YouWinBoard");
+	youWinBoard->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.42f, 0), CEGUI::UDim(0.33f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.58f, 0), CEGUI::UDim(0.4f, 0))));
+	youWinBoard->setText("     You Win!");
+	youWinBoard->setDisabled(true);
+	youWinBoard->setMouseCursor("AlfiskoSkin/MouseArrow");
+	youWinBoard->hide();
+
+	youLoseBoard = wmgr.createWindow("AlfiskoSkin/Editbox", "YouLoseBoard");
+	youLoseBoard->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.42f, 0), CEGUI::UDim(0.33f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.58f, 0), CEGUI::UDim(0.4f, 0))));
+	youLoseBoard->setText("    You Lose!");
+	youLoseBoard->setDisabled(true);
+	youLoseBoard->setMouseCursor("AlfiskoSkin/MouseArrow");
+	youLoseBoard->hide();
 
 	sheet->addChild(gameScoreboard);
 	sheet->addChild(opponentScoreboard);
-
-	//sheet->addChild(gameOverBoard);
-	//gameOverBoard->hide();
+	sheet->addChild(youWinBoard);
+	sheet->addChild(youLoseBoard);
 }
 
 ScoreManager::~ScoreManager(void) {
@@ -101,9 +111,12 @@ void ScoreManager::resetGameOver() {
 }
 
 void ScoreManager::showGameOver() {
+	(gameScore > enemyScore) ? youWinBoard->show() : youLoseBoard->show();
 }
 
 void ScoreManager::hideGameOver() {
+	youWinBoard->hide();
+	youLoseBoard->hide();
 }
 
 void ScoreManager::gameOver() {

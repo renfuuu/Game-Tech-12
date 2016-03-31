@@ -831,6 +831,7 @@ void Application::hideGui() {
 	ipBox->hide();
 	ipText->hide();
 	ipWindow->hide();
+	gameManager->hideGameOver();
 	replayButton->hide();
 }
 
@@ -845,7 +846,7 @@ void Application::showGui() {
 }
 
 void Application::showEndGui() {
-
+	gameManager->showGameOver();
 	replayButton->show();
 }
 
