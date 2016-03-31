@@ -1,5 +1,42 @@
 ## Milestone 3.3
 
+### How to Build
+* Refer to "HOW_TO_BUILD" file!
+
+### How to play
+* To play alone, select single player
+* Choose to Host a game or join a game (requires two computers)
+* To join a game, one computer must be hosting and you must enter the public ip address of the machine that is hosting and press join game
+* Move the mouse up/down and left/right on the game window to control the paddle
+* Strike the ball with the paddle to propel it through the room and attempt to bypass your opponent's paddle
+* Space bar resets score and the ball back to its inital position (for the host)
+* M mutes the sounds
+* Keys 1,2,3, and 4 change the camera angle (front, side,ball chase view, and free camera)
+* Free camera works as a camera man (WSAD or Arrow keys to move) hold shift to speed up
+* Escape key to quit or click the quit button
+
+### Progress
+
+### Summary
+* We created a fun and intuitive ball game that the user can choose to play in 1-player or 2-player mode. 
+
+### Implemented
+* Networking that uses UDP protocol
+* Prevent game start until all palyers joined
+* Detect client disconnect
+* Prevent crash if the player enters an incorrect ip address
+* Parser for the messages we send over the network
+* Converted from OGRE Overlay with CEGUI Text
+* Finite states for game modes: Home, How to Play, Single Player, Server, Client, Replay, and End of Game
+* Server mechanic, if you score a point then you get to serve
+* Cloud skybox and stadium background
+* Single Player mode + AI
+* Remove highscore
+
+#### Extra Credit
+* Replay for after the game ends so you can watch it
+* AI for single player
+
 ## Milestone 3.2
 
 ### Implemented
