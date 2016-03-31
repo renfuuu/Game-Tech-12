@@ -17,10 +17,10 @@
 
 ### Progress
 
-### Summary
+#### Summary
 * We created a fun and intuitive ball game that the user can choose to play in 1-player or 2-player mode. 
 
-### Implemented
+#### Implemented
 * Networking that uses UDP protocol
 * Prevent game start until all palyers joined
 * Detect client disconnect
