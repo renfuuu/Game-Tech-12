@@ -31,14 +31,12 @@ SoundManager::SoundManager(void) {
 	music = Mix_LoadMUS( "../Assets/music.wav" ); 
 	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../Assets/ball.wav");
 	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../Assets/wall.wav");
-	gameSounds[HEADSHOT] = Mix_LoadWAV("../Assets/headshot.wav");
 	gameSounds[SCORE] = Mix_LoadWAV("../Assets/score.wav");
 #endif
 #ifdef _WIN32
 	music = Mix_LoadMUS( "../../../Game-Tech-12/Assignment-2/Assets/music.wav" ); 
 	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/ball.wav");
 	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/wall.wav");
-	gameSounds[HEADSHOT] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/headshot.wav");
 	gameSounds[SCORE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/score.wav");
 #endif
 
