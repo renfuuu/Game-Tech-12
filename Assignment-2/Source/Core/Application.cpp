@@ -434,26 +434,70 @@ Wall* Application::createWall(Ogre::String nme, GameObject::objectType tp, Ogre:
 
 void Application::startStadiumFlashes ( ) {
 
+	Ogre::ParticleSystem* flashParticles[12];
+	Ogre::SceneNode* particles[12];
+
+	//Right Side Lower
+	flashParticles[0] = mSceneManager->createParticleSystem("StadiumFlash0", "Flash");
+	particles[0] = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle0");
+	particles[0]->_setDerivedPosition(Ogre::Vector3(4000, 0, -500));
+	particles[0]->attachObject(flashParticles[0]);
+
+	//Left Side Lower
+	flashParticles[1] = mSceneManager->createParticleSystem("StadiumFlash1", "Flash");
+	particles[1] = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle1");
+	particles[1]->_setDerivedPosition(Ogre::Vector3(-4000, 0, -500));
+	particles[1]->attachObject(flashParticles[1]);
+
+	//Front
+		//Lower
+	flashParticles[2] = mSceneManager->createParticleSystem("StadiumFlash2", "Flash");
+	particles[2] = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle2");
+	particles[2]->_setDerivedPosition(Ogre::Vector3(0, -100, -3500));
+	particles[2]->attachObject(flashParticles[2]);
+
+		//Upper
+	flashParticles[3] = mSceneManager->createParticleSystem("StadiumFlash3", "Flash");
+	particles[3] = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle3");
+	particles[3]->_setDerivedPosition(Ogre::Vector3(0, 1500, -5000));
+	particles[3]->attachObject(flashParticles[3]);
+		
+		//Upper Left
+	flashParticles[4] = mSceneManager->createParticleSystem("StadiumFlash4", "Flash");
+	particles[4] = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle4");
+	particles[4]->_setDerivedPosition(Ogre::Vector3(-3000, 1500, -5100));
+	particles[4]->attachObject(flashParticles[4]);
+
+		//Upper Right
+	flashParticles[5] = mSceneManager->createParticleSystem("StadiumFlash5", "Flash");
+	particles[5] = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle5");
+	particles[5]->_setDerivedPosition(Ogre::Vector3(3000, 1500, -5100));
+	particles[5]->attachObject(flashParticles[5]);
 	
-	Ogre::ParticleSystem* flashParticle1 = mSceneManager->createParticleSystem("StadiumFlash1", "Flash");
-	Ogre::SceneNode* particle1 = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle1");
-	particle1->_setDerivedPosition(Ogre::Vector3(4500, 200, -500));
-	particle1->attachObject(flashParticle1);
+	//Back
+		//Lower
+	flashParticles[6] = mSceneManager->createParticleSystem("StadiumFlash6", "Flash");
+	particles[6] = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle6");
+	particles[6]->_setDerivedPosition(Ogre::Vector3(0, 0, 3500));
+	particles[6]->attachObject(flashParticles[6]);
 
-	Ogre::ParticleSystem* flashParticle2 = mSceneManager->createParticleSystem("StadiumFlash2", "Flash");
-	Ogre::SceneNode* particle2 = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle2");
-	particle2->_setDerivedPosition(Ogre::Vector3(-4500, 200, -500));
-	particle2->attachObject(flashParticle2);
+		//Upper
+	flashParticles[7] = mSceneManager->createParticleSystem("StadiumFlash7", "Flash");
+	particles[7] = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle7");
+	particles[7]->_setDerivedPosition(Ogre::Vector3(0, 1500, 5000));
+	particles[7]->attachObject(flashParticles[7]);
+		
+		//Upper Left
+	flashParticles[8] = mSceneManager->createParticleSystem("StadiumFlash8", "Flash");
+	particles[8] = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle8");
+	particles[8]->_setDerivedPosition(Ogre::Vector3(-3000, 1500, 5100));
+	particles[8]->attachObject(flashParticles[4]);
 
-	Ogre::ParticleSystem* flashParticle3 = mSceneManager->createParticleSystem("StadiumFlash3", "Flash");
-	Ogre::SceneNode* particle3 = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle3");
-	particle3->_setDerivedPosition(Ogre::Vector3(0, 200, -5000));
-	particle3->attachObject(flashParticle3);
-
-	Ogre::ParticleSystem* flashParticle4 = mSceneManager->createParticleSystem("StadiumFlash4", "Flash");
-	Ogre::SceneNode* particle4 = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle4");
-	particle4->_setDerivedPosition(Ogre::Vector3(0, 200, 5000));
-	particle4->attachObject(flashParticle4);
+		//Upper Right
+	flashParticles[9] = mSceneManager->createParticleSystem("StadiumFlash9", "Flash");
+	particles[9] = mSceneManager->getSceneNode("stadium")->createChildSceneNode("FlashParticle9");
+	particles[9]->_setDerivedPosition(Ogre::Vector3(3000, 1500, 5100));
+	particles[9]->attachObject(flashParticles[5]);
 }
 /*
 * End Create Object Methods 
