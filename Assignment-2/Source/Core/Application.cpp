@@ -17,6 +17,8 @@
 
 using namespace Ogre;
 
+std::string instructions = "- To play alone, select Single Player\n- Choose to Host a game or join a game (requires two computers)\n- To join a game, one computer must be hosting and you must enter the public ip address of the machine that is hosting and press join game\n- Move the mouse up/down and left/right on the game window to control the paddle\n- Strike the ball with the paddle to propel it through the room and attempt to bypass your opponent's paddle\n- Space bar resets score and the ball back to its inital position (for the host)\n- M mutes the sounds\n- Keys 1,2,3, and 4 change the camera angle (front, side,ball chase view, and free camera)\n- Free camera works as a camera man (WSAD or Arrow keys to move) hold shift to speed up\n- Escape key to quit or click the quit button";
+
 Application::Application() : states()
 {
 }
@@ -575,6 +577,12 @@ void Application::setupCEGUI(void) {
 		CEGUI::UVector2(CEGUI::UDim(0.7f, 0), CEGUI::UDim(0.85f, 0))));
 	howToButton->setText("How To Play");
 
+	howToText = wmgr.createWindow("AlfiskoSkin/MultiLineEditbox", "Instructions");
+	howToText->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.125f, 0), CEGUI::UDim(0.35f, 0)),
+		CEGUI::UVector2(CEGUI::UDim(0.875f, 0), CEGUI::UDim(0.75f, 0))));
+	howToText->setText(instructions);
+	static_cast<CEGUI::MultiLineEditbox*>(howToText)->setReadOnly(true);
+
 	homeButton = wmgr.createWindow("AlfiskoSkin/Button", "HomeButton");
 	homeButton->setArea(CEGUI::URect(CEGUI::UVector2(CEGUI::UDim(0.1f, 0), CEGUI::UDim(0.0f, 0)),
 		CEGUI::UVector2(CEGUI::UDim(0.2f, 0), CEGUI::UDim(0.05f, 0))));
@@ -595,8 +603,10 @@ void Application::setupCEGUI(void) {
 	sheet->addChild(homeButton);
 	sheet->addChild(replayButton);
 	sheet->addChild(howToButton);
+	sheet->addChild(howToText);
 
 	replayButton->hide();
+	howToText->hide();
 
 	singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartSinglePlayer, this));
 	hostServerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::StartServer, this));
@@ -605,7 +615,7 @@ void Application::setupCEGUI(void) {
 	homeButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Home, this));
 	replayButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::Replay, this));
 	howToButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Application::HowTo, this));
-	
+
 }
 
 void Application::setupCameras(void) {
@@ -849,6 +859,7 @@ void Application::hideGui() {
 	gameManager->hideGameOver();
 	replayButton->hide();
 	howToButton->hide();
+	howToText->hide();
 }
 
 void Application::showGui() {
@@ -916,6 +927,7 @@ void Application::setState(State state) {
 		case HOWTO:
 			hideGui();
 			gameState = HOWTO;
+			howToText->show();
 			break;
 	}
 }

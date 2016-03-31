@@ -79,6 +79,7 @@ public:
     CEGUI::Window* homeButton;
     CEGUI::Window* replayButton;
     CEGUI::Window* howToButton;
+    CEGUI::Window* howToText;
 	
 	std::vector<Ogre::Camera*> cameras;
 	std::list<GameState> states;
