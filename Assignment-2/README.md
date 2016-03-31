@@ -9,7 +9,6 @@
 * To join a game, one computer must be hosting and you must enter the public ip address of the machine that is hosting and press join game
 * Move the mouse up/down and left/right on the game window to control the paddle
 * Strike the ball with the paddle to propel it through the room and attempt to bypass your opponent's paddle
-* Space bar resets score and the ball back to its inital position (for the host)
 * M mutes the sounds
 * Keys 1,2,3, and 4 change the camera angle (front, side,ball chase view, and free camera)
 * Free camera works as a camera man (WSAD or Arrow keys to move) hold shift to speed up

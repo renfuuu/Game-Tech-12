@@ -17,7 +17,7 @@
 
 using namespace Ogre;
 
-std::string instructions = "- To play alone, select Single Player\n- Choose to Host a game or join a game (requires two computers)\n- To join a game, one computer must be hosting and you must enter the public ip address of the machine that is hosting and press join game\n- Move the mouse up/down and left/right on the game window to control the paddle\n- Strike the ball with the paddle to propel it through the room and attempt to bypass your opponent's paddle\n- Space bar resets score and the ball back to its inital position (for the host)\n- M mutes the sounds\n- Keys 1,2,3, and 4 change the camera angle (front, side,ball chase view, and free camera)\n- Free camera works as a camera man (WSAD or Arrow keys to move) hold shift to speed up\n- Escape key to quit or click the quit button";
+std::string instructions = "- To play alone, select Single Player\n- Choose to Host a game or join a game (requires two computers)\n- To join a game, one computer must be hosting and you must enter the public ip address of the machine that is hosting and press join game\n- Move the mouse up/down and left/right on the game window to control the paddle\n- Strike the ball with the paddle to propel it through the room and attempt to bypass your opponent's paddle\n- M mutes the sounds\n- Keys 1,2,3, and 4 change the camera angle (front, side,ball chase view, and free camera)\n- Free camera works as a camera man (WSAD or Arrow keys to move) hold shift to speed up\n- Escape key to quit or click the quit button";
 
 Application::Application() : states()
 {
