@@ -27,7 +27,7 @@
 #include <cstdlib>
 
 #include "NetManager.h"
-
+#include "StadiumFlashes.h"
 #include "GameManager.h"
 #include "OISManager.h"
 #include "Simulator.h"
@@ -60,6 +60,8 @@ public:
 	Ogre::Timer* t1;
 
 	NetManager* netManager = nullptr;
+
+	StadiumFlashes* stadiumFlashes;
 
 	GameManager* gameManager;
 	OISManager* _oisManager;
