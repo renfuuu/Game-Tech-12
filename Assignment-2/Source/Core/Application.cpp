@@ -122,10 +122,6 @@ bool Application::update(const FrameEvent &evt) {
 	if (lastKey == OIS::KC_M) {
 		gameManager->mute();
 	}
-	else if (lastKey == OIS::KC_SPACE) {
-		Ogre::Vector3 vec = camMan->getPosition();
-		printf("X: %f\nY: %f\nZ: %f\n", vec.x, vec.y, vec.z);
-	}
 	else if (lastKey == OIS::KC_1 || lastKey == OIS::KC_2 || lastKey == OIS::KC_3 || lastKey == OIS::KC_4) {
 		int index = lastKey - 2;
 		if (gameState != HOME && index >= 0 && index < cameras.size()) {
@@ -187,6 +183,10 @@ bool Application::update(const FrameEvent &evt) {
 		_simulator->stepSimulation(evt.timeSinceLastFrame, 1, 1.0 / fps);
 	}
 	else {
+		if ( gameManager->getEnemyScore() < gameManager->getGameScore() )
+			gameManager->playSound(GameManager::GAME_WIN);
+		else
+			gameManager->playSound(GameManager::GAME_LOSS);
 		// Make sure the state of the entire game is reset before doing this. Ie all scores set to 0 and all network connections closed.
 		setState(ENDGAME); // We may want to change this to an end game menu
 	}
