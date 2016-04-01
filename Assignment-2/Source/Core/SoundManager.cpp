@@ -39,8 +39,8 @@ SoundManager::SoundManager(void) {
 	music = Mix_LoadMUS( "../../../Game-Tech-12/Assignment-2/Assets/music.wav" ); 
 	gameSounds[PADDLE_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/ball.wav");
 	gameSounds[WALL_BOUNCE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/wall.wav");
-	gameSounds[GAME_WIN] = Mix_LoadWAV("../Game-Tech-12/Assignment-2/Assets/win.wav");
-	gameSounds[GAME_LOSS] = Mix_LoadWAV("../Game-Tech-12/Assignment-2/Assets/fail.wav");
+	gameSounds[GAME_WIN] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/win.wav");
+	gameSounds[GAME_LOSS] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/fail.wav");
 	gameSounds[SCORE] = Mix_LoadWAV("../../../Game-Tech-12/Assignment-2/Assets/score.wav");
 #endif
 
