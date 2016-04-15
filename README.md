@@ -7,7 +7,7 @@
 
 ##### To run program:
 * cd build
-* ./assignment2
+* ./game
 
 ##### To build from source:
 * chmod u+x ./create
@@ -20,4 +20,4 @@
 * ./buildit
 * ./makeit
 Then, to run it,
-* ./assignment2
+* ./game
