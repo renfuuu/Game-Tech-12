@@ -1,0 +1,7 @@
+Final Project Report:
+
+Details and explains the places where we did better or worse than we expected and why those cases arose:
+The particle effect came out really nicely. The physics of the ball was a lot better than I expected. When I compare the handmade collision detection from assignment 1 to using the bullet library in assignment 2 there is a huge difference and it came out a lot more realistic. 
+
+Unexpected Issues:
+Previously if you hit ball directly into the floor then it fall out of the room. However we corrected this issue during the polishing week. Other than that everything came out as expected.

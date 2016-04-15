@@ -1,0 +1,36 @@
+// tron genrated by blender2ogre 0.6.0
+
+material tron 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass tron
+        {
+            ambient 0.004999999888241291 0.004999999888241291 0.004999999888241291 1.0
+            diffuse 0.003999999970197676 0.003999999970197676 0.003999999970197676 1.0
+            specular 0.09794800184559804 0.1030239923486711 0.1221999913334848 1.0 24.75
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            mesh_exporter <bpy_struct, MaterialProperties("")>
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}
